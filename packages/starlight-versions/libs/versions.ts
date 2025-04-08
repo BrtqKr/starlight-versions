@@ -9,8 +9,7 @@ import {
   copyDirectory,
   copyFile,
   ensureDirectory,
-  isDirectoryEntry,
-  listDirectory,
+  getDirectoryStructure,
   readJSONFile,
   writeJSONFile,
 } from './fs'
@@ -67,7 +66,7 @@ export async function ensureNewVersion(
   logger: AstroIntegrationLogger,
 ) {
   const docsDir = new URL('content/docs/', astroConfig.srcDir)
-  const newVersion = await checkForNewVersion(config, docsDir)
+  const newVersion = await checkForNewVersion(config, 'src/content/docs')
 
   if (!newVersion) return
 
@@ -329,20 +328,17 @@ async function getVersionConfig(version: Version, srcDir: URL) {
   }
 }
 
-async function checkForNewVersion(config: StarlightVersionsConfig, docsDir: URL): Promise<Version | undefined> {
+async function checkForNewVersion(config: StarlightVersionsConfig, docsDir: string): Promise<Version | undefined> {
   let newVersion: Version | undefined
 
-  const docsDirEntries = await listDirectory(docsDir)
-  const docsDirDirectories = new Set<string>()
-
-  for (const entry of docsDirEntries) {
-    if (await isDirectoryEntry(entry)) {
-      docsDirDirectories.add(entry.name)
-    }
-  }
+  const docsDirectories = await getDirectoryStructure(docsDir)
 
   for (const version of config.versions) {
-    if (!docsDirDirectories.has(version.slug)) {
+    // Check if any docsDirectory contains the substring version.slug
+    const isVersionExisting = docsDirectories.some((directory) => directory.includes(version.slug))
+
+    if (!isVersionExisting) {
+      // Only consider as a new version if no directory contains the version.slug
       if (newVersion) {
         throw new Error('Only one new version can be configured at a time.')
       }
@@ -362,11 +358,7 @@ function ęxtractNewVersionPath(newVersionPath: string) {
   return { path: pathBeforeLastSlash, versionSlug: pathAfterLastSlash }
 }
 
-async function makeVersionConfig(
-  version: Version,
-  starlightConfig: StarlightUserConfig,
-  srcDir: URL,
-) {
+async function makeVersionConfig(version: Version, starlightConfig: StarlightUserConfig, srcDir: URL) {
   const { path } = ęxtractNewVersionPath(version.slug)
 
   await ensureDirectory(getVersionContentCollectionURL(srcDir, path))

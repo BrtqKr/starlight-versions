@@ -5,18 +5,18 @@ import path from 'node:path'
 import { ensureTrailingSlash } from './path'
 
 export function listDirectory(directory: URL) {
-  return fs.readdir(directory, { withFileTypes: true })
+  return fs.readdir(directory, {withFileTypes: true})
 }
 
 export async function copyDirectory(sourceDir: URL, destDir: URL, callback: CopyDirectoryCallback, isRoot = true) {
   const dirEntries = await listDirectory(sourceDir)
-  
+
   if (isRoot && dirEntries.length === 0) {
     throw new Error(
       `Failed to copy the empty directory ('${sourceDir.pathname}') to the destination ('${destDir.pathname}').`,
     )
   }
-  
+
   await ensureDirectory(destDir)
 
   for (const entry of dirEntries) {
@@ -59,6 +59,25 @@ export async function readJSONFile<T extends object>(file: PathLike): Promise<T>
 
 export function ensureDirectory(directory: PathLike) {
   return fs.mkdir(directory, { recursive: true })
+}
+
+export async function getDirectoryStructure(directoryPath: string): Promise<string[]> {
+    const results: string[] = [];
+    const dir = await fs.opendir(directoryPath);
+
+    for await (const dirent of dir) {
+        const fullPath = path.join(directoryPath, dirent.name);
+        if (dirent.isDirectory()) {
+            // Recursively get files and directories from subdirectories
+            const subDirectoryResults = await getDirectoryStructure(fullPath);
+            results.push(...subDirectoryResults);  // Combine results into one array
+        } else {
+            // Add the file path to results
+            results.push(fullPath);
+        }
+    }
+
+    return results;
 }
 
 // Checks if the entry is a directory or a symbolic link to a directory.
