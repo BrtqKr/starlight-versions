@@ -68,55 +68,63 @@ export async function ensureNewVersion(
 ) {
   const docsDir = new URL('content/docs/', astroConfig.srcDir)
   const newVersion = await checkForNewVersion(config, docsDir)
-  const locales = Object.keys(starlightConfig.locales ?? {})
 
   if (!newVersion) return
 
+  const { path, versionSlug } = ęxtractNewVersionPath(newVersion.slug)
+
+  const subsetVersionDir = new URL(`${docsDir}${path}/`)
+  const locales = Object.keys(starlightConfig.locales ?? {})
+
   const assets: VersionAsset[] = []
 
-  await copyDirectory(docsDir, new URL(ensureTrailingSlash(newVersion.slug), docsDir), async (entry) => {
-    if (entry.type === 'directory') {
-      if (!entry.isRoot) {
-        const segments = entry.source.pathname.split('/')
-        const lastSegment = segments.at(-2)
-        const secondLastSegment = segments.at(-3)
+  await copyDirectory(
+    subsetVersionDir,
+    new URL(ensureTrailingSlash(`${docsDir}${newVersion.slug}`), subsetVersionDir),
+    async (entry) => {
+      if (entry.type === 'directory') {
+        if (!entry.isRoot) {
+          const segments = entry.source.pathname.split('/')
+          const lastSegment = segments.at(-2)
+          const secondLastSegment = segments.at(-3)
 
-        if (secondLastSegment && lastSegment === newVersion.slug && locales.includes(secondLastSegment)) {
-          // Skip version directories in a locale directory.
-          return true
+          if (secondLastSegment && lastSegment === versionSlug && locales.includes(secondLastSegment)) {
+            // Skip version directories in a locale directory.
+            return true
+          }
+
+          // Do not skip other non-root directories.
+          return false
         }
 
-        // Do not skip other non-root directories.
-        return false
+        // Skip root version directories.
+        if (entry.name in config.versionsBySlug) return true
+
+        const localeDir = locales.find((locale) => locale === entry.name)
+
+        // Copy root directories not matching any locale.
+        if (!localeDir) return false
+
+        // Otherwise, swap the locale and version directories.
+        return new URL(`../../${localeDir}/${versionSlug}/`, entry.dest)
       }
 
-      // Skip root version directories.
-      if (entry.name in config.versionsBySlug) return true
+      const slug = getDocSlug(docsDir, entry.url)
 
-      const localeDir = locales.find((locale) => locale === entry.name)
+      const md = await transformMarkdown(entry.content, {
+        assets: [],
+        base: stripTrailingSlash(astroConfig.base),
+        locale: getDocLocale(slug, starlightConfig),
+        slug,
+        url: entry.url,
+        version: newVersion,
+      })
 
-      // Copy root directories not matching any locale.
-      if (!localeDir) return false
+      assets.push(...(md.assets ?? []))
 
-      // Otherwise, swap the locale and version directories.
-      return new URL(`../../${localeDir}/${newVersion.slug}/`, entry.dest)
-    }
-
-    const slug = getDocSlug(docsDir, entry.url)
-
-    const md = await transformMarkdown(entry.content, {
-      assets: [],
-      base: stripTrailingSlash(astroConfig.base),
-      locale: getDocLocale(slug, starlightConfig),
-      slug,
-      url: entry.url,
-      version: newVersion,
-    })
-
-    assets.push(...(md.assets ?? []))
-
-    return md.content
-  })
+      return md.content
+    },
+  )
 
   for (const asset of assets) {
     await copyFile(asset.source, asset.dest)
@@ -124,7 +132,7 @@ export async function ensureNewVersion(
 
   await makeVersionConfig(newVersion, starlightConfig, astroConfig.srcDir)
 
-  logger.info(`Created new version '${newVersion.slug}'.`)
+  logger.info(`Created new version '${versionSlug}'.`)
 }
 
 export async function getVersionedSidebar(
@@ -345,21 +353,37 @@ async function checkForNewVersion(config: StarlightVersionsConfig, docsDir: URL)
   return newVersion
 }
 
-async function makeVersionConfig(version: Version, starlightConfig: StarlightUserConfig, srcDir: URL) {
-  const versionsDir = getVersionContentCollectionURL(srcDir)
+function ęxtractNewVersionPath(newVersionPath: string) {
+  const [pathBeforeLastSlash, pathAfterLastSlash] = [
+    newVersionPath.slice(0, newVersionPath.lastIndexOf('/')),
+    newVersionPath.slice(newVersionPath.lastIndexOf('/') + 1),
+  ]
 
-  await ensureDirectory(versionsDir)
+  return { path: pathBeforeLastSlash, versionSlug: pathAfterLastSlash }
+}
+
+async function makeVersionConfig(
+  version: Version,
+  starlightConfig: StarlightUserConfig,
+  srcDir: URL,
+) {
+  const { path } = ęxtractNewVersionPath(version.slug)
+
+  await ensureDirectory(getVersionContentCollectionURL(srcDir, path))
+
   await writeJSONFile(getVersionConfigURL(version, srcDir), {
     sidebar: starlightConfig.sidebar,
   } satisfies DocsVersionsConfig)
 }
 
-function getVersionContentCollectionURL(srcDir: URL) {
-  return new URL('content/versions/', srcDir)
+function getVersionContentCollectionURL(srcDir: URL, versionPath: string) {
+  return new URL(`content/versions/${versionPath}`, srcDir)
 }
 
 function getVersionConfigURL(version: Version, srcDir: URL) {
-  return new URL(`${version.slug}.json`, getVersionContentCollectionURL(srcDir))
+  const { versionSlug } = ęxtractNewVersionPath(version.slug)
+
+  return new URL(`${versionSlug}.json`, getVersionContentCollectionURL(srcDir, version.slug))
 }
 
 export type Version = z.output<typeof VersionSchema>

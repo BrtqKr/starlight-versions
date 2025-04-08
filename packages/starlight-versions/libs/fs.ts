@@ -10,13 +10,13 @@ export function listDirectory(directory: URL) {
 
 export async function copyDirectory(sourceDir: URL, destDir: URL, callback: CopyDirectoryCallback, isRoot = true) {
   const dirEntries = await listDirectory(sourceDir)
-
+  
   if (isRoot && dirEntries.length === 0) {
     throw new Error(
       `Failed to copy the empty directory ('${sourceDir.pathname}') to the destination ('${destDir.pathname}').`,
     )
   }
-
+  
   await ensureDirectory(destDir)
 
   for (const entry of dirEntries) {

@@ -9,11 +9,7 @@ export default defineConfig({
         starlightVersions({
           versions: [
             {
-              slug: '2.0',
-              label: 'v2.0',
-            },
-            {
-              slug: '1.0',
+              slug: 'ts-sdk/1.0',
               label: 'v1.0',
             },
           ],
