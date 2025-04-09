@@ -28,6 +28,10 @@ export default defineConfig({
           label: 'Guides',
           autogenerate: { directory: 'guides' },
         },
+        {
+          label: 'TS SDK',
+          autogenerate: { directory: 'ts-sdk' },
+        },
       ],
       social: {
         blueSky: 'https://bsky.app/profile/hideoo.dev',

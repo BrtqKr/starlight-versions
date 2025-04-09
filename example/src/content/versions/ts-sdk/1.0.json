@@ -17,6 +17,12 @@
       "autogenerate": {
         "directory": "guides"
       }
+    },
+    {
+      "label": "TS SDK",
+      "autogenerate": {
+        "directory": "ts-sdk"
+      }
     }
   ]
 }

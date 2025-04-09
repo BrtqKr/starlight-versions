@@ -76,10 +76,11 @@ export async function ensureNewVersion(
   const locales = Object.keys(starlightConfig.locales ?? {})
 
   const assets: VersionAsset[] = []
+  logger.info(`${docsDir}versions/${newVersion.slug}`)
 
   await copyDirectory(
     subsetVersionDir,
-    new URL(ensureTrailingSlash(`${docsDir}${newVersion.slug}`), subsetVersionDir),
+    new URL(ensureTrailingSlash(`${docsDir}versions/${newVersion.slug}`)),
     async (entry) => {
       if (entry.type === 'directory') {
         if (!entry.isRoot) {
@@ -151,7 +152,8 @@ export async function getVersionedSidebar(
     sidebar.push(versionSidebar)
   }
 
-  return sidebar
+  console.log('SIDEBAR ', JSON.stringify(sidebar))
+  return [sidebar[0]]
 }
 
 // A version is considered as the current version if it's undefined.
