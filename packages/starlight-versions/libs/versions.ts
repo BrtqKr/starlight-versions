@@ -212,7 +212,8 @@ export function getVersionURL(
   const isRootHTML = baseSegment && getExtension(baseSegment) === '.html'
   const baseSlug = baseSegment && isRootHTML ? stripExtension(baseSegment) : baseSegment
 
-  if (baseSlug && baseSlug in config.versionsBySlug) {
+
+  if (baseSlug && Object.keys(config.versionsBySlug).some(key => key.includes(baseSlug))) {
     if (versionSlug) {
       versionURL.pathname =
         versionRedirect === 'same-page'
@@ -229,7 +230,7 @@ export function getVersionURL(
       baseSegment === 'index.html'
         ? `/${versionSlug}.html`
         : versionRedirect === 'same-page'
-          ? `/${versionSlug}${versionURL.pathname}`
+          ? versionURL.pathname
           : isHTML
             ? `${versionSlug}.html`
             : `/${versionSlug}/`
@@ -353,7 +354,28 @@ export function getVersionFromSlug(
 
   const versionSegment = segments[1]
 
-  return config.versions.find((version) => version.slug === versionSegment)
+  return config.versions.find((version) => version.slug === versionSegment)}
+
+export function getActiveVersion(
+  config: StarlightVersionsConfig,
+  starlightConfig: StarlightConfig,
+  slug: string,
+): Version | undefined {
+  const segments = slug.split('/')
+
+  const versionOrLocaleSegment = segments[0]
+
+  if (!versionOrLocaleSegment) return undefined
+  
+  const version = config.versions.find((version) => slug.includes(version.slug))
+
+  if (version) return version
+
+  const locales = Object.keys(starlightConfig.locales ?? {})
+
+  if (!locales.includes(versionOrLocaleSegment)) return undefined
+
+  return config.versions.find((version) => slug.includes(version.slug))
 }
 
 export function getVersionIdentifier(version: Version | undefined): string {
@@ -395,7 +417,7 @@ async function getSidebarVersionGroup(version: Version, srcDir: URL) {
     }
   }
 
-  console.log("GET GROUP ", JSON.stringify(versionConfig.sidebar, null, 2))
+  // console.log("GET GROUP ", JSON.stringify(versionConfig.sidebar, null, 2))
   const test = {
     label: version.slug,
     items: addPrefixToSidebarConfig(version.slug, versionConfig.sidebar),

@@ -82,7 +82,6 @@ export function addPrefixToSidebarConfig(
       }
     })
 
-  console.log('TEST addPrefix', test)
   return test
 }
 
