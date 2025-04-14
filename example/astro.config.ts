@@ -10,7 +10,7 @@ export default defineConfig({
           versions: [
             {
               slug: 'ts-sdk/1.0',
-              label: 'v1.0',
+              label: 'ts-sdk v1.0',
             },
           ],
         }),

@@ -40,39 +40,50 @@ export function addPrefixToSidebarConfig(
   prefix: string,
   sidebar: NonNullable<StarlightSidebarUserConfig>,
 ): NonNullable<StarlightSidebarUserConfig> {
-  return sidebar.map((item) => {
-    if (typeof item === 'string') {
-      return addPrefixToSlug(prefix, item)
-    } else if ('items' in item) {
-      return {
-        ...item,
-        items: addPrefixToSidebarConfig(prefix, item.items),
+  const test = sidebar
+    .filter(
+      (item) => typeof item !== 'string' && 'autogenerate' in item && item.autogenerate.directory.includes(prefix),
+    )
+    .map((item) => {
+      if (typeof item !== 'string' && 'autogenerate' in item && item.autogenerate.directory.includes(prefix)) {
+        return item
       }
-    } else if ('autogenerate' in item) {
-      return {
-        ...item,
-        autogenerate: {
-          ...item.autogenerate,
-          directory: path.posix.join(prefix, item.autogenerate.directory),
-        },
-      }
-    } else if ('slug' in item) {
-      return {
-        ...item,
-        slug: addPrefixToSlug(prefix, item.slug),
-      }
-    } else if (isAbsoluteLink(item.link)) {
-      return item
-    }
 
-    const segments = item.link.split('/')
-    segments.splice(1, 0, prefix)
+      if (typeof item === 'string') {
+        return addPrefixToSlug(prefix, item)
+      } else if ('items' in item) {
+        return {
+          ...item,
+          items: item.items,
+        }
+      } else if ('autogenerate' in item) {
+        return {
+          ...item,
+          autogenerate: {
+            ...item.autogenerate,
+            directory: item.autogenerate.directory,
+          },
+        }
+      } else if ('slug' in item) {
+        return {
+          ...item,
+          slug: item.slug,
+        }
+      } else if (isAbsoluteLink(item.link)) {
+        return item
+      }
 
-    return {
-      ...item,
-      link: segments.join('/'),
-    }
-  })
+      const segments = item.link.split('/')
+      segments.splice(1, 0, prefix)
+
+      return {
+        ...item,
+        link: segments.join('/'),
+      }
+    })
+
+  console.log('TEST addPrefix', test)
+  return test
 }
 
 function addPrefixToSlug(prefix: string, slug: string) {

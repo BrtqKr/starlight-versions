@@ -21,7 +21,7 @@
     {
       "label": "TS SDK",
       "autogenerate": {
-        "directory": "ts-sdk"
+        "directory": "versions/ts-sdk/1.0"
       }
     }
   ]

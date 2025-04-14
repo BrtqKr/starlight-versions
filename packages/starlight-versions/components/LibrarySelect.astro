@@ -4,7 +4,7 @@ import type { StarlightIcon } from '@astrojs/starlight/types'
 import starlightConfig from 'virtual:starlight/user-config'
 import starlightVersionsConfig from 'virtual:starlight-versions-config'
 
-import { getVersionFromSlug, getVersionURL, type Version } from '../libs/versions'
+import { getVersionURL, getLibraryURL, getVersionFromSlug } from '../libs/versions'
 import StarlightVersionsConfig from 'virtual:starlight-versions-config'
 
 const { id } = Astro.locals.starlightRoute
@@ -17,40 +17,37 @@ const { iconName } = Astro.props
 
 const versions = StarlightVersionsConfig.versions
 
-const tsVersions = versions.filter((version) => version.slug.includes('ts-sdk/'))
-const httpVersions = versions.filter((version) => version.slug.includes('http-api/'))
+const firstParts = new Set<string>()
 
-const pageVersion = getVersionFromSlug(starlightVersionsConfig, starlightConfig, id)
+for (const version of versions) {
+  const firstPart = version.slug.split('/')[0]
+  if (firstPart) firstParts.add(firstPart)
+}
+
+const availableLibraries = Array.from(firstParts)
+
+const pageLibrary = getVersionFromSlug(starlightVersionsConfig, starlightConfig, id)
 ---
 
 <starlight-version-select>
   <label>
     <span class="sr-only">Select version</span>
     <Icon name={iconName} class="icon label-icon" />
-    <select value={pageVersion?.label ?? 'current'} autocomplete="off">
+    <select value={pageLibrary?.slug ?? 'current'} autocomplete="off">
       <option
-        selected={pageVersion === undefined}
-        value={getVersionURL(starlightVersionsConfig, starlightConfig, Astro.url, undefined).pathname}
-        >{starlightVersionsConfig.current.label}</option
+        selected={pageLibrary === undefined}
+        value={getLibraryURL(starlightVersionsConfig, starlightConfig, Astro.url, undefined).pathname}
+        >{
+          starlightVersionsConfig.current.label === 'Latest' ? 'Default' : starlightVersionsConfig.current.label
+        }</option
       >
       {
-        tsVersions.map((version) => (
+        availableLibraries.map((library) => (
           <option
-            selected={version.slug === pageVersion?.slug}
-            value={getVersionURL(starlightVersionsConfig, starlightConfig, Astro.url, version).pathname}
+            selected={library === pageLibrary?.slug}
+            value={getLibraryURL(starlightVersionsConfig, starlightConfig, Astro.url, library).pathname}
           >
-            {version.label ?? version.slug}
-          </option>
-        ))
-      }
-      {tsVersions.length > 0 && httpVersions.length > 0 && <option disabled>──────────</option>}
-      {
-        httpVersions.map((version) => (
-          <option
-            selected={version.slug === pageVersion?.slug}
-            value={getVersionURL(starlightVersionsConfig, starlightConfig, Astro.url, version).pathname}
-          >
-            {version.label ?? version.slug}
+            {library}
           </option>
         ))
       }

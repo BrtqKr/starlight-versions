@@ -149,11 +149,11 @@ export async function getVersionedSidebar(
 
   for (const version of config.versions) {
     const versionSidebar = await getSidebarVersionGroup(version, srcDir)
+    // console.log('SIDEBAR 1234 ', JSON.stringify(versionSidebar))
     sidebar.push(versionSidebar)
   }
 
-  console.log('SIDEBAR ', JSON.stringify(sidebar))
-  return [sidebar[0]]
+  return sidebar
 }
 
 // A version is considered as the current version if it's undefined.
@@ -253,6 +253,85 @@ export function getVersionURL(
 }
 
 // An undefined version is valid and represents the current version.
+// https://github.com/withastro/starlight/blob/64288fb0051310f7148afd13f65c578664f04eb2/packages/starlight/utils/localizedUrl.ts
+export function getLibraryURL(
+  config: StarlightVersionsConfig,
+  starlightConfig: StarlightConfig,
+  url: URL,
+  library: string | undefined,
+): URL {
+  const versionURL = new URL(url)
+
+  const base = stripTrailingSlash(import.meta.env.BASE_URL)
+  const hasBase = versionURL.pathname.startsWith(base)
+
+  if (hasBase) {
+    versionURL.pathname = versionURL.pathname.replace(base, '')
+  }
+
+  let baseSegment: string | undefined
+  let localeSegment: string | undefined
+
+  const isHTML = getExtension(versionURL.pathname) === '.html'
+  const [, firstSegment, secondSegment] = versionURL.pathname.split('/')
+
+  if (starlightConfig.isMultilingual || starlightConfig.locales) {
+    const versionOrLocale = firstSegment?.replace('.html', '')
+    const isRootLocale = versionOrLocale && !Object.keys(starlightConfig.locales).includes(versionOrLocale)
+    baseSegment = isRootLocale ? firstSegment : secondSegment
+
+    if (!isRootLocale) {
+      localeSegment = versionOrLocale
+      versionURL.pathname = versionURL.pathname.replace(`/${firstSegment}`, '')
+    }
+  } else {
+    baseSegment = firstSegment
+  }
+
+  const isRootHTML = baseSegment && getExtension(baseSegment) === '.html'
+  const baseSlug = baseSegment && isRootHTML ? stripExtension(baseSegment) : baseSegment
+
+  if (baseSlug && baseSlug in config.versionsBySlug) {
+    if (library) {
+      versionURL.pathname =
+        library === 'same-page'
+          ? versionURL.pathname.replace(baseSlug, library)
+          : `${library}${isHTML ? '.html' : '/'}`
+    } else if (isRootHTML) {
+      versionURL.pathname = '/index.html'
+    } else {
+      versionURL.pathname =
+        library === 'same-page' ? versionURL.pathname.replace(`/${baseSlug}`, '') : isHTML ? '/index.html' : '/'
+    }
+  } else if (library) {
+    versionURL.pathname =
+      baseSegment === 'index.html'
+        ? `/${library}.html`
+        : library === 'same-page'
+          ? `/${library}${versionURL.pathname}`
+          : isHTML
+            ? `${library}.html`
+            : `/${library}/`
+  } else if (library === 'root' && !isRootHTML) {
+    versionURL.pathname = isHTML ? '/index.html' : library
+  }
+
+  if (localeSegment) {
+    versionURL.pathname = isHTML
+      ? versionURL.pathname === '/index.html'
+        ? `/${localeSegment}.html`
+        : `/${localeSegment}${versionURL.pathname.replace(/\/$/, '.html')}`
+      : `/${localeSegment}${versionURL.pathname}`
+  }
+
+  if (hasBase) {
+    versionURL.pathname = base + versionURL.pathname
+  }
+
+  return versionURL
+}
+
+// An undefined version is valid and represents the current version.
 export function getVersionFromSlug(
   config: StarlightVersionsConfig,
   starlightConfig: StarlightConfig,
@@ -316,10 +395,14 @@ async function getSidebarVersionGroup(version: Version, srcDir: URL) {
     }
   }
 
-  return {
+  console.log("GET GROUP ", JSON.stringify(versionConfig.sidebar, null, 2))
+  const test = {
     label: version.slug,
     items: addPrefixToSidebarConfig(version.slug, versionConfig.sidebar),
   }
+
+  // console.log('GET GROUP ', JSON.stringify(test, null, 2))
+  return test
 }
 
 async function getVersionConfig(version: Version, srcDir: URL) {
@@ -365,8 +448,24 @@ async function makeVersionConfig(version: Version, starlightConfig: StarlightUse
 
   await ensureDirectory(getVersionContentCollectionURL(srcDir, path))
 
+  const sidebar = starlightConfig.sidebar
+
+  const updatedSidebar = sidebar?.map(item => {
+    if (item.autogenerate && item.autogenerate.directory === path) {
+      const updatedItem = {
+        ...item,
+        autogenerate: {
+          ...item.autogenerate,
+          directory: `versions/${version.slug}`
+        }
+      };
+      return updatedItem;
+    }
+    return item;
+  });
+
   await writeJSONFile(getVersionConfigURL(version, srcDir), {
-    sidebar: starlightConfig.sidebar,
+    sidebar: updatedSidebar,
   } satisfies DocsVersionsConfig)
 }
 
