@@ -3,9 +3,9 @@ import { Icon } from '@astrojs/starlight/components'
 import type { StarlightIcon } from '@astrojs/starlight/types'
 import starlightConfig from 'virtual:starlight/user-config'
 import starlightVersionsConfig from 'virtual:starlight-versions-config'
-
-import { getActiveVersion, getVersionFromSlug, getVersionURL, type Version } from '../libs/versions'
 import StarlightVersionsConfig from 'virtual:starlight-versions-config'
+
+import { getActiveVersion, getVersionURL } from '../libs/versions'
 
 const { id } = Astro.locals.starlightRoute
 
@@ -118,34 +118,3 @@ const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, i
     }
   }
 </style>
-
-<script>
-  customElements.define(
-    'starlight-version-select',
-    class StarlightVersionSelect extends HTMLElement {
-      constructor() {
-        super()
-
-        const select = this.querySelector('select')
-        if (!select) return
-
-        select?.addEventListener('change', (event) => {
-          if (event.currentTarget instanceof HTMLSelectElement) {
-            globalThis.location.pathname = event.currentTarget.value
-          }
-        })
-
-        window.addEventListener('pageshow', (event) => {
-          if (!event.persisted) return
-          const markupSelectedIndex = select.querySelector<HTMLOptionElement>('option[selected]')?.index
-
-          // If the page was loaded from a cache, the version select selected index might not be in sync with the
-          // current page.
-          if (markupSelectedIndex !== select.selectedIndex) {
-            select.selectedIndex = markupSelectedIndex ?? 0
-          }
-        })
-      }
-    }
-  )
-</script>

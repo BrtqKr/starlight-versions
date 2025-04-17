@@ -29,24 +29,15 @@ const availableLibraries = Array.from(firstParts)
 const pageLibrary = getVersionFromSlug(starlightVersionsConfig, starlightConfig, id)
 ---
 
-<starlight-version-select>
+<starlight-library-select>
   <label>
-    <span class="sr-only">Select version</span>
+    <span class="sr-only">Select library</span>
     <Icon name={iconName} class="icon label-icon" />
-    <select value={pageLibrary?.slug ?? 'current'} autocomplete="off">
-      <option
-        selected={pageLibrary === undefined}
-        value={getLibraryURL(starlightVersionsConfig, starlightConfig, Astro.url, undefined).pathname}
-        >{
-          starlightVersionsConfig.current.label === 'Latest' ? 'Default' : starlightVersionsConfig.current.label
-        }</option
-      >
+    <select id="library-select" autocomplete="off">
+      <option value={'both'}>Both</option>
       {
         availableLibraries.map((library) => (
-          <option
-            selected={library === pageLibrary?.slug}
-            value={getLibraryURL(starlightVersionsConfig, starlightConfig, Astro.url, library).pathname}
-          >
+          <option selected={library === pageLibrary?.slug} value={library}>
             {library}
           </option>
         ))
@@ -54,7 +45,7 @@ const pageLibrary = getVersionFromSlug(starlightVersionsConfig, starlightConfig,
     </select>
     <Icon name="down-caret" class="icon caret-icon" />
   </label>
-</starlight-version-select>
+</starlight-library-select>
 
 <style>
   label {
@@ -115,32 +106,26 @@ const pageLibrary = getVersionFromSlug(starlightVersionsConfig, starlightConfig,
 </style>
 
 <script>
-  customElements.define(
-    'starlight-version-select',
-    class StarlightVersionSelect extends HTMLElement {
-      constructor() {
-        super()
+  function updateSessionStorage() {
+    console.log('TEST')
+    const selectBox = document.getElementById('library-select') as HTMLSelectElement
+    const selectedValue = selectBox.value
+    sessionStorage.setItem('selectedLibrary', selectedValue)
+  }
 
-        const select = this.querySelector('select')
-        if (!select) return
-
-        select?.addEventListener('change', (event) => {
-          if (event.currentTarget instanceof HTMLSelectElement) {
-            globalThis.location.pathname = event.currentTarget.value
-          }
-        })
-
-        window.addEventListener('pageshow', (event) => {
-          if (!event.persisted) return
-          const markupSelectedIndex = select.querySelector<HTMLOptionElement>('option[selected]')?.index
-
-          // If the page was loaded from a cache, the version select selected index might not be in sync with the
-          // current page.
-          if (markupSelectedIndex !== select.selectedIndex) {
-            select.selectedIndex = markupSelectedIndex ?? 0
-          }
-        })
-      }
+  document.addEventListener('DOMContentLoaded', () => {
+    const storedLabel = sessionStorage.getItem('selectedLibrary')
+    const selectBox = document.getElementById('library-select') as HTMLSelectElement
+    if (storedLabel) {
+      selectBox.value = storedLabel
     }
-  )
+    selectBox.addEventListener('change', updateSessionStorage)
+  })
 </script>
+
+<!-- window.addEventListener('pageshow', (_event) => {
+          const storedVersion = sessionStorage.getItem('selectedVersion')
+          const optionToSelect = select.querySelector(`option[value="${storedVersion}"]`) as HTMLOptionElement
+          console.log('PAGESHOW ', optionToSelect)
+          select.selectedIndex = optionToSelect ? optionToSelect.index : 0
+        }) -->
