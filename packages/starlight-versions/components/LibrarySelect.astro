@@ -3,9 +3,9 @@ import { Icon } from '@astrojs/starlight/components'
 import type { StarlightIcon } from '@astrojs/starlight/types'
 import starlightConfig from 'virtual:starlight/user-config'
 import starlightVersionsConfig from 'virtual:starlight-versions-config'
-
-import { getVersionURL, getLibraryURL, getVersionFromSlug } from '../libs/versions'
 import StarlightVersionsConfig from 'virtual:starlight-versions-config'
+
+import { getVersionFromSlug } from '../libs/versions'
 
 const { id } = Astro.locals.starlightRoute
 
@@ -24,7 +24,7 @@ for (const version of versions) {
   if (firstPart) firstParts.add(firstPart)
 }
 
-const availableLibraries = Array.from(firstParts)
+const availableLibraries = [...firstParts]
 
 const pageLibrary = getVersionFromSlug(starlightVersionsConfig, starlightConfig, id)
 ---
