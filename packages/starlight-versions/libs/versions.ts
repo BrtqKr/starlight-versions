@@ -205,6 +205,8 @@ export function getVersionURL(
       localeSegment = versionOrLocale
       versionURL.pathname = versionURL.pathname.replace(`/${firstSegment}`, '')
     }
+  } else if(secondSegment && /^[-+]?[0-9]*\.?[0-9]+$/.test(secondSegment)) {
+    baseSegment = `${firstSegment}/${secondSegment}`
   } else {
     baseSegment = firstSegment
   }
@@ -212,6 +214,7 @@ export function getVersionURL(
   const isRootHTML = baseSegment && getExtension(baseSegment) === '.html'
   const baseSlug = baseSegment && isRootHTML ? stripExtension(baseSegment) : baseSegment
 
+  if(!version ) console.log('BASE SLUG ', baseSegment)
   if (baseSlug && Object.keys(config.versionsBySlug).some((key) => key.includes(baseSlug))) {
     if (versionSlug) {
       versionURL.pathname =
