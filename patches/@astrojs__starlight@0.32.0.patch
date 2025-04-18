@@ -1,0 +1,83 @@
+diff --git a/utils/createPathFormatter.ts b/utils/createPathFormatter.ts
+index 52c9527c6d8c6756125c2f746cf14d055ed1e3ef..d3e85efed4e65fa329d737bdc5c63783ca685e05 100644
+--- a/utils/createPathFormatter.ts
++++ b/utils/createPathFormatter.ts
+@@ -37,9 +37,16 @@ function formatPath(
+ 	href: string,
+ 	{ format = 'directory', trailingSlash = 'ignore' }: FormatPathOptions
+ ) {
++	const segments = href.split('/');
++
+ 	const formatStrategy = formatStrategies[format];
+ 	const trailingSlashStrategy = trailingSlashStrategies[trailingSlash];
+-
++	
++	if (segments[1] === segments[3]) {
++	  segments.splice(3, 1);
++	  href = segments.join('/')
++	}	
++	
+ 	// Handle extension
+ 	href = formatStrategy.handleExtension(href);
+ 
+diff --git a/utils/navigation.ts b/utils/navigation.ts
+index cfcd2e837d328fb0f15c7706862f115a184e2ff3..97cfee8150676bed6786715d43b51dbb4c615388 100644
+--- a/utils/navigation.ts
++++ b/utils/navigation.ts
+@@ -109,6 +109,7 @@ function groupFromAutogenerateConfig(
+ 	});
+ 	const tree = treeify(dirDocs, locale, localeDir);
+ 	const label = pickLang(item.translations, localeToLang(locale)) || item.label;
++
+ 	return {
+ 		type: 'group',
+ 		label,
+@@ -142,6 +143,9 @@ function linkFromInternalSidebarLinkItem(
+ 	const slug = item.slug === 'index' ? '' : item.slug;
+ 	const localizedSlug = locale ? (slug ? locale + '/' + slug : locale) : slug;
+ 	const route = routes.find((entry) => localizedSlug === entry.slug);
++	// console.log('ROUTES ', routes.map((route)=>({slug: route.slug, id: route.id})))
++	// console.log('ITEM SLUG ', item.slug)
++
+ 	if (!route) {
+ 		const hasExternalSlashes = item.slug.at(0) === '/' || item.slug.at(-1) === '/';
+ 		if (hasExternalSlashes) {
+@@ -325,9 +329,12 @@ function dirToItem(
+ 	locale: string | undefined,
+ 	collapsed: boolean
+ ): SidebarEntry {
+-	return isDir(dirOrRoute)
++	const test = isDir(dirOrRoute)
+ 		? groupFromDir(dirOrRoute, fullPath, dirName, currentPathname, locale, collapsed)
+ 		: linkFromRoute(dirOrRoute);
++
++	console.log('dirToItem ', JSON.stringify(test, null ,2))
++	return test
+ }
+ 
+ /** Create a sidebar entry for a given content directory. */
+@@ -360,6 +367,7 @@ export function getSidebar(pathname: string, locale: string | undefined): Sideba
+ 		intermediateSidebar = getIntermediateSidebarFromConfig(config.sidebar, pathname, locale);
+ 		intermediateSidebars.set(locale, intermediateSidebar);
+ 	}
++	console.log('getSidebarFromIntermediateSidebar(intermediateSidebar, pathname) ', JSON.stringify(getSidebarFromIntermediateSidebar(intermediateSidebar, pathname), null, 2))
+ 	return getSidebarFromIntermediateSidebar(intermediateSidebar, pathname);
+ }
+ 
+@@ -370,6 +378,7 @@ export function getSidebarFromConfig(
+ 	locale: string | undefined
+ ): SidebarEntry[] {
+ 	const intermediateSidebar = getIntermediateSidebarFromConfig(sidebarConfig, pathname, locale);
++	// console.log('INTERMEDIATE SIDEBAR 2', JSON.stringify(intermediateSidebar, null, 2))
+ 	return getSidebarFromIntermediateSidebar(intermediateSidebar, pathname);
+ }
+ 
+@@ -380,6 +389,8 @@ function getIntermediateSidebarFromConfig(
+ 	locale: string | undefined
+ ): SidebarEntry[] {
+ 	const routes = getLocaleRoutes(locale);
++
++	// console.log('SIDEBAR CONFIG ', JSON.stringify(config.sidebar, null, 2))
+ 	if (sidebarConfig) {
+ 		return sidebarConfig.map((group) => configItemToEntry(group, pathname, locale, routes));
+ 	} else {

@@ -214,7 +214,6 @@ export function getVersionURL(
   const isRootHTML = baseSegment && getExtension(baseSegment) === '.html'
   const baseSlug = baseSegment && isRootHTML ? stripExtension(baseSegment) : baseSegment
 
-  if(!version ) console.log('BASE SLUG ', baseSegment)
   if (baseSlug && Object.keys(config.versionsBySlug).some((key) => key.includes(baseSlug))) {
     if (versionSlug) {
       versionURL.pathname =
@@ -349,7 +348,6 @@ async function getSidebarVersionGroup(version: Version, srcDir: URL) {
     items: addPrefixToSidebarConfig(version.slug, versionConfig.sidebar),
   }
 
-  console.log('GET GROUP ', JSON.stringify(test, null, 2))
   return test
 }
 

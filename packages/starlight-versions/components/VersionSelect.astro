@@ -22,9 +22,6 @@ const httpVersions = versions.filter((version) => version.slug.includes('http-ap
 
 const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, id)
 const testVersion = getVersionFromSlug(starlightVersionsConfig, starlightConfig, id)
-
-console.log('PAGE VERSION ', getVersionURL(starlightVersionsConfig, starlightConfig, Astro.url, undefined).pathname)
-// console.log('TEST VERSION ', testVersion)
 ---
 
 <starlight-version-select>
