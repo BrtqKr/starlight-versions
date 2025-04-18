@@ -150,10 +150,9 @@ export async function getVersionedSidebar(
 
   for (const version of config.versions) {
     const versionSidebar = await getSidebarVersionGroup(version, srcDir)
-    // console.log('SIDEBAR 1234 ', JSON.stringify(versionSidebar))
     sidebar.push(versionSidebar)
   }
-
+  
   return sidebar
 }
 
@@ -264,9 +263,11 @@ export function getVersionFromSlug(
   const versionOrLocaleSegment = segments[0]
 
   if (!versionOrLocaleSegment) return undefined
+  
+  const fullVersionSegment = /^[-+]?[0-9]*\.?[0-9]+$/.test(versionOrLocaleSegment) ? versionOrLocaleSegment : `${segments[0]}/${segments[1]}`
 
-  const version = config.versions.find((version) => version.slug === versionOrLocaleSegment)
-
+  const version = config.versions.find((version) => version.slug === fullVersionSegment)
+  
   if (version) return version
 
   const locales = Object.keys(starlightConfig.locales ?? {})
@@ -345,7 +346,7 @@ async function getSidebarVersionGroup(version: Version, srcDir: URL) {
     items: addPrefixToSidebarConfig(version.slug, versionConfig.sidebar),
   }
 
-  // console.log('GET GROUP ', JSON.stringify(test, null, 2))
+  console.log('GET GROUP ', JSON.stringify(test, null, 2))
   return test
 }
 

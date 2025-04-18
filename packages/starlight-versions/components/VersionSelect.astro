@@ -5,7 +5,7 @@ import starlightConfig from 'virtual:starlight/user-config'
 import starlightVersionsConfig from 'virtual:starlight-versions-config'
 import StarlightVersionsConfig from 'virtual:starlight-versions-config'
 
-import { getActiveVersion, getVersionURL } from '../libs/versions'
+import { getActiveVersion, getVersionFromSlug, getVersionURL } from '../libs/versions'
 
 const { id } = Astro.locals.starlightRoute
 
@@ -21,6 +21,10 @@ const tsVersions = versions.filter((version) => version.slug.includes('ts-sdk/')
 const httpVersions = versions.filter((version) => version.slug.includes('http-api/'))
 
 const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, id)
+const testVersion = getVersionFromSlug(starlightVersionsConfig, starlightConfig, id)
+
+// console.log('PAGE VERSION ', pageVersion)
+// console.log('TEST VERSION ', testVersion)
 ---
 
 <starlight-version-select>

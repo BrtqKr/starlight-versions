@@ -107,7 +107,6 @@ const pageLibrary = getVersionFromSlug(starlightVersionsConfig, starlightConfig,
 
 <script>
   function updateSessionStorage() {
-    console.log('TEST')
     const selectBox = document.getElementById('library-select') as HTMLSelectElement
     const selectedValue = selectBox.value
     sessionStorage.setItem('selectedLibrary', selectedValue)
@@ -126,6 +125,5 @@ const pageLibrary = getVersionFromSlug(starlightVersionsConfig, starlightConfig,
 <!-- window.addEventListener('pageshow', (_event) => {
           const storedVersion = sessionStorage.getItem('selectedVersion')
           const optionToSelect = select.querySelector(`option[value="${storedVersion}"]`) as HTMLOptionElement
-          console.log('PAGESHOW ', optionToSelect)
           select.selectedIndex = optionToSelect ? optionToSelect.index : 0
         }) -->
