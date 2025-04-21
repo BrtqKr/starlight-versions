@@ -21,7 +21,7 @@ index 52c9527c6d8c6756125c2f746cf14d055ed1e3ef..d3e85efed4e65fa329d737bdc5c63783
  	href = formatStrategy.handleExtension(href);
  
 diff --git a/utils/navigation.ts b/utils/navigation.ts
-index cfcd2e837d328fb0f15c7706862f115a184e2ff3..97cfee8150676bed6786715d43b51dbb4c615388 100644
+index cfcd2e837d328fb0f15c7706862f115a184e2ff3..96df64876cadcf7cea5c076e569a17a8ee93ec67 100644
 --- a/utils/navigation.ts
 +++ b/utils/navigation.ts
 @@ -109,6 +109,7 @@ function groupFromAutogenerateConfig(
@@ -42,7 +42,61 @@ index cfcd2e837d328fb0f15c7706862f115a184e2ff3..97cfee8150676bed6786715d43b51dbb
  	if (!route) {
  		const hasExternalSlashes = item.slug.at(0) === '/' || item.slug.at(-1) === '/';
  		if (hasExternalSlashes) {
-@@ -325,9 +329,12 @@ function dirToItem(
+@@ -165,6 +169,7 @@ function linkFromInternalSidebarLinkItem(
+ 		frontmatter.title;
+ 	const badge = item.badge ?? frontmatter.sidebar?.badge;
+ 	const attrs = { ...frontmatter.sidebar?.attrs, ...item.attrs };
++
+ 	return makeSidebarLink(route.slug, label, getSidebarBadge(badge, locale, label), attrs);
+ }
+ 
+@@ -224,10 +229,35 @@ function getRoutePathRelativeToCollectionRoot(route: Route, locale: string | und
+ 			localizedId(route.entry.filePath.replace(`${docsCollectionPathFromRoot}/`, ''), locale);
+ }
+ 
++function cleanSegment(path: string): string {
++    let segments = path.split('/');
++    if (segments[0] === segments[2]) {
++        segments.splice(2, 1);  // Remove the third segment (index 2)
++    }
++    return segments.join('/');  // Join the segments back into a string
++}
++
+ /** Turn a flat array of routes into a tree structure. */
+ function treeify(routes: Route[], locale: string | undefined, baseDir: string): Dir {
+ 	const treeRoot: Dir = makeDir(baseDir);
+-	routes
++
++	const testRoutes = routes.map(item => {
++    		let newItem = {...item, entry: {...item.entry}};
++
++			if (newItem.id) newItem.id = cleanSegment(newItem.id);
++    		if (newItem.slug) newItem.slug = cleanSegment(newItem.slug);
++
++    		// Also handle id and slug inside entry if it exists
++    		if (newItem.entry) {
++    		    newItem.entry = { ...newItem.entry };
++    		    newItem.entry.id = cleanSegment(newItem.entry.id);
++    		    newItem.entry.slug = cleanSegment(newItem.entry.slug);
++    		}
++
++    		return newItem; 
++		}) 
++	
++	testRoutes
+ 		// Remove any entries that should be hidden
+ 		.filter((doc) => !doc.entry.data.sidebar.hidden)
+ 		// Compute the path of each entry from the root of the collection ahead of time.
+@@ -259,6 +289,8 @@ function treeify(routes: Route[], locale: string | undefined, baseDir: string):
+ 			});
+ 		});
+ 
++	console.log('ROOT ', treeRoot)
++
+ 	return treeRoot;
+ }
+ 
+@@ -325,9 +357,12 @@ function dirToItem(
  	locale: string | undefined,
  	collapsed: boolean
  ): SidebarEntry {
@@ -51,20 +105,20 @@ index cfcd2e837d328fb0f15c7706862f115a184e2ff3..97cfee8150676bed6786715d43b51dbb
  		? groupFromDir(dirOrRoute, fullPath, dirName, currentPathname, locale, collapsed)
  		: linkFromRoute(dirOrRoute);
 +
-+	console.log('dirToItem ', JSON.stringify(test, null ,2))
++	// console.log('dirToItem ', JSON.stringify(test, null ,2))
 +	return test
  }
  
  /** Create a sidebar entry for a given content directory. */
-@@ -360,6 +367,7 @@ export function getSidebar(pathname: string, locale: string | undefined): Sideba
+@@ -360,6 +395,7 @@ export function getSidebar(pathname: string, locale: string | undefined): Sideba
  		intermediateSidebar = getIntermediateSidebarFromConfig(config.sidebar, pathname, locale);
  		intermediateSidebars.set(locale, intermediateSidebar);
  	}
-+	console.log('getSidebarFromIntermediateSidebar(intermediateSidebar, pathname) ', JSON.stringify(getSidebarFromIntermediateSidebar(intermediateSidebar, pathname), null, 2))
++	// console.log('getSidebarFromIntermediateSidebar(intermediateSidebar, pathname) ', JSON.stringify(getSidebarFromIntermediateSidebar(intermediateSidebar, pathname), null, 2))
  	return getSidebarFromIntermediateSidebar(intermediateSidebar, pathname);
  }
  
-@@ -370,6 +378,7 @@ export function getSidebarFromConfig(
+@@ -370,6 +406,7 @@ export function getSidebarFromConfig(
  	locale: string | undefined
  ): SidebarEntry[] {
  	const intermediateSidebar = getIntermediateSidebarFromConfig(sidebarConfig, pathname, locale);
@@ -72,12 +126,13 @@ index cfcd2e837d328fb0f15c7706862f115a184e2ff3..97cfee8150676bed6786715d43b51dbb
  	return getSidebarFromIntermediateSidebar(intermediateSidebar, pathname);
  }
  
-@@ -380,6 +389,8 @@ function getIntermediateSidebarFromConfig(
+@@ -380,7 +417,9 @@ function getIntermediateSidebarFromConfig(
  	locale: string | undefined
  ): SidebarEntry[] {
  	const routes = getLocaleRoutes(locale);
 +
-+	// console.log('SIDEBAR CONFIG ', JSON.stringify(config.sidebar, null, 2))
  	if (sidebarConfig) {
++		// console.log('SIDEBAR CONFIG ', JSON.stringify(sidebarConfig.map((group) => configItemToEntry(group, pathname, locale, routes)), null ,2))
  		return sidebarConfig.map((group) => configItemToEntry(group, pathname, locale, routes));
  	} else {
+ 		const tree = treeify(routes, locale, locale || '');
