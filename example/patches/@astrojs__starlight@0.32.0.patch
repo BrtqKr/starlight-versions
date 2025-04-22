@@ -36,8 +36,6 @@ index cfcd2e837d328fb0f15c7706862f115a184e2ff3..96df64876cadcf7cea5c076e569a17a8
  	const slug = item.slug === 'index' ? '' : item.slug;
  	const localizedSlug = locale ? (slug ? locale + '/' + slug : locale) : slug;
  	const route = routes.find((entry) => localizedSlug === entry.slug);
-+	// console.log('ROUTES ', routes.map((route)=>({slug: route.slug, id: route.id})))
-+	// console.log('ITEM SLUG ', item.slug)
 +
  	if (!route) {
  		const hasExternalSlashes = item.slug.at(0) === '/' || item.slug.at(-1) === '/';
@@ -104,8 +102,6 @@ index cfcd2e837d328fb0f15c7706862f115a184e2ff3..96df64876cadcf7cea5c076e569a17a8
 +	const test = isDir(dirOrRoute)
  		? groupFromDir(dirOrRoute, fullPath, dirName, currentPathname, locale, collapsed)
  		: linkFromRoute(dirOrRoute);
-+
-+	// console.log('dirToItem ', JSON.stringify(test, null ,2))
 +	return test
  }
  
@@ -114,7 +110,6 @@ index cfcd2e837d328fb0f15c7706862f115a184e2ff3..96df64876cadcf7cea5c076e569a17a8
  		intermediateSidebar = getIntermediateSidebarFromConfig(config.sidebar, pathname, locale);
  		intermediateSidebars.set(locale, intermediateSidebar);
  	}
-+	// console.log('getSidebarFromIntermediateSidebar(intermediateSidebar, pathname) ', JSON.stringify(getSidebarFromIntermediateSidebar(intermediateSidebar, pathname), null, 2))
  	return getSidebarFromIntermediateSidebar(intermediateSidebar, pathname);
  }
  
@@ -122,7 +117,6 @@ index cfcd2e837d328fb0f15c7706862f115a184e2ff3..96df64876cadcf7cea5c076e569a17a8
  	locale: string | undefined
  ): SidebarEntry[] {
  	const intermediateSidebar = getIntermediateSidebarFromConfig(sidebarConfig, pathname, locale);
-+	// console.log('INTERMEDIATE SIDEBAR 2', JSON.stringify(intermediateSidebar, null, 2))
  	return getSidebarFromIntermediateSidebar(intermediateSidebar, pathname);
  }
  
@@ -132,7 +126,46 @@ index cfcd2e837d328fb0f15c7706862f115a184e2ff3..96df64876cadcf7cea5c076e569a17a8
  	const routes = getLocaleRoutes(locale);
 +
  	if (sidebarConfig) {
-+		// console.log('SIDEBAR CONFIG ', JSON.stringify(sidebarConfig.map((group) => configItemToEntry(group, pathname, locale, routes)), null ,2))
  		return sidebarConfig.map((group) => configItemToEntry(group, pathname, locale, routes));
  	} else {
  		const tree = treeify(routes, locale, locale || '');
+
+diff --git a/utils/routing/index.ts b/utils/routing/index.ts
+index 460d15a778f3ea47e8df62bf8d217edf4b482e34..99ddbcc00a0c3409315c491bf3bc06f207fc49b7 100644
+--- a/utils/routing/index.ts
++++ b/utils/routing/index.ts
+@@ -46,13 +46,21 @@ const docs: StarlightDocsEntry[] = (
+ 	})) ?? []
+ ).map(normalizeCollectionEntry);
+ 
++function cleanSegment(path: string): string {
++    let segments = path.split('/');
++    if (segments[0] === segments[2]) {
++        segments.splice(2, 1);  // Remove the third segment (index 2)
++    }
++    return segments.join('/');  // Join the segments back into a string
++}
++
+ function getRoutes(): Route[] {
+ 	const routes: Route[] = docs.map((entry) => ({
+ 		entry,
+-		slug: entry.slug,
+-		id: entry.id,
+-		entryMeta: slugToLocaleData(entry.slug),
+-		...slugToLocaleData(entry.slug),
++		slug: cleanSegment(entry.slug),
++		id: cleanSegment(entry.id),
++		entryMeta: slugToLocaleData(cleanSegment(entry.slug)),
++		...slugToLocaleData(cleanSegment(entry.slug)),
+ 	}));
+ 
+ 	// In multilingual sites, add required fallback routes.
+@@ -103,7 +111,9 @@ export function getRouteBySlugParam(slugParam: string | undefined): Route | unde
+ 	return routesBySlugParam.get(slugParam?.replace(/\/$/, '') || undefined);
+ }
+ 
++
+ function getPaths(): Path[] {
+ 	return routes.map((route) => ({
+ 		params: { slug: slugToParam(route.slug) },
+ 		props: route,

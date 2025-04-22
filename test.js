@@ -1,0 +1,441 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+;[
+  {
+    params: {},
+    props: {
+      entry: {
+        id: '',
+        data: {
+          title: 'Starlight Versions Example',
+          description: 'Starlight plugin to version documentation pages.',
+          editUrl: false,
+          head: [{ tag: 'title', attrs: {}, content: 'Starlight Versions Example' }],
+          template: 'splash',
+          hero: {
+            tagline: 'Starlight plugin to version documentation pages.',
+            image: { html: '🕒', alt: '' },
+            actions: [
+              {
+                text: 'Check Example',
+                link: '/getting-started/',
+                variant: 'primary',
+                icon: { type: 'icon', name: 'rocket' },
+              },
+              {
+                text: 'Documentation',
+                link: 'https://starlight-versions.vercel.app',
+                variant: 'minimal',
+                icon: { type: 'icon', name: 'external' },
+              },
+            ],
+          },
+          lastUpdated: false,
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: 'import { Card, CardGrid } from \'@astrojs/starlight/components\'\n\n## Next steps\n\n<CardGrid stagger>\n  <Card title="Explore the example" icon="magnifier">\n    Browse through the example pages to see how the plugin works.\n  </Card>\n  <Card title="Install the plugin" icon="puzzle">\n    Check the [getting\n    started](https://starlight-versions.vercel.app/getting-started/) guide for\n    installation instructions.\n  </Card>\n</CardGrid>',
+        filePath: 'src/content/docs/index.mdx',
+        digest: '5468edfff08b078c',
+        deferredRender: true,
+        collection: 'docs',
+        slug: '',
+      },
+      slug: '',
+      id: '',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'getting-started' },
+    props: {
+      entry: {
+        id: 'getting-started',
+        data: {
+          title: 'Getting Started',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: "This is the getting started page for the Starlight Versions plugin example.\nYou can browse through the various pages and versions of the documentation to see the plugin in action.\n\nHere is a [link](/another-page/) to another page which also contains versioned assets.\n\n## History\n\nimport { Steps } from '@astrojs/starlight/components'\n\n<Steps>\n\n1. This page was **created** in the version `1.0` of the documentation.\n2. This page was **updated** in the version `2.0` of the documentation.\n3. This page was **updated** in the version `3.0` of the documentation.\n\n</Steps>",
+        filePath: 'src/content/docs/getting-started.mdx',
+        digest: '741aa4b5ae804737',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'getting-started',
+      },
+      slug: 'getting-started',
+      id: 'getting-started',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'guides/guide-1' },
+    props: {
+      entry: {
+        id: 'guides/guide-1',
+        data: {
+          title: 'Guide 1',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: "This is a random page of the Starlight Versions plugin example.\n\n## History\n\nimport { Steps } from '@astrojs/starlight/components'\n\n<Steps>\n\n1. This page was **created** in the version `1.0` of the documentation.\n2. This page was **updated** in the version `2.0` of the documentation.\n\n</Steps>\n\n## Random Content\n\n### Habe daret paulum\n\nLorem markdownum inquit vivo mortale nodis? Vera fuit terribili et temptat, refert obstipuere nacta, debebit. Nox vitam.\n\n```\ncpl_recycle.halfRte *= errorMemoryBit(blu.digitalEup(2 + camera, 259123, 4));\nif (function_nanometer_status) {\n    expansion_controller_filename.dawMysql = favicon_friend;\n    icio.flamingApiLeak(3, wepAddressHard * webJrePrinter);\n    syncDfs.prebindingAiff(software(headerTerminal));\n} else {\n    ataJre.sipControl += usb_metal(card.simm_protector(hertz, spyware));\n    pcb_packet_symbolic += meta_redundancy_leopard.kde(p, 2);\n    portal += reimageInterfaceRepository;\n}\nif (marketingLeaf(tutorial.dongle(dtd), 5 * hardHocNavigation + 62)) {\n    boot_pinterest_threading = controllerFormatYobibyte + smartphone;\n}\n```\n\n### Est natus ego ligati quicquid concipis et\n\nHoc primi disces suis sepulcrales adest exilibus legem! Pro et rogabam membra ante praedae Phrygiae paterer praebebat claro et pavidus dixit.\n\n### Germana crura\n\nSilvas nitentem stravit sed quem quam vietum oraque caesoque poposcerat augere ablata umectat. Curvique et hinc tibi ubi addunt munera consequiturque idem montani caelarat aderat cinctasque lumina, fessam exprimitur. Iamque reperta spoliata, rite victus indoctum, animam ense!\n\nDetur pulvereamque ignotas meoque contrarius longius mixta, est est. Trepidantem et Adonis, ad tot, vestros deos licet quater, reddita tum in sus nullos potuit praetemptat poste. Praestant simul poteram, totosque perlucentibus illo sanguine, petentes herbas: utere haec muta quo egregius Tritoniacam.\n\n### Hesternos es intus quisquis et mecum velamenta\n\nMaior vota barba exierant, exilium, temptatum parens illis, laeva Alpes est quippe pulsa mentem, errabat. Dum corripiunt Lernaeae, et, cursus vix populus deserit nomine. Super ora lancea, post virga enim specie cum duruerant quod gigantas cristati et dixit, mugitibus Dianae. Ultra spissa ignara niveis cur in fameque, novissima vindicis mirere: est, refero, sume. Est summa cruentum coniugium, quotiensque similis silvas doleres manare in lambebat, satis?\n\n### Teli oscula\n\nVulnera forte dicta mihi si caute silvas in porrigar de dictos infamataeque valet anima animalia. Habemus aequor genitum et vertit, capit alligat, tractus teneris et eveniet in caelo, sibi. Mora deae.\n\nDesierat virgine se mentis sonabunt abiere. Nec et magniloquo solita videt superata; qui ante investigata comites mallet signum erectus crimine quantum in dixere a tamen. Sternitur buxus sub semifer voce quid donec vultus imagine circumstant violasse timentem. Fit quae repercusso terris sternitur mors Oresitrophos omnia; nec sublimis; miserere. In oblite verborum undis dolendi delabor ulla.",
+        filePath: 'src/content/docs/guides/guide-1.mdx',
+        digest: '9d363c7f16944f29',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'guides/guide-1',
+      },
+      slug: 'guides/guide-1',
+      id: 'guides/guide-1',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'guides/guide-3' },
+    props: {
+      entry: {
+        id: 'guides/guide-3',
+        data: {
+          title: 'Guide 3',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: "This is a random page of the Starlight Versions plugin example.\n\n## History\n\nimport { Steps } from '@astrojs/starlight/components'\n\n<Steps>\n\n1. This page was **created** in the version `1.0` of the documentation.\n2. This page was **updated** in the version `2.0` of the documentation.\n\n</Steps>\n\n## Random Content\n\n### Relevat meosque ferrumque tenues prius coeperat\n\nLorem markdownum novo fractis mihi: ignes et volucres omnia, noctis! Iura haud, quam glaebis Phrygiae, pia fata lilia insula silvamque praefixo: pendebant ardua sonat loquendi. Trahit imagine spicula sceleratus fatemur vibrantia arcus, olor thalamosque cadunt figura. Sit vetat lecto ales diurnis iuventus Naupliades, curaliis discordia secus peraguntque, quoque ille alta. Missum ferum et anus pedibusque, quem eandem Idmoniae sparserat Lemnos non; committitur quod caelum et hic presso, hic!\n\n- Maerenti nepos subii inania fluctibus graviore ulterius\n- Doluit spectent diffusa inpendit qui ardet fortis\n- O pictos pectore petunt posse Iunonis ferens\n- Placet pruniceum dicenti Alphenor mihi permittat blanditias\n- Foret procul magna meliore\n\n### Di dira echidnae et Iris munera praeceps\n\nLorem markdownum deprendit si addit hos novae, triplicesque Diomede omnes moenibus colla, ipse exitio patrio domesticus abluere muros. In flexit: neque hoc incubat patre; moenia stagnum, posita!\n\n### Liceat doctos ulla hominem\n\nMadida iuvenumque arcana; fabula Peneiaque. Dum iuxta quo terrena cinguntur: non modo. Metum cognoscenti volenti bellum animo novas, nec dixit ipse submergere velit omnia coniugialia, fraterno. Interdum Tusca.\n\n### Inde ire tibi caelestique inter\n\nPostquam umeris possem solebat Medea! Non qui gelidos si regia admirantibus iuris conscendunt esse duro. Eram alis amico virginis modo sagitta erigor et est ore virgineus. Pandion tempora tradat non Caesaris, his audet quercus germanae. Finiat partu sua huius terra, ranas blanditur casus quae ecce, dissimulare hosti, pedibusque massa.\n\nDeinde si torquere columbae aequora, Iovi fataliter delatus; est traiecti grates, quoque unda, nepotem. Adspexit vincite. Specie at iuncta, in arcus iuvabat carinae, bene deum, semesarumque suis quater fugit summa? Vel nec solent ad insuitur iussit.\n\n### Velut quaeras limenque et Stygia erit\n\nTumulo adhuc mutare. Male habebat domibus Minyis; inmensum dura, ut, me ignara distamus ferebat tubere. Liquitur ecce.\n\n- Iove pro intra dedit\n- Et cunctis resque dextra Anaxarete rorat\n- Qui ubi\n\nAit nec, interea gravitate retinet derepta sanguine tardis. Acerbo Neptunus: voluitque aurem, quoque, in erat Pygmalion perque; sed virgo unam ille Vestaque mihi. Ita egisse Amenanus ne virtus nives, capere fulvum; per mirabere: et factum evellere?",
+        filePath: 'src/content/docs/guides/guide-3.mdx',
+        digest: '64485ea22062ad2c',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'guides/guide-3',
+      },
+      slug: 'guides/guide-3',
+      id: 'guides/guide-3',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'another-page' },
+    props: {
+      entry: {
+        id: 'another-page',
+        data: {
+          title: 'Another Page',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: "This is a random page of the Starlight Versions plugin example.\n\nHere is an asset:\n\n![A versioned documentation asset](../../assets/demo.png)\n\n## History\n\nimport { Steps } from '@astrojs/starlight/components'\n\n<Steps>\n\n1. This page was **created** in the version `1.0` of the documentation.\n2. This page was **updated** in the version `2.0` of the documentation.\n3. This page was **updated** in the version `3.0` of the documentation.\n\n</Steps>\n\n## Random Content\n\n### Veli lilia venientis\n\nLorem markdownum ecce. Caret venenis, pollice terra, credas sua vera volat. Scopuloque et dixit qua canduit, licebit tantum capientibus aurea quidque. Sollertius dixit tumultus et, umor abeunt tui Alcandrumque parmam, hospes. Tum defendere palude videns, sonus dixit vocat!\n\n> Fines modo est, urguent! Inpetus coniuge cum simul ut senex sereno purpureusque nympha iussa inde nititur, hic. Sparsaque resolvent corpus, prius obverterat stant verum sed a conpescuit, demisit illa, trahatur atque et. Lacrimas veluti.\n\nMora Notum cuspide capillis illo, hostem auget adnuit Rhodopeius potest. Esse nullo?\n\n### Timeas ingrate quo venit nos deprensa iacens\n\nPleno sua! Muro positos flentem opaca legebat, et nutu Sisyphe caelebs colentibus dempserat. Orpheu habitabat munus longa promere timuitque sanguinis bos o corpore. Nostros nunc, est suis coacti et magnorum petisset contempsere.\n\nPulsa certamine tristes poterat, et molles secutum; credulus se matris pectus secreta. Utinamque vulnus porrexi.\n\n### Exercent proles in pallentem corporibus doctis in\n\nTalaria tamen cavernas agmen et Tethyn tu meliora timor praestare et intrata moenia. Ingeminat iamdudum Calymne constituis laticem arreptamque mea vox quid agmine: arcus. Nisi temptatum iuvenale aere, non durum: campus, nemus quae. Saxa de virus Arachnes bacis, sonitum pressa: aevum doloris cacumine in quis, deprendit semper Turnus. Campi ad ales visa furto: autem non, nam.\n\n- Conata alta cristis\n- Tellus inhaerebat quem pressit\n- Omnis bracchiaque Noricus parente se ardere dedit\n- Quaecumque coniugio non orbis ardent totidemque ipsaque\n- Lyciae hortaturque quos adsumptumque membra\n- Et levis Aeoliis faceres is eundem ad\n\nMunera ille, aut herbis vaticinor ardua, rapidissima haec bracchia Phoebeis ille: incanduit in tum. Comitata mihi; ad fruge. Tot illa cum verbaque, aut nostro, spectentque horrenda ut enim exiguamque Tyrios summo mensas caducifer Numicius amore.\n\nQuerellas movere his horrendis Peleus quod harenas nec. Fecerat deus herbis o fuerat promere, nulla nec nomen haec et inquit et pater ingratos sic tria et! Acuta magna a visceraque color me caede peritura recepit, at miseram positas, hastam loca, se nocuit conata. Thymo virtutis? Satis nam tendebat Nox se aris sponte, fortuna per; velit satis Iphis tu Pallante parantur videt.\n\n### Modo primum\n\nBene sine, ubi sine omne auras corpus glandibus adpropera aras sede. Morte gravibus maculavit simplex eadem, quem Hyperborea, increscere iam inposuit et telique Bromumque litus. Pascere instruxere digiti; ambo prece tibi humo!",
+        filePath: 'src/content/docs/another-page.mdx',
+        digest: '99533f251c73cd99',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'another-page',
+      },
+      slug: 'another-page',
+      id: 'another-page',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'guides/guide-2' },
+    props: {
+      entry: {
+        id: 'guides/guide-2',
+        data: {
+          title: 'Guide 2',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: "This is a random page of the Starlight Versions plugin example.\n\n## History\n\nimport { Steps } from '@astrojs/starlight/components'\n\n<Steps>\n\n1. This page was **created** in the version `1.0` of the documentation.\n\n</Steps>\n\n## Random Content\n\n### Invitusque intrata est sua recepit tamen\n\nLorem markdownum subeunt quosque altera subigebant moderato clamor reprensa. Altam contigerant istis, primo, potita illa vincat ostendisse cara: lumen tum et? Natalis flamma virisque, ver carinae plurima: nomine unda! Ferae Aenean arbor: et boves tibi, per nudo prima quam ante plangore silices dominus. Ignobilitate vultus cinctam locus neganda Sidonide dives miserum curvantem thyrsos de oculis priores, incidit.\n\n- Est omnes\n- Quam certe precantem modo\n- Pallorem qui captum ausae manus quod velox\n- Pectoris inmeritam magni\n\n### Virga crura imagine facibus carmina silvas\n\nTheatro est signatum, eurytus Philomela Tigris deusque miles summa regina placido fecisse vacent: genuit. Caelo sub tumulo inmota, ore ad committere sustulit prioris. Forem ipse eum, iam sanguine, lacrimisque cetera actae; non.\n\n1. Aut hamo omnem hanc\n2. Dite gaudere secures\n3. Modo aureus\n4. De qui dea dura humi medio vides\n5. Tibi sensurum pererrant deos sollicitare voce novissima\n6. Et pecori sanguine populos\n\n### Columbae fugavi pro convaluit ad voce flores\n\nFata fuit deus ad preces pedum: virtus oppositas vulnere, possent decent ipse putaret deerit. Manu per, possit institerat sibi: sum paternum! Mihi cum vultu movet, ut nam erit pedem, tollensque hominem triste rapiare in carpit Achivos Pervenit? Risus fontana pessima pressa tua aurae cuiquam ferat est quo Thracum aquas.\n\n- Carne palaestrae materiam omnes\n- Est videat sint Paphon at\n- Mactassent perque semper legit\n- Numero fuit sum\n- Senilem manu regimen horum est laudatve quinque\n\n### Terram nunc nec pro horrenda\n\nAt stantes seque aperite inplent: thyrso rumoribus: remoraminaque Gargaphie vivere catenis scelus ora et vanaque fronte. Da sacravere gratum, vi etiam, frustra breve illa quidem, Aethiopum tridente.\n\n1. Illi Tellus elidunt pactique\n2. Profundi luctus dependent\n3. Et Coroniden sacra\n\nNimbis invidiae cibos aspicit, Nycteus pretium inpatiensque sanguine? Fratrisque silvas hae additur. Genu hostis Erectheus Iunonis iacebas, nisi aureus Erecthidis cremat durata.",
+        filePath: 'src/content/docs/guides/guide-2.mdx',
+        digest: '0fc7c39ab0d06ba4',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'guides/guide-2',
+      },
+      slug: 'guides/guide-2',
+      id: 'guides/guide-2',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'guides/guide-4' },
+    props: {
+      entry: {
+        id: 'guides/guide-4',
+        data: {
+          title: 'Guide 4',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: "This is a random page of the Starlight Versions plugin example.\n\n## History\n\nimport { Steps } from '@astrojs/starlight/components'\n\n<Steps>\n\n1. This page was **created** in the version `3.0` of the documentation.\n\n</Steps>\n\n## Random Content\n\n### Victa adfata at tuta ille puro denique\n\nLorem markdownum linguam imoque umquam iam ultimus adiciam indiciine in undis coepta. Quod quae: quas puero promptior manus et vota, mactassent quoniam tu numen Clarium Denique! Reget arserat tu memorant validi expers curras desertae omnia, quam. Non florebat semper, et victoremque paratis ultra; coget illa maribus rogati.\n\nHorrendaque abscidit turribus moenia, talia mearum cursus et Hebrum arbor munere in quales, fruentur robustior. Nostro propiora ante ore arce, amorem: simul quod tosta est. Sororibus clara. Cum altaque micant. Neve eques expertem.\n\nMeri illa aestu inhumata. Macies fuit quaecumque Ethemon et falcato certa meruisse poterat. Per acie, inde erant vetito, cum nec invida feriuntque Cyparisse putetis facies. Inplicuit cessit io cupidine, nec transfert, subiungit senior de circum coniunctaque vidit orant viscera coniuge.\n\n### Alter dulces parvas inclusaque prudens caesosque nostra\n\nProles publica iamque anni utque tubas reticere quoque, vertit domos exspectatus quosque tacui bella scabrae? Vela me tenuere et Timoli senecta licet negat socios quaerit infantibus mecum iratus!\n\n- Sede has dammas spissus licebit mollibus primum\n- Cognoscere et tenera leonum\n- Trabesque dubita ne se Parnasosque gurgite latent\n- Fert sanguine exstant\n- In mihi animata natum\n\nEt querella mortis sui aves vultus fugacibus condiderat Iphide, ventris habuit luctantiaque in Paris non flecti. Moenia meos vides os pererrat meumque suos? Coluit deus dum; posse meorum, exilium incaluere paludem posuit fecit et rapinae armenti. Increpat Diomede fluviis caelestum velut illo nec celeres cladis stringebat esse cecidisse. Una tetigere tamen manebat movet in haut repetita rustica Iovem oscula deique, et sic esse nec, Nox septem.\n\nNemeaeo aevo iustissime puero parta curae deus miseris: sola est dextrae, illa. Non utque; Alcyone mox murmure cupidi exerceor pectora. E est non, in et Iovi per flenti virtute habitantque quod ubi, in super tam: servet natura. Da procul quidem. Sabinae Proserpina poste est vitae ignavis, huius pars turba pugnavimus fientque et tuas labens quae nemo abdita demisit, ita!",
+        filePath: 'src/content/docs/guides/guide-4.mdx',
+        digest: '816b802cdb94fbc9',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'guides/guide-4',
+      },
+      slug: 'guides/guide-4',
+      id: 'guides/guide-4',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'http-api/http-api-page' },
+    props: {
+      entry: {
+        id: 'http-api/http-api-page',
+        data: {
+          title: 'HTTP API PAGE 1',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: 'HTTP API PAGE 1',
+        filePath: 'src/content/docs/http-api/http-api-page.mdx',
+        digest: '4a198157b04f03fa',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'http-api/http-api-page',
+      },
+      slug: 'http-api/http-api-page',
+      id: 'http-api/http-api-page',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'http-api/nest1/http-api-page2' },
+    props: {
+      entry: {
+        id: 'http-api/nest1/http-api-page2',
+        data: {
+          title: 'HTTP API PAGE 2',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: 'HTTP API PAGE 2',
+        filePath: 'src/content/docs/http-api/nest1/http-api-page2.mdx',
+        digest: 'a64bcd40b8d8f72f',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'http-api/nest1/http-api-page2',
+      },
+      slug: 'http-api/nest1/http-api-page2',
+      id: 'http-api/nest1/http-api-page2',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'ts-sdk/ts-page' },
+    props: {
+      entry: {
+        id: 'ts-sdk/ts-page',
+        data: {
+          title: 'TS PAGE 1',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: 'TS PAGE 1',
+        filePath: 'src/content/docs/ts-sdk/ts-page.mdx',
+        digest: '1121963c9216b1cc',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'ts-sdk/ts-page',
+      },
+      slug: 'ts-sdk/ts-page',
+      id: 'ts-sdk/ts-page',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'ts-sdk/ts-page2' },
+    props: {
+      entry: {
+        id: 'ts-sdk/ts-page2',
+        data: {
+          title: 'TS PAGE 2',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: 'TS PAGE 2',
+        filePath: 'src/content/docs/ts-sdk/ts-page2.mdx',
+        digest: '4bd8b238ef60be4c',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'ts-sdk/ts-page2',
+      },
+      slug: 'ts-sdk/ts-page2',
+      id: 'ts-sdk/ts-page2',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'ts-sdk/1.0/ts-sdk/ts-page' },
+    props: {
+      entry: {
+        id: 'ts-sdk/1.0/ts-sdk/ts-page',
+        data: {
+          title: 'TS PAGE 1',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: 'TS PAGE 1',
+        filePath: 'src/content/docs/versions/ts-sdk/1.0/ts-page.mdx',
+        digest: '632a6f52253e467e',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'ts-sdk/1.0/ts-sdk/ts-page',
+      },
+      slug: 'ts-sdk/1.0/ts-sdk/ts-page',
+      id: 'ts-sdk/1.0/ts-sdk/ts-page',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+  {
+    params: { slug: 'ts-sdk/1.0/ts-sdk/ts-page2' },
+    props: {
+      entry: {
+        id: 'ts-sdk/1.0/ts-sdk/ts-page2',
+        data: {
+          title: 'TS PAGE 2',
+          editUrl: true,
+          head: [],
+          template: 'doc',
+          sidebar: { hidden: false, attrs: {} },
+          pagefind: true,
+          draft: false,
+          banner: {
+            content:
+              'This is a demo of the Starlight Versions plugin — Back to the <a href="https://starlight-versions.vercel.app/">documentation</a>.',
+          },
+        },
+        body: 'TS PAGE 2',
+        filePath: 'src/content/docs/versions/ts-sdk/1.0/ts-page2.mdx',
+        digest: '9f8cffe3a56e1d83',
+        deferredRender: true,
+        collection: 'docs',
+        slug: 'ts-sdk/1.0/ts-sdk/ts-page2',
+      },
+      slug: 'ts-sdk/1.0/ts-sdk/ts-page2',
+      id: 'ts-sdk/1.0/ts-sdk/ts-page2',
+      entryMeta: { dir: 'ltr', lang: 'en' },
+      dir: 'ltr',
+      lang: 'en',
+    },
+  },
+]
+// Possible dynamic routes being matched: ../node_modules/.pnpm/@astrojs+starlight@0.32.0_patch_hash=4utisiuing4izzihusmw2s2434_astro@5.3.0_@types+node@18.19_5ifmmd4umrpf67ythlc46bf6oe/node_modules/@astrojs/starlight/routes/static/index.astro.
+// Entry docs → 404 was not found.

@@ -171,6 +171,15 @@ export function getVersionSidebar(version: Version | undefined, sidebar: Starlig
   return sidebarVersionGroup.entries
 }
 
+function removeVersion(url: string) {
+  const urlSegments = url.split('/');
+
+  const versionRegex = /^[-+]?[0-9]*\.?[0-9]+$/;
+  const filteredSegments = urlSegments.filter(segment => !versionRegex.test(segment));
+
+  return filteredSegments.join('/');
+}
+
 // An undefined version is valid and represents the current version.
 // https://github.com/withastro/starlight/blob/64288fb0051310f7148afd13f65c578664f04eb2/packages/starlight/utils/localizedUrl.ts
 export function getVersionURL(
@@ -223,8 +232,9 @@ export function getVersionURL(
     } else if (isRootHTML) {
       versionURL.pathname = '/index.html'
     } else {
+      
       versionURL.pathname =
-        versionRedirect === 'same-page' ? versionURL.pathname.replace(`/${baseSlug}`, '') : isHTML ? '/index.html' : '/'
+        versionRedirect === 'same-page' ? removeVersion(versionURL.pathname) : isHTML ? '/index.html' : '/'
     }
   } else if (versionSlug) {
     versionURL.pathname =
