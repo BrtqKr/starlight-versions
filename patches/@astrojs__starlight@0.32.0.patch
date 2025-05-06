@@ -60,7 +60,7 @@ index cfcd2e837d328fb0f15c7706862f115a184e2ff3..fa528c286149ab9543bc5a8582675f33
  		.filter((doc) => !doc.entry.data.sidebar.hidden)
  		// Compute the path of each entry from the root of the collection ahead of time.
 diff --git a/utils/routing/index.ts b/utils/routing/index.ts
-index 460d15a778f3ea47e8df62bf8d217edf4b482e34..e5e262ab5e76d16845efbfb0ccdcf6cdf7e96b9b 100644
+index 460d15a778f3ea47e8df62bf8d217edf4b482e34..c898dcd2afee2b6000d745131c1095d408ebb49b 100644
 --- a/utils/routing/index.ts
 +++ b/utils/routing/index.ts
 @@ -1,20 +1,29 @@
@@ -169,7 +169,7 @@ index 460d15a778f3ea47e8df62bf8d217edf4b482e34..e5e262ab5e76d16845efbfb0ccdcf6cd
 -		...slugToLocaleData(entry.slug),
 -	}));
 +  const routes: Route[] = docs.map((entry) => ({
-+    entry,
++    entry: {...entry, id: cleanSegment(entry.id)},
 +    slug: cleanSegment(entry.slug),
 +    id: cleanSegment(entry.id),
 +    entryMeta: slugToLocaleData(cleanSegment(entry.slug)),

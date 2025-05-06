@@ -8,7 +8,6 @@ export const onRequest = defineRouteMiddleware((context) => {
   const { starlightRoute } = context.locals
   const { entry, locale, pagination, sidebar } = starlightRoute
 
-  console.log('starlightVersionsConfig ', starlightVersionsConfig)
   starlightRoute.sidebar = getVersionSidebar(
     getVersionFromSlug(starlightVersionsConfig, starlightConfig, entry.slug),
     sidebar,

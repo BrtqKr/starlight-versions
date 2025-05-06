@@ -21,7 +21,6 @@ const tsVersions = versions.filter((version) => version.slug.includes('ts-sdk/')
 const httpVersions = versions.filter((version) => version.slug.includes('http-api/'))
 
 const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, id)
-const testVersion = getVersionFromSlug(starlightVersionsConfig, starlightConfig, id)
 ---
 
 <starlight-version-select>

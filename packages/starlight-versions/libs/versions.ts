@@ -182,9 +182,11 @@ export function getVersionSidebar(version: Version | undefined, sidebar: Starlig
     )
   }
 
-  console.log("VERSION ", JSON.stringify(version?.slug ?? currentVersionSidebarGroupLabel.toString()))
-  console.log("SIDEBAR ", JSON.stringify(sidebar, null, 2))
-  console.log("GET VERSION SIDEBAR ", JSON.stringify(sidebarVersionGroup.entries, null, 2))
+  // console.log('VERSION ', version)
+  // console.log('CONFIG ', JSON.stringify(config, null, 2))
+  // console.log("VERSION ", JSON.stringify(version?.slug ?? currentVersionSidebarGroupLabel.toString()))
+  // console.log("SIDEBAR ", JSON.stringify(sidebar, null, 2))
+  // console.log("GET VERSION SIDEBAR ", JSON.stringify(sidebarVersionGroup.entries, null, 2))
   return [...sidebarVersionGroup.entries]
 }
 
@@ -287,6 +289,7 @@ export function getVersionFromSlug(
   starlightConfig: StarlightConfig,
   slug: string,
 ): Version | undefined {
+  console.log('SLUG ', slug)
   const segments = slug.split('/')
 
   const versionOrLocaleSegment = segments[0]
