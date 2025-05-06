@@ -45,7 +45,6 @@ export default function starlightVersionsPlugin(userConfig: StarlightVersionsUse
 
           const versionedSidebar = await getVersionedSidebar(config, starlightConfig.sidebar, astroConfig.srcDir)
 
-          console.log('VERSIONED SIDEBAR ', JSON.stringify(versionedSidebar, null, 2))
           updateConfig({
             components: overrideComponents(
               starlightConfig,

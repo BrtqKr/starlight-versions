@@ -148,16 +148,30 @@ export async function getVersionedSidebar(
     },
   ]
 
+  // console.log('versions sidebar ', JSON.stringify(currentSidebar, null, 2))
+  // const commonVersionGroups = getCommonVersionGroups(config, srcDir, currentSidebar)
+  
+  // for (const version of commonVersionGroups) {
+  //   sidebar.push(version)
+  // }
+  
   for (const version of config.versions) {
-    const versionSidebar = await getSidebarVersionGroup(version, srcDir)
+    const versionSidebar = await getSidebarVersionGroup(version, srcDir, currentSidebar)
     sidebar.push(versionSidebar)
   }
   
   return sidebar
 }
 
-// A version is considered as the current version if it's undefined.
-export function getVersionSidebar(version: Version | undefined, sidebar: StarlightSidebar): StarlightSidebar {
+export function getVersionSidebar(version: Version | undefined, sidebar: StarlightSidebar, config: StarlightVersionsConfig): StarlightSidebar {
+
+  // const commonVersionGroups = getCommonVersionGroups(config, config.)
+  
+  // console.log('middleware CONFIG ', JSON.stringify(sidebar, null, 2))
+  // let commonGroups = []
+  // for (const version of commonVersionGroups) {
+  //   commonGroups.push(version)
+  // }
   const sidebarVersionGroup = sidebar.find(
     (item) => item.label === (version?.slug ?? currentVersionSidebarGroupLabel.toString()),
   )
@@ -168,7 +182,10 @@ export function getVersionSidebar(version: Version | undefined, sidebar: Starlig
     )
   }
 
-  return sidebarVersionGroup.entries
+  console.log("VERSION ", JSON.stringify(version?.slug ?? currentVersionSidebarGroupLabel.toString()))
+  console.log("SIDEBAR ", JSON.stringify(sidebar, null, 2))
+  console.log("GET VERSION SIDEBAR ", JSON.stringify(sidebarVersionGroup.entries, null, 2))
+  return [...sidebarVersionGroup.entries]
 }
 
 function removeVersion(url: string) {
@@ -342,22 +359,42 @@ export function getVersionFromPaginationLink(
   return config.versions.find((version) => version.slug === versionSegment)
 }
 
-async function getSidebarVersionGroup(version: Version, srcDir: URL) {
+function getCommonVersionGroups(config: StarlightVersionsConfig, currentSidebar: StarlightSidebarUserConfig) {
+  const versionRegex = /[-+]?[0-9]*\.?[0-9]+/;
+  const versions = config.versions
+
+  const versionSlugs = new Set(versions.map((version) => version.slug.split('/')[0]))
+  
+  const filteredSidebar = currentSidebar?.filter((sidebarEntry) => {
+    if(typeof sidebarEntry === 'string') return false
+    else if("autogenerate" in sidebarEntry) {
+      return !versionRegex.test(sidebarEntry.autogenerate.directory) && !versionSlugs.has(sidebarEntry.autogenerate.directory)
+    } else if("items" in sidebarEntry) {
+      return true
+    }
+    return false
+  })
+  
+  return filteredSidebar ?? []
+}
+
+async function getSidebarVersionGroup(version: Version, srcDir: URL, currentSidebar: StarlightSidebarUserConfig) {
   const versionConfig = await getVersionConfig(version, srcDir)
 
+  // console.log('CURRENT SIDEBAR ', currentSidebar)
   if (!versionConfig.sidebar) {
     return {
       label: version.slug,
       autogenerate: { directory: version.slug },
     }
   }
-
-  // console.log("GET GROUP ", JSON.stringify(versionConfig.sidebar, null, 2))
+  
   const test = {
     label: version.slug,
     items: addPrefixToSidebarConfig(version.slug, versionConfig.sidebar),
   }
-
+  
+  // console.log('TEST ', JSON.stringify(test, null, 2))
   return test
 }
 
@@ -420,7 +457,6 @@ async function makeVersionConfig(version: Version, starlightConfig: StarlightUse
     //     version.slug.includes(sidebarItem?.autogenerate?.directory),
     // )
     ?.map((item) => {
-      console.log('ITEM ', item)
       if (
         item.autogenerate &&
         item.autogenerate.directory === path) {

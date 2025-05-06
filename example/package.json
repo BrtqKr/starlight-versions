@@ -12,7 +12,6 @@
     "lint": "eslint . --cache --max-warnings=0"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.32.0",
     "astro": "^5.3.0",
     "sharp": "^0.33.5",
     "starlight-versions": "workspace:*"
@@ -37,10 +36,5 @@
     "url": "https://github.com/HiDeoo/starlight-versions.git",
     "directory": "example"
   },
-  "bugs": "https://github.com/HiDeoo/starlight-versions/issues",
-  "pnpm": {
-    "patchedDependencies": {
-      "@astrojs/starlight@0.32.0": "patches/@astrojs__starlight@0.32.0.patch"
-    }
-  }
+  "bugs": "https://github.com/HiDeoo/starlight-versions/issues"
 }

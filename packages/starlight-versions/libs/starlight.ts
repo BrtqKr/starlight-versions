@@ -86,8 +86,6 @@ export function addPrefixToSidebarConfig(
 }
 
 function addPrefixToSlug(prefix: string, slug: string) {
-    console.log(`${prefix}/${slug}`)
-
   return `${prefix}/${slug}`
 }
 

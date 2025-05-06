@@ -44,5 +44,13 @@
     "type": "git",
     "url": "https://github.com/HiDeoo/starlight-versions.git"
   },
-  "bugs": "https://github.com/HiDeoo/starlight-versions/issues"
+  "bugs": "https://github.com/HiDeoo/starlight-versions/issues",
+  "dependencies": {
+    "@astrojs/starlight": "0.32.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@astrojs/starlight@0.32.0": "patches/@astrojs__starlight@0.32.0.patch"
+    }
+  }
 }
