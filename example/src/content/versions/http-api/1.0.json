@@ -21,13 +21,7 @@
     {
       "label": "HTTP API",
       "autogenerate": {
-        "directory": "http-api"
-      }
-    },
-    {
-      "label": "TS SDK",
-      "autogenerate": {
-        "directory": "versions/ts-sdk/1.0"
+        "directory": "versions/http-api/1.0"
       }
     }
   ]

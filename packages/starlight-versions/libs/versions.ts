@@ -289,25 +289,24 @@ export function getVersionFromSlug(
   starlightConfig: StarlightConfig,
   slug: string,
 ): Version | undefined {
-  console.log('SLUG ', slug)
-  const segments = slug.split('/')
-
+  const segments =  slug.split('/')
+  
   const versionOrLocaleSegment = segments[0]
-
+  
   if (!versionOrLocaleSegment) return undefined
   
   const fullVersionSegment = /^[-+]?[0-9]*\.?[0-9]+$/.test(versionOrLocaleSegment) ? versionOrLocaleSegment : `${segments[0]}/${segments[1]}`
-
+  
   const version = config.versions.find((version) => version.slug === fullVersionSegment)
   
   if (version) return version
-
+  
   const locales = Object.keys(starlightConfig.locales ?? {})
-
+  
   if (!locales.includes(versionOrLocaleSegment)) return undefined
-
+  
   const versionSegment = segments[1]
-
+  
   return config.versions.find((version) => version.slug === versionSegment)
 }
 

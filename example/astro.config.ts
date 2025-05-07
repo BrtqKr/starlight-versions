@@ -12,6 +12,10 @@ export default defineConfig({
               slug: 'ts-sdk/1.0',
               label: 'ts-sdk v1.0',
             },
+            {
+              slug: 'http-api/1.0',
+              label: 'http-api v1.0',
+            },
           ],
         }),
       ],
@@ -27,6 +31,10 @@ export default defineConfig({
         {
           label: 'Guides',
           autogenerate: { directory: 'guides' },
+        },
+        {
+          label: 'HTTP API',
+          autogenerate: { directory: 'http-api' },
         },
         {
           label: 'TS SDK',
