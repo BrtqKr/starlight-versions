@@ -27,12 +27,14 @@ const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, i
   <label>
     <span class="sr-only">Select version</span>
     <Icon name={iconName} class="icon label-icon" />
-    <select value={pageVersion?.label ?? 'current'} autocomplete="off">
+    <select id="version-select" value={pageVersion?.label ?? 'current'} autocomplete="off">
       <option
         selected={pageVersion === undefined}
         value={getVersionURL(starlightVersionsConfig, starlightConfig, Astro.url, undefined).pathname}
         >{starlightVersionsConfig.current.label}</option
       >
+      {(tsVersions.length > 0 || httpVersions.length > 0) && <option disabled>──────────</option>}
+
       {
         tsVersions.map((version) => (
           <option
@@ -120,6 +122,50 @@ const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, i
 </style>
 
 <script>
+  import StarlightVersionsConfig from 'virtual:starlight-versions-config'
+
+  function setSelectValueFromSessionStorage() {
+    const selectBox = document.getElementById('version-select') as HTMLSelectElement
+    const savedVersionSlug = sessionStorage.getItem('selectedVersion')
+    if (selectBox && savedVersionSlug) {
+      const options = Array.from(selectBox.options)
+      const matchOption = options.find((option) => option.value.includes(savedVersionSlug))
+      if (matchOption) {
+        selectBox.value = matchOption.value
+      }
+    }
+  }
+
+  function updateSessionStorage() {
+    const selectBox = document.getElementById('version-select') as HTMLSelectElement
+    const selectedValue = selectBox.value
+      .split('/')
+      .filter((part) => part !== '')
+      .slice(0, 2)
+      .join('/')
+
+    console.log('OPTIONS ', JSON.stringify(StarlightVersionsConfig.versions.map((version) => version.slug)))
+
+    sessionStorage.setItem('selectedVersion', `/${selectedValue}/`)
+
+    console.log('UPDATE STORAGE')
+  }
+
+  // function updateSessionStorage() {
+  //   const selectBox = document.getElementById('version-select') as HTMLSelectElement
+  //   const selectedValue = selectBox.value
+  //     .split('/')
+  //     .filter((part) => part !== '')
+  //     .slice(0, 2)
+  //     .join('/')
+
+  //   const optionSlugs = StarlightVersionsConfig.versions.map((version) => version.slug)
+
+  //   if (optionSlugs.some((slug) => slug === selectedValue))
+  //     sessionStorage.setItem('selectedVersion', `/${selectedValue}/`)
+  //   else sessionStorage.removeItem('selectedVersion')
+  // }
+
   customElements.define(
     'starlight-version-select',
     class StarlightVersionSelect extends HTMLElement {
@@ -129,9 +175,20 @@ const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, i
         const select = this.querySelector('select')
         if (!select) return
 
+        setSelectValueFromSessionStorage()
+
         select?.addEventListener('change', (event) => {
           if (event.currentTarget instanceof HTMLSelectElement) {
-            globalThis.location.pathname = event.currentTarget.value
+            updateSessionStorage()
+            console.log('test path', globalThis.location.pathname)
+            const versionedSegment = globalThis.location.pathname.split('/')[1]
+            const isVersionedPath =
+              !!versionedSegment &&
+              StarlightVersionsConfig.versions
+                .map((version) => version.slug)
+                .some((slug) => slug.includes(versionedSegment))
+
+            if (isVersionedPath) globalThis.location.pathname = event.currentTarget.value
           }
         })
 

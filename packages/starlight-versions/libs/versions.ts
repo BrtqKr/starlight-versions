@@ -280,6 +280,7 @@ export function getVersionURL(
     versionURL.pathname = base + versionURL.pathname
   }
 
+  console.log('VERSION URL ', versionURL.pathname)
   return versionURL
 }
 

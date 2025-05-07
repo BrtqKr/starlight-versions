@@ -48,8 +48,6 @@ export const onRequest = defineRouteMiddleware((context) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   starlightRoute.sidebar =  getVersionFromSlug(starlightVersionsConfig, starlightConfig, entry.slug) ? [...baseSidebarEntries, ...versionSidebarEntries] : commonSidebarEntries
   
-  const versions = Object.keys(starlightVersionsConfig.versionsBySlug)
-
   const pageVersion = getVersionFromSlug(starlightVersionsConfig, starlightConfig, entry.slug)
 
   starlightRoute.pagination.prev = getPaginationLink(locale, pageVersion, pagination.prev)
