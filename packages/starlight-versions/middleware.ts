@@ -5,22 +5,23 @@ import starlightVersionsConfig from 'virtual:starlight-versions-config'
 import { getVersionFromPaginationLink, getVersionFromSlug, getVersionSidebar, type Version } from './libs/versions'
 
 const versionRegex = /(?:ts-sdk|http-api)\/\d+(\.\d+)*$/;
+const versionedSectionRegex = /(?:ts-sdk|http-api)\//;
 
-function containsVersionHref(entries: any[]): boolean {
+function containsHref(entries: any[], regex: RegExp): boolean {
     return entries.some(entry => {
-        if (entry.type === 'link' && entry.href && versionRegex.test(entry.href)) {
+        if (entry.type === 'link' && entry.href && regex.test(entry.href)) {
             return true;
         }
         if (entry.type === 'group' && entry.entries) {
-            return containsVersionHref(entry.entries); // Recursive search in the case of nested groups
+            return containsHref(entry.entries, regex); // Recursive search in the case of nested groups
         }
         return false;
     });
 }
 
-function filterGroups(groups: any[]): any[] {
+function filterGroups(groups: any[], regex: RegExp): any[] {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    return groups.filter(group => !containsVersionHref(group.entries));
+    return groups.filter(group => !containsHref(group.entries, regex));
 }
 
 export const onRequest = defineRouteMiddleware((context) => {
@@ -32,7 +33,9 @@ export const onRequest = defineRouteMiddleware((context) => {
     getVersionFromSlug(starlightVersionsConfig, starlightConfig, ''),
     sidebar,
     starlightVersionsConfig
-  ))
+  ), versionRegex)
+
+  const baseSidebarEntries = filterGroups(commonSidebarEntries, versionedSectionRegex)
 
   const versionSidebarEntries = getVersionSidebar(
     getVersionFromSlug(starlightVersionsConfig, starlightConfig, entry.slug),
@@ -43,10 +46,8 @@ export const onRequest = defineRouteMiddleware((context) => {
 
   
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  starlightRoute.sidebar = commonSidebarEntries
+  starlightRoute.sidebar =  getVersionFromSlug(starlightVersionsConfig, starlightConfig, entry.slug) ? [...baseSidebarEntries, ...versionSidebarEntries] : commonSidebarEntries
   
-
-  console.log('TEST ', JSON.stringify(versionSidebarEntries, null, 2))
   const versions = Object.keys(starlightVersionsConfig.versionsBySlug)
 
   const pageVersion = getVersionFromSlug(starlightVersionsConfig, starlightConfig, entry.slug)
