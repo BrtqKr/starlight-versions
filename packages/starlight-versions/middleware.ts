@@ -24,11 +24,15 @@ function filterGroups(groups: any[], regex: RegExp): any[] {
     return groups.filter(group => !containsHref(group.entries, regex));
 }
 
-export const onRequest = defineRouteMiddleware((context) => {
+export const onRequest = defineRouteMiddleware(async (context, next) => {
+
   const { starlightRoute } = context.locals
   const { entry, locale, pagination, sidebar } = starlightRoute
 
-  
+  const selectedVersion = await context.session?.get("selectedVersion");
+
+  console.log('VERSION middleware', selectedVersion)
+
   const commonSidebarEntries = filterGroups(getVersionSidebar(
     getVersionFromSlug(starlightVersionsConfig, starlightConfig, ''),
     sidebar,
@@ -52,6 +56,8 @@ export const onRequest = defineRouteMiddleware((context) => {
 
   starlightRoute.pagination.prev = getPaginationLink(locale, pageVersion, pagination.prev)
   starlightRoute.pagination.next = getPaginationLink(locale, pageVersion, pagination.next)
+
+  return next()
 })
 
 function getPaginationLink(locale: string | undefined, currentVersion: Version | undefined, link: PaginationLink) {

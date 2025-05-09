@@ -4,6 +4,7 @@ import type { StarlightIcon } from '@astrojs/starlight/types'
 import starlightConfig from 'virtual:starlight/user-config'
 import starlightVersionsConfig from 'virtual:starlight-versions-config'
 import StarlightVersionsConfig from 'virtual:starlight-versions-config'
+import { actions } from 'astro:actions'
 
 import { getActiveVersion, getVersionFromSlug, getVersionURL } from '../libs/versions'
 
@@ -15,19 +16,46 @@ interface Props {
 
 const { iconName } = Astro.props
 
+// function updateSessionStorage(value: FormDataEntryValue | null) {
+//   if (!value || typeof value !== 'string') return
+//   const selectedValue = value
+//     .split('/')
+//     .filter((part) => part !== '')
+//     .slice(0, 2)
+//     .join('/')
+
+//   const optionSlugs = StarlightVersionsConfig.versions.map((version) => version.slug)
+
+//   if (optionSlugs.includes(selectedValue)) Astro.session?.set('selectedVersion', `${selectedValue}`)
+//   else Astro.session?.delete('selectedVersion')
+// }
+
+// if (Astro.request.method === 'POST') {
+//   try {
+//     const data = await Astro.request.formData()
+//     updateSessionStorage(data.get('selectedVersion'))
+//   } catch (error) {
+//     if (error instanceof Error) {
+//       console.error(error.message)
+//     }
+//   }
+// }
+
 const versions = StarlightVersionsConfig.versions
 
 const tsVersions = versions.filter((version) => version.slug.includes('ts-sdk/'))
 const httpVersions = versions.filter((version) => version.slug.includes('http-api/'))
 
 const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, id)
+
+const currentVersion = await Astro.session?.get('selectedVersion')
 ---
 
 <starlight-version-select>
   <label>
     <span class="sr-only">Select version</span>
     <Icon name={iconName} class="icon label-icon" />
-    <select id="version-select" value={pageVersion?.label ?? 'current'} autocomplete="off">
+    <select id="version-select" value={currentVersion ?? 'current'} autocomplete="off">
       <option
         selected={pageVersion === undefined}
         value={getVersionURL(starlightVersionsConfig, starlightConfig, Astro.url, undefined).pathname}
@@ -122,49 +150,20 @@ const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, i
 </style>
 
 <script>
-  import StarlightVersionsConfig from 'virtual:starlight-versions-config'
+  // import StarlightVersionsConfig from 'virtual:starlight-versions-config'
 
-  function setSelectValueFromSessionStorage() {
-    const selectBox = document.getElementById('version-select') as HTMLSelectElement
-    const savedVersionSlug = sessionStorage.getItem('selectedVersion')
-    if (selectBox && savedVersionSlug) {
-      const options = Array.from(selectBox.options)
-      const matchOption = options.find((option) => option.value.includes(savedVersionSlug))
-      if (matchOption) {
-        selectBox.value = matchOption.value
-      }
-    }
-  }
-
-  function updateSessionStorage() {
-    const selectBox = document.getElementById('version-select') as HTMLSelectElement
-    const selectedValue = selectBox.value
-      .split('/')
-      .filter((part) => part !== '')
-      .slice(0, 2)
-      .join('/')
-
-    console.log('OPTIONS ', JSON.stringify(StarlightVersionsConfig.versions.map((version) => version.slug)))
-
-    sessionStorage.setItem('selectedVersion', `/${selectedValue}/`)
-
-    console.log('UPDATE STORAGE')
-  }
-
-  // function updateSessionStorage() {
-  //   const selectBox = document.getElementById('version-select') as HTMLSelectElement
-  //   const selectedValue = selectBox.value
-  //     .split('/')
-  //     .filter((part) => part !== '')
-  //     .slice(0, 2)
-  //     .join('/')
-
-  //   const optionSlugs = StarlightVersionsConfig.versions.map((version) => version.slug)
-
-  //   if (optionSlugs.some((slug) => slug === selectedValue))
-  //     sessionStorage.setItem('selectedVersion', `/${selectedValue}/`)
-  //   else sessionStorage.removeItem('selectedVersion')
+  // async function setSelectValueFromSessionStorage() {
+  // const selectBox = document.getElementById('version-select') as HTMLSelectElement
+  // const savedVersionSlug = await Astro.session?.get('selectedVersion')
+  // if (selectBox && savedVersionSlug) {
+  //   const options = Array.from(selectBox.options)
+  //   const matchOption = options.find((option) => option.value.includes(savedVersionSlug))
+  //   if (matchOption) {
+  //     selectBox.value = matchOption.value
+  //   }
   // }
+  // }
+  import { actions } from 'astro:actions'
 
   customElements.define(
     'starlight-version-select',
@@ -173,35 +172,39 @@ const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, i
         super()
 
         const select = this.querySelector('select')
-        if (!select) return
+        if (!select) {
+          console.log('NO SELECT')
+          return
+        }
 
-        setSelectValueFromSessionStorage()
+        select?.addEventListener('change', async (event) => {
+          const version = event.currentTarget.value
+          console.log('SELECT ', version)
 
-        select?.addEventListener('change', (event) => {
-          if (event.currentTarget instanceof HTMLSelectElement) {
-            updateSessionStorage()
-            console.log('test path', globalThis.location.pathname)
-            const versionedSegment = globalThis.location.pathname.split('/')[1]
-            const isVersionedPath =
-              !!versionedSegment &&
-              StarlightVersionsConfig.versions
-                .map((version) => version.slug)
-                .some((slug) => slug.includes(versionedSegment))
+          // Creating FormData to send
+          const formData = new FormData()
+          formData.append('version', version)
 
-            if (isVersionedPath) globalThis.location.pathname = event.currentTarget.value
-          }
+          // Assuming your actions are set up to trigger the endpoint correctly
+          await actions.updateSelectedVersion(formData)
         })
 
-        window.addEventListener('pageshow', (event) => {
-          if (!event.persisted) return
-          const markupSelectedIndex = select.querySelector<HTMLOptionElement>('option[selected]')?.index
+        // setSelectValueFromSessionStorage()
 
-          // If the page was loaded from a cache, the version select selected index might not be in sync with the
-          // current page.
-          if (markupSelectedIndex !== select.selectedIndex) {
-            select.selectedIndex = markupSelectedIndex ?? 0
-          }
-        })
+        // select?.addEventListener('change', (event) => {
+        //   if (event.currentTarget instanceof HTMLSelectElement) {
+        //     updateSessionStorage()
+        //     console.log('test path', globalThis.location.pathname)
+        //     const versionedSegment = globalThis.location.pathname.split('/')[1]
+        //     const isVersionedPath =
+        //       !!versionedSegment &&
+        //       StarlightVersionsConfig.versions
+        //         .map((version) => version.slug)
+        //         .some((slug) => slug.includes(versionedSegment))
+
+        //     if (isVersionedPath) globalThis.location.pathname = event.currentTarget.value
+        //   }
+        // })
       }
     }
   )

@@ -2,8 +2,10 @@ import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
 
 export default defineConfig({
+  output: 'server',
   integrations: [
     starlight({
+      prerender: false,
       customCss: ['./src/styles/custom.css'],
       editLink: {
         baseUrl: 'https://github.com/HiDeoo/starlight-versions/edit/main/docs/',

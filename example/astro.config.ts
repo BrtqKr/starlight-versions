@@ -1,10 +1,13 @@
 import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
 import starlightVersions from 'starlight-versions'
+import node from '@astrojs/node';
 
 export default defineConfig({
+  output: 'server',
   integrations: [
     starlight({
+      prerender: false,
       plugins: [
         starlightVersions({
           versions: [
@@ -49,4 +52,7 @@ export default defineConfig({
     }),
   ],
   site: 'https://starlight-versions-example.vercel.app',
+  adapter: node({
+    mode: 'standalone',
+  }),
 })
