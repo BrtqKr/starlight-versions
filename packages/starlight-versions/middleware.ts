@@ -29,9 +29,7 @@ export const onRequest = defineRouteMiddleware(async (context, next) => {
   const { starlightRoute } = context.locals
   const { entry, locale, pagination, sidebar } = starlightRoute
 
-  const selectedVersion = await context.session?.get("selectedVersion");
-
-  console.log('VERSION middleware', selectedVersion)
+  const selectedVersion = context.cookies.get('selectedVersion')
 
   const commonSidebarEntries = filterGroups(getVersionSidebar(
     getVersionFromSlug(starlightVersionsConfig, starlightConfig, ''),
@@ -41,16 +39,16 @@ export const onRequest = defineRouteMiddleware(async (context, next) => {
 
   const baseSidebarEntries = filterGroups(commonSidebarEntries, versionedSectionRegex)
 
-  const versionSidebarEntries = getVersionSidebar(
-    getVersionFromSlug(starlightVersionsConfig, starlightConfig, entry.slug),
+  const versionSidebarEntries = selectedVersion?.value ? getVersionSidebar(
+    getVersionFromSlug(starlightVersionsConfig, starlightConfig, selectedVersion.value),
     sidebar,
     starlightVersionsConfig
-  )
+  ) : []
   
+  console.log('VERSION middleware', selectedVersion?.value)
 
-  
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  starlightRoute.sidebar =  getVersionFromSlug(starlightVersionsConfig, starlightConfig, entry.slug) ? [...baseSidebarEntries, ...versionSidebarEntries] : commonSidebarEntries
+  starlightRoute.sidebar =  selectedVersion?.value && getVersionFromSlug(starlightVersionsConfig, starlightConfig, selectedVersion.value) ? [...baseSidebarEntries, ...versionSidebarEntries] : commonSidebarEntries
   
   const pageVersion = getVersionFromSlug(starlightVersionsConfig, starlightConfig, entry.slug)
 
