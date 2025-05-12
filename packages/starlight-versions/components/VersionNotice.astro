@@ -15,7 +15,7 @@ const pageVersion = getVersionFromSlug(starlightVersionsConfig, starlightConfig,
       <span>
         This content is for {pageVersion.label ?? `the ${pageVersion.slug} version`}. Switch to the
         {/* prettier-ignore */}
-        <a href={getVersionURL(starlightVersionsConfig, starlightConfig, Astro.url, undefined).pathname}>latest version</a>
+        <a id="version-switch-link" href={getVersionURL(starlightVersionsConfig, starlightConfig, Astro.url, undefined).pathname}>latest version</a>
         for up-to-date documentation.
       </span>
     </p>
@@ -45,3 +45,25 @@ const pageVersion = getVersionFromSlug(starlightVersionsConfig, starlightConfig,
     flex-shrink: 0;
   }
 </style>
+
+<script>
+  import { navigate } from 'astro:transitions/client'
+
+  const handleNewVersion = (href: string | null) => {
+    if (href) {
+      document.cookie = 'selectedVersion=current; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      navigate(href)
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const link = document.getElementById('version-switch-link')
+    if (link) {
+      const href = link.getAttribute('href')
+      link.removeEventListener('click', () => handleNewVersion(href))
+      link.addEventListener('click', () => {
+        handleNewVersion(href)
+      })
+    }
+  })
+</script>

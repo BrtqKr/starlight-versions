@@ -4,7 +4,7 @@ import type { StarlightIcon } from '@astrojs/starlight/types'
 import starlightConfig from 'virtual:starlight/user-config'
 import starlightVersionsConfig from 'virtual:starlight-versions-config'
 
-import { getActiveVersion, getVersionURL } from '../libs/versions'
+import { getVersionURL } from '../libs/versions'
 
 const cookieVersion = Astro.cookies.get('selectedVersion')?.value || ''
 // const parsedCookies = cookies
@@ -17,8 +17,6 @@ const activeVersion = cookieVersion
   .slice(0, 2)
   .join('/')
 
-const { id } = Astro.locals.starlightRoute
-
 interface Props {
   iconName: StarlightIcon
 }
@@ -30,7 +28,6 @@ const versions = starlightVersionsConfig.versions
 const tsVersions = versions.filter((version) => version.slug.includes('ts-sdk/'))
 const httpVersions = versions.filter((version) => version.slug.includes('http-api/'))
 
-const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, id)
 ---
 
 <starlight-version-select>
@@ -128,7 +125,6 @@ const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, i
 </style>
 
 <script>
-  import { actions } from 'astro:actions'
   import { navigate } from 'astro:transitions/client'
   const versionRegex = /\/[0-9]+(\.[0-9]+)?\//g
 
@@ -145,7 +141,7 @@ const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, i
         }
 
         select?.addEventListener('change', async (event) => {
-          const version = event.currentTarget.value
+          const version = (event.currentTarget as HTMLSelectElement | null )?.value
 
           const selectedValue = version
             ? version
@@ -155,13 +151,20 @@ const pageVersion = getActiveVersion(starlightVersionsConfig, starlightConfig, i
                 .join('/')
             : 'current'
 
-          document.cookie = `selectedVersion=${selectedValue}; path=/; Secure; SameSite=Strict;`
+          document.cookie = `selectedVersion=${selectedValue.replace('versionless:', '')}; path=/; Secure; SameSite=Strict;`
+
+          if (selectedValue !== 'current' && selectedValue.includes('versionless:')) {
+            console.log('PREVENTED')
+            navigate(window.location.pathname)
+            return
+          }
+
           let currentPath = window.location.pathname
           let newPath = version === 'current' ? currentPath.replace(versionRegex, '/') : version
 
-          navigate(newPath)
+          if(newPath) navigate(newPath)
         })
       }
-    },
+    }
   )
 </script>

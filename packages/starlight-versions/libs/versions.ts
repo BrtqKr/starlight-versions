@@ -208,6 +208,10 @@ export function getVersionURL(
   version: Version | undefined,
 ): URL {
   const versionURL = new URL(url)
+  console.log('URL ', versionURL.pathname)
+  console.log('VERSION ', version)
+  const versionFullRegex = /(?:ts-sdk|http-api)\/\d+(\.\d+)*$/
+
   const versionSlug = version?.slug ?? ''
   const versionRedirect = version?.redirect ?? config.current.redirect
 
@@ -280,7 +284,9 @@ export function getVersionURL(
     versionURL.pathname = base + versionURL.pathname
   }
 
-  // console.log('VERSION URL ', versionURL.pathname)
+  if(version && !versionFullRegex.test(versionURL.pathname) && firstSegment && !versionURL.pathname.includes('ts-sdk') && !versionURL.pathname.includes('http-api')) {
+    versionURL.pathname = `versionless:${version.slug}`
+  }
   return versionURL
 }
 
