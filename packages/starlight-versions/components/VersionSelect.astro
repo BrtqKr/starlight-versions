@@ -27,7 +27,6 @@ const versions = starlightVersionsConfig.versions
 
 const tsVersions = versions.filter((version) => version.slug.includes('ts-sdk/'))
 const httpVersions = versions.filter((version) => version.slug.includes('http-api/'))
-
 ---
 
 <starlight-version-select>
@@ -141,7 +140,7 @@ const httpVersions = versions.filter((version) => version.slug.includes('http-ap
         }
 
         select?.addEventListener('change', async (event) => {
-          const version = (event.currentTarget as HTMLSelectElement | null )?.value
+          const version = (event.currentTarget as HTMLSelectElement | null)?.value
 
           const selectedValue = version
             ? version
@@ -151,18 +150,23 @@ const httpVersions = versions.filter((version) => version.slug.includes('http-ap
                 .join('/')
             : 'current'
 
-          document.cookie = `selectedVersion=${selectedValue.replace('versionless:', '')}; path=/; Secure; SameSite=Strict;`
-
           if (selectedValue !== 'current' && selectedValue.includes('versionless:')) {
-            console.log('PREVENTED')
+            document.cookie = `selectedVersion=${selectedValue.replace('versionless:', '')}; path=/; Secure; SameSite=Strict;`
             navigate(window.location.pathname)
             return
           }
 
+          if (selectedValue !== 'current' && selectedValue.includes('incompatible:')) {
+            document.cookie = `selectedVersion=${selectedValue.replace('incompatible:', '')}; path=/; Secure; SameSite=Strict;`
+            navigate('/fundamentals/getting-started')
+            return
+          }
+
+          document.cookie = `selectedVersion=${selectedValue}; path=/; Secure; SameSite=Strict;`
           let currentPath = window.location.pathname
           let newPath = version === 'current' ? currentPath.replace(versionRegex, '/') : version
 
-          if(newPath) navigate(newPath)
+          if (newPath) navigate(newPath)
         })
       }
     }

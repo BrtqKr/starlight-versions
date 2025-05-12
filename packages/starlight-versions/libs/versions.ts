@@ -287,6 +287,12 @@ export function getVersionURL(
   if(version && !versionFullRegex.test(versionURL.pathname) && firstSegment && !versionURL.pathname.includes('ts-sdk') && !versionURL.pathname.includes('http-api')) {
     versionURL.pathname = `versionless:${version.slug}`
   }
+
+  if((firstSegment === 'http-api' &&  version?.slug.includes('ts-sdk') )|| (firstSegment === 'ts-sdk' &&  version?.slug.includes('http-api'))) {
+    versionURL.pathname = `incompatible:${version.slug}`  
+  }
+
+
   return versionURL
 }
 
