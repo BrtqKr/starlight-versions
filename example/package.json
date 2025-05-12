@@ -9,7 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "lint": "eslint . --cache --max-warnings=0"
+    "lint": "eslint . --cache --max-warnings=0",
+    "reset": "rm -rf src/content/versions && rm -rf src/content/docs/versions"
   },
   "dependencies": {
     "@astrojs/node": "^9.2.1",
