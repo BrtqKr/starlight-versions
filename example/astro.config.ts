@@ -28,18 +28,21 @@ export default defineConfig({
           items: [{ slug: 'getting-started' }, { label: 'Another Page', link: '/another-page/' }],
         },
         {
-          label: 'Guides',
-          autogenerate: { directory: 'guides' },
-        },
-        // {
-        //   label: 'HTTP API',
-        //   autogenerate: { directory: 'http-api' },
-        // },
-        {
           label: "TypeScript SDK",
           items: [
-            { label: "One", slug: "ts-sdk/one" },
-            { label: "Two", slug: "ts-sdk/two" },
+            { label: "TS PAGE 1", slug: "ts-sdk/ts-page" },
+            { label: "TS PAGE 2", slug: "ts-sdk/ts-page2" },
+            {
+              label: "Guides",
+              collapsed: true,
+              autogenerate: { directory: "ts-sdk/guides" },
+            },
+            {
+              label: "Inputs",
+              collapsed: true,
+              autogenerate: { directory: "ts-sdk/inputs" },
+            },
+
           ]
         },
       ],

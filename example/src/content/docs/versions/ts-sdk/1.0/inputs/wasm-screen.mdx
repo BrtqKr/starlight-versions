@@ -1,0 +1,28 @@
+---
+title: Screen capture (Web API)
+slug: ts-sdk/1.0/ts-sdk/inputs/wasm-screen
+---
+
+import { Aside, Badge, Code } from '@astrojs/starlight/components';
+import CollapsibleDetails from '../../../../../components/CollapsibleDetails.astro';
+
+<Badge text="Browser (WASM)" variant="tip" size="large" />
+
+<br />
+
+<br />
+
+An input that captures the screen output and audio using Web API `getDisplayMedia()`.
+
+## Usage
+
+```tsx title=screenCaptureInputExample.tsx
+import Smelter from "@swmansion/smelter-web-wasm"
+
+async function run() {
+    const smelter = new Smelter();
+    await smelter.init();
+    await smelter.registerInput('example', { type: 'screen_capture' })
+}
+void run()
+```

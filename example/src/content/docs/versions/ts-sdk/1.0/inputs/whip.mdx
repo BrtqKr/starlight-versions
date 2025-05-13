@@ -1,0 +1,147 @@
+---
+title: WHIP
+sidebar:
+  order: 1
+slug: ts-sdk/1.0/ts-sdk/inputs/whip
+---
+
+import { Aside, Badge, Code } from '@astrojs/starlight/components';
+import CollapsibleDetails from '../../../../../components/CollapsibleDetails.astro';
+
+<Badge text="Node.js" variant="tip" size="large" />
+
+<br />
+
+<br />
+
+An input type that allows streaming video and audio to Smelter over WHIP.
+
+Smelter exposes WHIP endpoint on port 9000 under `/whip/:input_id` route. A different port can be
+configured with [`SMELTER_WHIP_WHEP_SERVER_PORT`](/ts-sdk/1.0/deployment/configuration#smelter_whip_whep_server_port).
+
+To connect new input, register it first with [`Smelter.registerInput`](/ts-sdk/1.0/ts-sdk/smelter#registerinput) and
+then establish a WHIP connection.
+
+## Usage
+
+```tsx title=whipInputExample.tsx
+import Smelter from "@swmansion/smelter-node";
+
+async function run() {
+  const smelter = new Smelter();
+  await smelter.init();
+  const { bearerToken, endpointRoute } = await smelter.registerInput(
+    "example",
+    {
+      type: "whip",
+      video: { decoder: "ffmpeg_h264" },
+      audio: { decoder: "opus" }
+    }
+  );
+  // At this point you can establish WHIP connection to
+  // `http://localhost:9000${endpointRoute}` with token
+  // `bearerToken`
+}
+void run();
+```
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type RegisterWhipInput = {
+    type: "whip";
+    video?: InputWhipVideoOptions;
+    audio?: InputWhipAudioOptions;
+    required?: boolean;
+    offsetMs?: number;
+  };
+  ```
+</CollapsibleDetails>
+
+Parameters for registering an WHIP endpoint as an input.
+
+<Aside>At least one of `video` and `audio` has to be defined.</Aside>
+
+## Properties
+
+### video
+
+Parameters of a video included in the WHIP stream.
+
+* **Type**: [`InputWhipVideoOptions`](/ts-sdk/1.0/ts-sdk/inputs/whip#inputwhipvideooptions)
+
+***
+
+### audio
+
+Parameters of an audio included in the WHIP stream.
+
+* **Type**: [`InputWhipAudioOptions`](/ts-sdk/1.0/ts-sdk/inputs/whip#inputwhipaudiooptions)
+
+***
+
+### required
+
+Determines if the input stream is essential for output frame production. If set to true and the stream is delayed, Smelter will postpone output frames until the stream is received.
+
+* **Type**: `boolean`
+* **Default value**: `false`
+
+***
+
+### offsetMs
+
+Offset in milliseconds relative to the pipeline start (start request). If unspecified, the stream synchronizes based on the delivery time of the initial frames.
+
+* **Type**: `number`
+
+## InputWhipVideoOptions
+
+Parameters of a video source included in the WHIP stream.
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type InputWhipVideoOptions = {
+    decoder: "ffmpeg_h264" | "vulkan_video";
+  }
+  ```
+</CollapsibleDetails>
+
+### Properties
+
+#### decoder
+
+* **Type**: `"ffmpeg_h264" | "vulkan_video"`
+* **Supported values**:
+  * `"ffmpeg_h264"` - Use the software decoder based on ffmpeg.
+  * `"vulkan_video"` (<Badge text="Required feature:vk-video" variant="note" />) - Use hardware decoder based on Vulkan Video.
+
+    This should be faster and more scalable than the ffmpeg decoder, if the hardware and OS
+    support it.
+
+    This requires hardware that supports Vulkan Video. Another requirement is this program has
+    to be compiled with the `vk-video` feature enabled (enabled by default on platforms which
+    support Vulkan, i.e. non-Apple operating systems and not the web).
+
+## InputWhipAudioOptions
+
+Parameters of an audio source included in the WHIP stream.
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type InputWhipAudioOptions = {
+    decoder: "opus";
+    forwardErrorCorrection?: boolean;
+  }
+  ```
+</CollapsibleDetails>
+
+### Properties (decoder: "opus")
+
+#### forwardErrorCorrection
+
+Specifies whether the stream uses forward error correction. It's specific for the `Opus` codec. For more information, visit <a href="https://datatracker.ietf.org/doc/html/rfc6716#section-2.1.7" target="_blank">RFC specification</a>.
+
+* **Type**: `boolean`
+* **Default value**: `false`

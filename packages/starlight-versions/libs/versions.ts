@@ -75,7 +75,6 @@ export async function ensureNewVersion(
 
   const subsetVersionDir = new URL(`${docsDir}${path}/`)
 
-  console.log('subsetVersionDir ', subsetVersionDir)
   const locales = Object.keys(starlightConfig.locales ?? {})
 
   const assets: VersionAsset[] = []

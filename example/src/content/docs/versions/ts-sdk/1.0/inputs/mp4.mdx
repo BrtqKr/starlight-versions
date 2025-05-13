@@ -1,0 +1,128 @@
+---
+title: MP4
+sidebar:
+  order: 2
+slug: ts-sdk/1.0/ts-sdk/inputs/mp4
+---
+
+import { Aside, Badge, Code } from '@astrojs/starlight/components';
+import CollapsibleDetails from '../../../../../components/CollapsibleDetails.astro';
+
+<Badge text="Node.js" variant="tip" size="large" />
+
+<Badge text="Browser (WASM)" variant="tip" size="large" />
+
+<br />
+
+<br />
+
+An input type that allows Smelter to read static MP4 files.
+
+<Aside>
+  MP4 files can contain video and audio tracks encoded with various codecs. This input type supports MP4 video tracks encoded with `h264` and audio tracks encoded with `AAC`.
+
+  If the file contains multiple audio or video tracks, only the first audio track and the first video track will be processed; all additional tracks will be ignored.
+</Aside>
+
+<Aside type="caution"> <Badge text="Browser (WASM)" variant="tip" /> runtime (via package `@swmansion/smelter-web-wasm`) currently does not support audio from mp4 files.</Aside>
+
+## Usage
+
+```tsx title=mp4InputExample.tsx
+import Smelter from "@swmansion/smelter-node";
+
+async function run() {
+  const smelter = new Smelter();
+  await smelter.init();
+  await smelter.registerInput("example", {
+      type: "mp4",
+      serverPath: "./input.mp4"
+  });
+}
+void run();
+```
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type RegisterMp4Input = {
+    type: "mp4";
+    url?: string;
+    serverPath?: string;
+    loop?: bool;
+    required?: bool;
+    offsetMs?: number;
+    videoDecoder?: "ffmpeg_h264" | "vulkan_video";
+  }
+  ```
+</CollapsibleDetails>
+
+Parameters for registering an MP4 file as an input.
+
+<Aside>Exactly one of `url` or `serverPath` has to be defined.</Aside>
+
+## Properties
+
+### url
+
+URL of the MP4 file.
+
+* **Type**: `string`
+* **Option availability**: <Badge text="Node.js" variant="tip" />, <Badge text="Browser (WASM)" variant="tip" />
+
+***
+
+### serverPath
+
+Path to the MP4 file, specifying its location on the server where the Smelter instance is deployed.
+
+* **Type**: `string`
+* **Option availability**: <Badge text="Node.js" variant="tip" />
+
+***
+
+### loop
+
+Specifies whether the input should be played in a loop.
+
+* **Type**: `boolean`
+* **Default value**: `false`
+* **Option availability**: <Badge text="Node.js" variant="tip" />
+
+***
+
+### required
+
+Determines if the input stream is essential for output frame production. If set to true and the stream is delayed, Smelter will postpone output frames until the stream is received.
+
+* **Type**: `boolean`
+* **Default value**: `false`
+* **Option availability**: <Badge text="Node.js" variant="tip" />
+
+***
+
+### offsetMs
+
+Offset in milliseconds relative to the pipeline start (start request). If unspecified, the stream synchronizes based on the delivery time of the initial frames.
+
+* **Type**: `number`
+* **Option availability**: <Badge text="Node.js" variant="tip" />
+
+### videoDecoder
+
+The decoder to use for decoding video.
+
+* **Type**: `"ffmpeg_h264" | "vulkan_video"`
+* **Option availability**: <Badge text="Node.js" variant="tip" />
+* **Default value**: `ffmpeg_h264`
+* **Supported values**:
+  * `"ffmpeg_h264"` - Use the software decoder based on ffmpeg.
+  * `"vulkan_video"` (<Badge text="Required feature:vk-video" variant="note" />) - Use hardware decoder based on Vulkan Video.
+
+    This should be faster and more scalable than the ffmpeg decoder, if the hardware and OS
+    support it.
+
+    This requires hardware that supports Vulkan Video. Another requirement is this program has
+    to be compiled with the `vk-video` feature enabled (enabled by default on platforms which
+    support Vulkan, i.e. non-Apple operating systems and not the web).

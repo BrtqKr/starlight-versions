@@ -5,43 +5,81 @@ import path from 'node:path'
 import { ensureTrailingSlash } from './path'
 
 export function listDirectory(directory: URL) {
-  return fs.readdir(directory, {withFileTypes: true})
+  return fs.readdir(directory, {recursive: true, withFileTypes: true})
 }
 
+import { promises as fs } from 'fs';
+import { dirname, join } from 'path';
+
 export async function copyDirectory(sourceDir: URL, destDir: URL, callback: CopyDirectoryCallback, isRoot = true) {
-  const dirEntries = await listDirectory(sourceDir)
+  const dirEntries = await fs.readdir(new URL(sourceDir).pathname, { withFileTypes: true });
 
   if (isRoot && dirEntries.length === 0) {
-    throw new Error(
-      `Failed to copy the empty directory ('${sourceDir.pathname}') to the destination ('${destDir.pathname}').`,
-    )
+    throw new Error(`Failed to copy the empty directory ('${sourceDir.pathname}') to the destination ('${destDir.pathname}').`);
   }
 
-  await ensureDirectory(destDir)
+  await ensureDirectory(destDir);
 
   for (const entry of dirEntries) {
+    const sourceEntryPath = join(sourceDir.pathname, entry.name);
+    const destEntryPath = join(destDir.pathname, entry.name);
+    const entrySourceURL = new URL(`file://${sourceEntryPath}`);
+    let entryDestURL = new URL(`file://${destEntryPath}`);
+
     if (entry.isDirectory()) {
-      const source = new URL(ensureTrailingSlash(entry.name), sourceDir)
-      let dest = new URL(ensureTrailingSlash(entry.name), destDir)
+      const skipOrDest = await callback({ type: 'directory', name: entry.name, isRoot, dest: entryDestURL, source: entrySourceURL});
 
-      const skipOrDest = await callback({ type: 'directory', name: entry.name, isRoot, dest, source })
-      if (skipOrDest === true) continue
-      if (skipOrDest instanceof URL) dest = skipOrDest
+      if (skipOrDest === true) continue;
+      if (skipOrDest instanceof URL) entryDestURL = skipOrDest;
 
-      await ensureDirectory(dest)
-      await copyDirectory(source, dest, callback, false)
+      await ensureDirectory(entryDestURL);
+      await copyDirectory(entrySourceURL, entryDestURL, callback, false);
     } else if (entry.isFile()) {
-      const source = new URL(entry.name, sourceDir)
-      const content = await fs.readFile(source, 'utf8')
+      console.log('READ FILE ', entrySourceURL);
+      const content = await fs.readFile(entrySourceURL, 'utf8');
+      const updatedContent = await callback({ type: 'file', content, url: entrySourceURL });
 
-      const updatedContent = await callback({ type: 'file', content, url: source })
-
-      if (typeof updatedContent !== 'string') continue
-
-      await fs.writeFile(new URL(entry.name, destDir), updatedContent)
+      if (typeof updatedContent !== 'string') continue;
+      await fs.writeFile(entryDestURL, updatedContent);
     }
   }
 }
+
+// export async function copyDirectory(sourceDir: URL, destDir: URL, callback: CopyDirectoryCallback, isRoot = true) {
+//   const dirEntries = await listDirectory(sourceDir)
+
+//   if (isRoot && dirEntries.length === 0) {
+//     throw new Error(
+//       `Failed to copy the empty directory ('${sourceDir.pathname}') to the destination ('${destDir.pathname}').`,
+//     )
+//   }
+
+//   await ensureDirectory(destDir)
+
+//   for (const entry of dirEntries) {
+//     if (entry.isDirectory()) {
+//       const source = new URL(ensureTrailingSlash(entry.name), sourceDir)
+//       let dest = new URL(ensureTrailingSlash(entry.name), ensureTrailingSlash(destDir.toString()))
+
+//       const skipOrDest = await callback({ type: 'directory', name: entry.name, isRoot, dest, source })
+//       if (skipOrDest === true) continue
+//       if (skipOrDest instanceof URL) dest = skipOrDest
+
+//       await ensureDirectory(dest)
+//       await copyDirectory(source, dest, callback, false)
+//     } else if (entry.isFile()) {
+//       const source = new URL(entry.name, sourceDir)
+//       console.log('READ FILE ', source)
+//       const content = await fs.readFile(source, 'utf8')
+
+//       const updatedContent = await callback({ type: 'file', content, url: source })
+
+//       if (typeof updatedContent !== 'string') continue
+
+//       await fs.writeFile(new URL(entry.name, destDir), updatedContent)
+//     }
+//   }
+// }
 
 export function copyFile(source: URL, dest: URL) {
   return fs.cp(source, dest, { force: true })

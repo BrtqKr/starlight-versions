@@ -1,0 +1,86 @@
+---
+title: Web rendering
+slug: ts-sdk/1.0/ts-sdk/guides/web-rendering
+---
+
+import { Aside, Badge, Steps } from '@astrojs/starlight/components';
+
+<Badge text="Node.js" variant="tip" size="large" />
+
+<br />
+
+<br />
+
+Web rendering is an experimental feature that lets you render websites. Furthermore, apart from the standard output stream, you can also place other components on the website; we refer to this process as embedding.
+
+## Prerequisites
+
+There are a couple of requirements necessary for using this feature:
+
+* **A smelter version built with web renderer support** - The web renderer adds extra dependencies and significantly increases the size of the Smelter binaries. To mitigate this impact, we offer two versions of Smelter builds: one with web renderer support and another without.
+* **[`SMELTER_WEB_RENDERER_ENABLE`](/ts-sdk/1.0/deployment/configuration#smelter_web_renderer_enable)** - For deployment, this environment variable must be set to `true` to enable the web renderer functionality.
+
+## Embedding components
+
+Embedding refers to the process of displaying child components within a website. You specify these child components in the `children` field of the web view. The IDs of the child components must match the IDs of the HTML elements where they are to be embedded. The web renderer then places the frames of the child components into the designated HTML elements.
+
+### Embedding methods
+
+Smelter supports multiple ways of embedding components. You can define them while registering a renderer.
+
+There are 3 embedding methods available:
+
+* `chromium_embedding` - Frames produced by child components are passed directly to a Chromium instance and displayed on an HTML canvas. This process involves an additional copy operation for each input frame, which may lead to performance issues when dealing with a large number of inputs. The HTML elements designated for embedding must be canvases.
+* `native_embedding_over_content` - Renders frames produced by child components over the website's content, allowing them to appear on top of the web layers.
+* `native_embedding_under_content` - Renders frames produced by child components beneath the website's content. It requires the website to have a transparent background to ensure the frames underneath are not obscured by the website.
+
+<Aside type="caution">We recommend using `native_embedding` methods. `chromium_embedding` can significantly impact performance, particularly when handling a large number of inputs.</Aside>
+
+## Example usage
+
+<Steps>
+  1. Register `WebRenderer` instance. Otherwise, it will not be possible to include a fully functioning `WebView` in the output scene.
+
+     ```tsx
+     await smelter.registerWebRenderer("example_website", {
+       url: "https://example.com",
+       resolution: {
+         width: 1920,
+         height: 1080
+       },
+       embeddingMethod: "native_embedding_over_content"
+     })
+     ```
+
+  2. Create an output scene with a `WebView` component.
+
+     The `WebView` component needs to use an `instanceId` that has already been registered.
+
+     ```tsx
+     import Smelter from "@swmansion/smelter-node"
+
+     function App() {
+       return (
+         <WebView instanceId="example_website"></WebView>
+       )
+     }
+     ```
+
+     <Aside type="caution">Only one `WebView` component can use a specific web renderer instance at a time.</Aside>
+
+  3. Embed a registered InputStream into the website.
+
+     ```tsx {4}
+     function App() {
+       return (
+         <WebView instanceId="example_website">
+           <InputStream id="my_video" inputId="input_1" />
+         </WebView>
+       )
+     }
+     ```
+</Steps>
+
+The above steps should result in an output video that renders site `https://example.com`.
+If the page includes tag with ID `my_video` then the content of input stream `input_1` will
+be rendered on top.
