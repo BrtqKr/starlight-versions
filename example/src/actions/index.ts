@@ -10,7 +10,6 @@ export const server = {
     handler: async ({version}) => {
       try {
 
-        console.log('VERSION action ', version)
         // const selectedValue = version
         //   .split('/')
         //   .filter((part) => part !== '')

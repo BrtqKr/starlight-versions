@@ -35,7 +35,6 @@ export async function copyDirectory(sourceDir: URL, destDir: URL, callback: Copy
       await ensureDirectory(entryDestURL);
       await copyDirectory(entrySourceURL, entryDestURL, callback, false);
     } else if (entry.isFile()) {
-      console.log('READ FILE ', entrySourceURL);
       const content = await fs.readFile(entrySourceURL, 'utf8');
       const updatedContent = await callback({ type: 'file', content, url: entrySourceURL });
 
@@ -69,7 +68,6 @@ export async function copyDirectory(sourceDir: URL, destDir: URL, callback: Copy
 //       await copyDirectory(source, dest, callback, false)
 //     } else if (entry.isFile()) {
 //       const source = new URL(entry.name, sourceDir)
-//       console.log('READ FILE ', source)
 //       const content = await fs.readFile(source, 'utf8')
 
 //       const updatedContent = await callback({ type: 'file', content, url: source })

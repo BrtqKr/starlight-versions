@@ -34,7 +34,6 @@ export const onRequest = defineRouteMiddleware(async (context, next) => {
   const commonSidebarEntries = filterGroups(getVersionSidebar(
     getVersionFromSlug(starlightVersionsConfig, starlightConfig, ''),
     sidebar,
-    starlightVersionsConfig
   ), versionRegex)
 
   const baseSidebarEntries = filterGroups(commonSidebarEntries, versionedSectionRegex)
@@ -42,10 +41,9 @@ export const onRequest = defineRouteMiddleware(async (context, next) => {
   const versionSidebarEntries = selectedVersion?.value ? getVersionSidebar(
     getVersionFromSlug(starlightVersionsConfig, starlightConfig, selectedVersion.value),
     sidebar,
-    starlightVersionsConfig
   ) : []
   
-  console.log('VERSION middleware', selectedVersion?.value)
+  // console.log('versionSidebarEntries ',JSON.stringify(versionSidebarEntries, null, 2))
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   starlightRoute.sidebar =  selectedVersion?.value && getVersionFromSlug(starlightVersionsConfig, starlightConfig, selectedVersion.value) ? [...baseSidebarEntries, ...versionSidebarEntries] : commonSidebarEntries

@@ -40,10 +40,11 @@ export function addPrefixToSidebarConfig(
   prefix: string,
   sidebar: NonNullable<StarlightSidebarUserConfig>,
 ): NonNullable<StarlightSidebarUserConfig> {
+  const [versionName, versionNumber] = prefix.split('/')
   const test = sidebar
-    .filter(
-      (item) => typeof item !== 'string' && 'autogenerate' in item && item.autogenerate.directory.includes(prefix),
-    )
+    // .filter(
+    //   (item) => typeof item !== 'string' && 'autogenerate' in item && item.autogenerate.directory.includes(prefix),
+    // )
     .map((item) => {
       if (typeof item !== 'string' && 'autogenerate' in item && item.autogenerate.directory.includes(prefix)) {
         return item
@@ -54,20 +55,28 @@ export function addPrefixToSidebarConfig(
       } else if ('items' in item) {
         return {
           ...item,
-          items: item.items,
+          items: item.items.map((item)=>{
+            if(typeof item ==='string') return item
+            else if('slug' in item) {
+              return {...item, slug:item.slug.replace(versionName ?? '', prefix) }
+            } else if('autogenerate' in item) {
+              return {...item, autogenerate: {directory: `versions/${item.autogenerate.directory.replace(versionName ?? '', prefix)}` }}
+            }
+            return item
+          }),
         }
       } else if ('autogenerate' in item) {
         return {
           ...item,
           autogenerate: {
             ...item.autogenerate,
-            directory: item.autogenerate.directory,
+            directory: `versions/${item.autogenerate.directory.replace(versionName ?? '', prefix)}`,
           },
         }
       } else if ('slug' in item) {
         return {
           ...item,
-          slug: item.slug,
+          slug: item.slug.replace(versionName ?? '', prefix),
         }
       } else if (isAbsoluteLink(item.link)) {
         return item
@@ -81,6 +90,8 @@ export function addPrefixToSidebarConfig(
         link: segments.join('/'),
       }
     })
+
+  console.log('STARLIGHT ' ,JSON.stringify(test, null, 2))
 
   return test
 }
