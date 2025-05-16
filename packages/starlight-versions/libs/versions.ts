@@ -1,6 +1,7 @@
 import type { StarlightConfig } from '@astrojs/starlight/types'
 import type { AstroConfig, AstroIntegrationLogger } from 'astro'
 import { z } from 'astro/zod'
+import * as fs from 'node:fs';
 
 import type { StarlightVersionsConfig } from '..'
 import type { DocsVersionsConfig } from '../schema'
@@ -112,19 +113,22 @@ export async function ensureNewVersion(
       }
 
       const slug = getDocSlug(docsDir, entry.url)
+      
+      if(entry.url.toString().includes('.mdx') ) {
+        const md = await transformMarkdown(entry.content, {
+          assets: [],
+          base: stripTrailingSlash(astroConfig.base),
+          locale: getDocLocale(slug, starlightConfig),
+          slug,
+          url: entry.url,
+          version: newVersion,
+        })
 
-      const md = await transformMarkdown(entry.content, {
-        assets: [],
-        base: stripTrailingSlash(astroConfig.base),
-        locale: getDocLocale(slug, starlightConfig),
-        slug,
-        url: entry.url,
-        version: newVersion,
-      })
-
-      assets.push(...(md.assets ?? []))
-
-      return md.content
+    
+        assets.push(...(md.assets ?? []))
+  
+        return md.content
+      }
     },
   )
 
@@ -159,12 +163,18 @@ export async function getVersionedSidebar(
 
 
 export function getVersionSidebar(version: Version | undefined, sidebar: StarlightSidebar): StarlightSidebar {
+  if(version?.slug === 'ts-sdk/1.0') {
+    // console.log('VERSION ', version)
+    // console.log('SIDEBAR ', JSON.stringify(sidebar, null, 2))
+  }
   const sidebarVersionGroup = sidebar.find(
     (item) => item.label === (version?.slug ?? currentVersionSidebarGroupLabel.toString()),
   )
   
-  // console.log('sidebar ', JSON.stringify(sidebar, null, 2))
+  // const jsonData = JSON.stringify(sidebarVersionGroup, null, 2);
 
+  // // Define the file path
+  // const filePath = 'output.txt';
 
   if (!sidebarVersionGroup || !('entries' in sidebarVersionGroup)) {
     throwPluginError(
@@ -418,6 +428,7 @@ function ęxtractNewVersionPath(newVersionPath: string) {
 async function makeVersionConfig(version: Version, starlightConfig: StarlightUserConfig, srcDir: URL) {
   const docsDir = new URL('content/docs/', srcDir)
 
+  const [versionName, versionNumber] = version.slug.split('/')
   const { path } = ęxtractNewVersionPath(version.slug)
 
   await ensureDirectory(getVersionContentCollectionURL(srcDir, path))
@@ -425,17 +436,28 @@ async function makeVersionConfig(version: Version, starlightConfig: StarlightUse
   const sidebar = starlightConfig.sidebar
 
   const entries = await listDirectory(new URL(ensureTrailingSlash(`${docsDir}versions`)))
-  const dirNamesToRemove = entries.filter((dirent) => dirent.isDirectory()).map((dirent) => dirent.name).filter((direntName)=> !version.slug.includes(direntName))
+  // const dirNamesToRemove = new Set(entries.filter((dirent) => dirent.isDirectory()).map((dirent) => dirent.name).filter((direntName)=> !version.slug.includes(direntName)))
 
   const updatedSidebar = sidebar
-  ?.filter((item)=> (item.autogenerate && !dirNamesToRemove.includes(item.autogenerate.directory) )|| !item.autogenerate )
-    // ?.filter(
-    //   (sidebarItem) =>
-    //     sidebarItem &&
-    //     !dirNames.includes(sidebarItem?.autogenerate?.directory) &&
-    //     version.slug.includes(sidebarItem?.autogenerate?.directory),
-    // )
-    ?.map((item) => {
+    ?.filter(
+      (sidebarItem) => {
+        if(typeof sidebarItem === 'string' || !versionName) return false;
+        if('autogenerate' in sidebarItem) {
+          if(sidebarItem.autogenerate.directory.includes(versionName)) return true
+          return false
+        } 
+        if('slug' in sidebarItem) {
+          if(sidebarItem.slug.includes(versionName)) return true
+          return false
+        }
+        if('items' in sidebarItem) {
+          if(sidebarItem.items.filter((item)=>typeof item !=='string').some((item)=> (('autogenerate' in item && item.autogenerate.directory.includes(versionName) ) || ('slug' in item  && item.slug.includes(versionName))))) return true
+          return false
+        }
+        return false
+      }
+    )
+    .map((item) => {
       if (
         item.autogenerate &&
         item.autogenerate.directory === path) {

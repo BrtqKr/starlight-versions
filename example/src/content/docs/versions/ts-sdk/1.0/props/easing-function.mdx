@@ -1,0 +1,42 @@
+---
+title: EasingFunction
+sidebar:
+  order: 1
+slug: ts-sdk/1.0/ts-sdk/props/easing-function
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type EasingFunction =
+    | "linear"
+    | "bounce"
+    | {
+        functionName: "cubic_bezier";
+        points: [number, number, number, number];
+      };
+  ```
+</CollapsibleDetails>
+
+## Properties
+
+### functionName
+
+Duration of a transition in milliseconds.
+
+* **Type**: `linear | bounce | cubic_bezier`
+* **Default value**: `linear`
+* **Supported values**:
+  * `linear`
+  * `bounce`
+  * `cubic_bezier`
+
+***
+
+### points
+
+Four numerical values in `[0; 1]` range used for cubic Bézier. The result is clamped to the range `[0; 1]`.
+
+* **Type**: `[number, number, number, number]`

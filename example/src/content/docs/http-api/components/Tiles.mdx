@@ -1,0 +1,311 @@
+---
+title: Tiles
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-tiles-example.mp4";
+
+Tiles is a layout component that arranges all child components side by side, optimizing the use of available space. It divides its area into multiple rectangles or tiles, assigning one to each child component. Each of these rectangles is of equal size and they do not overlap.
+
+## Usage
+
+<CollapsibleDetails summaryTitle='Update request' open>
+
+```http
+POST: /api/output/example_output/update
+Content-Type: application/json
+
+{
+  "video": {
+    "root": {
+      "type": "tiles",
+      "id": "example_tiles",
+      "transition": { "duration_ms": 200 },
+      "children": [
+        { "type": "input_stream", "input_id": "input_1" },
+        { "type": "input_stream", "input_id": "input_2" },
+        { "type": "input_stream", "input_id": "input_3" },
+        { "type": "input_stream", "input_id": "input_4" },
+        { "type": "input_stream", "input_id": "input_5" }
+      ]
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle="Example output">
+  This output can be achieved by sending above request multiple times with
+  different number of input streams.
+  <video autoplay loop muted src={ExampleImage} alt="example output" />
+</CollapsibleDetails>
+
+## Positioning
+
+### Absolute
+
+A component is absolutely positioned when it specifies style properties such as `top`, `left`, `right`, `bottom`, or `rotation`. These properties determine the component's position relative to its parent. However, the parent component must support absolute positioning for these values to take effect.
+
+<Aside type="caution">
+  - Tiles **do not** support absolute positioning for its child components. All
+  children will still be rendered, but all fields like top, left, right, bottom,
+  and rotation will be ignored. - Tiles **cannot** be absolutely positioned
+  relative to its parent.
+</Aside>
+
+### Static
+
+`Tiles` determine the number of rows and columns in which children should be placed, based on several factors:
+
+- The size of the `Tiles` component.
+- The aspect ratio of a single tile (specified by the `title_aspect_ratio` field).
+- The number of child components.
+
+An optimal configuration of rows and columns aims to utilize the largest possible area of the component. Children are positioned in the order they appear, from left to right, and arranged row-by-row from top to bottom.
+
+The placement and sizing behavior of child components varies depending on their type, as detailed in the table below:
+
+{" "}
+
+<table>
+  <tr>
+    <th>
+      <strong>Component Type</strong>
+    </th>
+    <th>
+      <strong>Behavior</strong>
+    </th>
+  </tr>
+  <tr>
+    <td>
+      <strong>Non-layout Component</strong>
+    </td>
+    <td>
+      Scales proportionally to fit inside the parent. If the aspect ratios do
+      not match, the component will be centered vertically or horizontally.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <strong>Layout Component</strong>
+    </td>
+    <td>
+      Takes the width and height of a tile, ignoring its own width/height fields
+      if they are defined.
+    </td>
+  </tr>
+</table>
+
+### Transitions
+
+The `Tiles` component does not support size transitions in the same way as `View` or `Rescaler` do. If you want to achieve that effect, you can wrap a `Tiles` component inside a `View` and define a transition on `View`.
+
+Currently, supported transitions:
+
+- Adding a new component. When a component is added, all of the existing components move to their new location within `transition.duration_ms` time. At the end of a transition, the new child component shows up without an animation.
+- Removing an existing component. When a component is removed, a tile with that item disappears immediately without any animation, and the remaining elements move to their new location within `transition.duration_ms`.
+- Changing the order of child components.
+
+Adding/removing/changing the order of components can only be properly defined if there is a way to identify child components. We need to know if a specific child in a scene update should be treated as the same item as a child from a previous scene. Currently, identity of a child component is resolved in the following way:
+
+- If a child component has an `"id"` defined, then this is its primary way of identification.
+- If a child component does not have an `"id"` defined, then it's identified by order inside the `children` list, while only counting components without an `"id"`. For example:
+  - A component without an `"id"` is 1st child in the old scene. After an update, the 1st component has an `"id"`, but the 2nd does not. In this situation, 1st component in the old scene and 2nd in the new one are considered to be the same component. It's the same because 2nd component in a new scene is still 1st if you only count components without an id.
+  - There are two components without any `"id"` in the old scene. After an update, they switched places (still without any `"id"`). In that case, there would be no transition. Identification is based on the child components order, so from the `Tiles` component perspective only the content of those children has changed.
+
+## Reference
+
+<CollapsibleDetails summaryTitle='Type definitions' open>
+```tsx
+type Tiles = {
+  id?: string;
+  children?: Component[];
+  width?: f32;
+  height?: f32;
+  background_color?: string;
+  tile_aspect_ratio?: string;
+  margin?: f32;
+  padding?: f32;
+  horizontal_align?: "left" | "right" | "justified" | "center";
+  vertical_align?: "top" | "center" | "bottom" | "justified";
+  transition?: Transition;
+}
+```
+</CollapsibleDetails>
+
+## Properties
+
+### id
+
+ID of a component.
+
+- **Type**: `string`
+
+---
+
+### children
+
+List of component's children.
+
+- **Type**: `Component[]`
+
+---
+
+### width
+
+Width of a component in pixels.
+
+- **Type**: `f32`
+
+<Aside type="caution">
+  The behavior of the `Tiles` component varies depending on the type of its
+  parent component: - **Non-layout parent** - When the parent is not a [layout
+  component](/fundamentals/concepts/layouts), the `width` property is
+  **required**. - **Layout parent** - For parents that are [layout
+  components](/fundamentals/concepts/layouts), please refer to the relevant
+  component documentation.
+</Aside>
+
+---
+
+### height
+
+Height of a component in pixels.
+
+- **Type**: `f32`
+
+<Aside type="caution">
+  The behavior of the `Tiles` component varies depending on the type of its
+  parent component: - **Non-layout parent** - When the parent is not a [layout
+  component](/fundamentals/concepts/layouts), the `height` property is
+  **required**. - **Layout parent** - For parents that are [layout
+  components](/fundamentals/concepts/layouts), please refer to the relevant
+  component documentation.
+</Aside>
+
+---
+
+### background_color
+
+Background color in `#RRGGBBAA` format.
+
+- **Type**: `string`
+- **Default value**: `#00000000`
+
+---
+
+### tile_aspect_ratio
+
+Aspect ratio of each tile in `W:H` format, where `W` and `H` are integers.
+
+- **Type**: `string`
+- **Default value**: `"16:9"`
+
+---
+
+### margin
+
+Margin on each tile in pixels.
+
+- **Type**: `f32`
+- **Default value**: `0`
+
+---
+
+### padding
+
+Padding on each tile in pixels.
+
+- **Type**: `f32`
+- **Default value**: `0`
+
+---
+
+### horizontal_align
+
+Horizontal alignment of tiles.
+
+- **Type**: `"left" | "right" | "justified" | "center"`
+- **Default value**: `"center"`
+
+---
+
+### vertical_align
+
+Vertical alignment of tiles.
+
+- **Type**: `"top" | "center" | "bottom" | "justified"`
+- **Default value**: `"center"`
+
+### transition
+
+Defines how this component will behave during a scene update. This will only have an effect if the previous scene already contained a `Tiles` component with the same id.
+
+- **Type**: [`Transition`](#transition-1)
+
+## Transition
+
+```typescript
+type Transition = {
+  duration_ms: f64;
+  easing_function?: EasingFunction;
+};
+```
+
+### Properties
+
+#### duration_ms
+
+Duration of a transition in milliseconds.
+
+- **Type**: `f64`
+
+---
+
+#### easing_function
+
+Easing functions are used to interpolate between two values over time during transition.
+
+- **Type**: [`EasingFunction`](#easingfunction)
+- **Default value**: `"linear"`
+
+## EasingFunction
+
+```typescript
+type EasingFunction =
+  | { function_name: "linear" }
+  | { function_name: "bounce" }
+  | {
+      function_name: "cubic_bezier";
+      points: [f64, f64, f64, f64];
+    };
+```
+
+Easing functions are used to interpolate between two values over time.
+
+Custom easing functions can be implemented with cubic Bézier.
+The control points are defined with `points` field by providing four numerical values: `x1`, `y1`, `x2` and `y2`. The `x1` and `x2` values have to be in the range `[0; 1]`. The cubic Bézier result is clamped to the range `[0; 1]`.
+You can find example control point configurations [here](https://easings.net/).
+
+### Properties
+
+#### function_name
+
+Duration of a transition in milliseconds.
+
+- **Type**: `linear | bounce | cubic_bezier`
+- **Default value**: `linear`
+- **Supported values**:
+  - `linear`
+  - `bounce`
+  - `cubic_bezier`
+
+---
+
+#### points
+
+Four numerical values in `[0; 1]` range used for cubic Bézier. The result is clamped to the range `[0; 1]`.
+
+- **Type**: `[f64, f64, f64, f64]`

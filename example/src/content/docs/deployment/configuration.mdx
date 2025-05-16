@@ -1,0 +1,168 @@
+---
+title: Configuration
+---
+import { Aside } from '@astrojs/starlight/components';
+
+This section details the environment variables used for the Smelter deployment configuration. Every environment variable listed below is optional.
+
+### `SMELTER_API_PORT`
+API port of the Smelter API.
+- **Defaults to**: `8081`
+
+### `SMELTER_INSTANCE_ID`
+ID returned from `GET /status` request. Can be used to verify that a connection was established to the correct smelter instance. 
+- **Defaults to**: the random number
+
+### `SMELTER_OUTPUT_FRAMERATE`
+Output framerate for all output streams.
+- **Defaults to**: `30`
+- **Supported values**:
+    - `number`
+    - `string` in the `NUM/DEN` format, where both NUM and DEN are unsigned integers
+
+### `SMELTER_MIXING_SAMPLE_RATE`
+Output sample rate for all output streams.
+- **Defaults to**: `48000`
+- **Supported values**:
+    - Sample rates (`8000`, `12000`, `16000`, `24000`, `48000`) in number or string format
+
+### `SMELTER_FORCE_GPU`
+If enabled, GPU will be required for rendering. If only CPU based adapters will be found then process will exit with an error.
+- **Defaults to**: `false`
+- **Supported values**:
+    - `true` or `1`, to enable
+    - `false` or `0`, to disable
+
+### `SMELTER_STREAM_FALLBACK_TIMEOUT_MS`
+Timeout duration (in ms) that specifies when Smelter should switch to a fallback option if the input stream ceases to send frames.
+- **Defaults to**: `500`
+
+### `SMELTER_LOGGER_LEVEL`
+Value or configuration string that specifies the granularity of log capture.
+- **Defaults to**: `info,wgpu_hal=warn,wgpu_core=warn`
+- **Supported values**:
+    - `error`, `warn`, `info`, `debug`, `trace`
+    -  `string` containing tracing-subscriber configuration (see <a href='https://docs.rs/tracing-subscriber/latest/tracing_subscriber/filter/struct.EnvFilter.html#example-syntax' target='_blank'>documentation</a> for more details)
+
+### `SMELTER_LOGGER_FORMAT`
+Logger output format.
+- **Defaults to**: `json`
+- **Supported values**:
+    - `json`, `compact`, `pretty`
+
+<Aside type="caution">
+This option does not apply to: 
+- Logs produced by FFmpeg
+- The embedded Chromium instance used for web rendering
+</Aside>
+
+### `SMELTER_FFMPEG_LOGGER_LEVEL`
+Value that specifies the granularity of log capture for FFmpeg.
+- **Defaults to**: `warn`
+- **Supported values**:
+    - `error` - equivalent to FFmpeg's `error, 16`
+    - `warn` - equivalent to FFmpeg's `warning, 24`
+    - `info` - equivalent to FFmpeg's `info, 32`
+    - `debug` - equivalent to FFmpeg's `debug, 48`
+
+See `-loglevel` option in <a href='https://ffmpeg.org/ffmpeg.html' target='_blank'>FFmpeg docs</a> for more details.
+
+### `SMELTER_DOWNLOAD_DIR`
+Path specifying where to store downloaded files.
+- **Defaults to**: the location provided by the OS
+
+<Aside>If the directory isn’t specified, the Smelter instance will create a subdirectory named `smelter-<random number>` to store downloaded temporary files.</Aside>
+
+### `SMELTER_WEB_RENDERER_ENABLE`
+If enabled, Smelter will support web rendering capabilities.
+- **Defaults to**: `false`
+- **Supported values**:
+    - `true` or `1`, to enable
+    - `false` or `0`, to disable
+
+<Aside type="caution">With this option disabled, you cannot use `WebView` components or register `WebRenderer` instances.</Aside>
+
+### `SMELTER_WEB_RENDERER_GPU_ENABLE`
+If enabled, Smelter will support GPU inside the embedded Chromium instance.
+- **Defaults to**: `true`
+- **Supported values**:
+    - `true` or `1`, to enable
+    - `false` or `0`, to disable
+
+### `SMELTER_OFFLINE_PROCESSING_ENABLE`
+If enabled, sets `SMELTER_AHEAD_OF_TIME_PROCESSING_ENABLE` and `SMELTER_NEVER_DROP_OUTPUT_FRAMES` options to true. If those options are also defined they take priority over `SMELTER_OFFLINE_PROCESSING_ENABLE`.
+- **Defaults to**: `false`
+- **Supported values**:
+    - `true` or `1`, to enable
+    - `false` or `0`, to disable
+
+### `SMELTER_AHEAD_OF_TIME_PROCESSING_ENABLE`
+If enabled, the Smelter server will try to generate output frames/samples ahead of time if all inputs are available.
+- **Defaults to**: `false`
+- **Supported values**:
+    - `true` or `1`, to enable
+    - `false` or `0`, to disable
+
+<Aside>Consider using this option if you want to process input streams faster than in real time.</Aside>
+
+### `SMELTER_NEVER_DROP_OUTPUT_FRAMES`
+If enabled, the Smelter server will not drop frames/samples from output stream even if rendering or encoding is not fast enough to process it in real time.
+- **Defaults to**: `false`
+- **Supported values**:
+    - `true` or `1`, to enable
+    - `false` or `0`, to disable
+
+### `SMELTER_RUN_LATE_SCHEDULED_EVENTS`
+Parts of the Smelter API support a schedule_time_ms field to apply certain actions at a specific time. If enabled, the event will still be executed, even if it was scheduled too late.
+- **Defaults to**: `false`
+- **Supported values**:
+    - `true` or `1`, to enable
+    - `false` or `0`, to disable
+
+### `SMELTER_REQUIRED_WGPU_FEATURES`
+List of WebGPU features to enable.
+- **Defaults to**:
+```
+UNIFORM_BUFFER_AND_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING,
+SAMPLED_TEXTURE_AND_STORAGE_BUFFER_ARRAY_NON_UNIFORM_INDEXING
+```
+- **Supported values**:
+    - `string` containing comma-separated list of WebGPU features (see <a href="https://docs.rs/wgpu/24.0.1/wgpu/struct.Features.html" target='_blank'>Rust WebGPU documentation</a> for the list of available options)
+
+<Aside type="caution">`TEXTURE_BINDING_ARRAY` and `PUSH_CONSTANTS` are always required and cannot be overwritten using this environment variable.</Aside>
+
+### `SMELTER_INPUT_BUFFER_DURATION_MS`
+Duration (in ms) of an input buffer in milliseconds. New stream will not be processed until this buffer is filled.
+- **Defaults to**: `80` (about 5 frames in 60 fps)
+
+<Aside type="caution">Increasing this value always increases the latency of the stream by the same amount.</Aside>
+
+### `SMELTER_LOAD_SYSTEM_FONTS`
+If enabled, the Smelter server will load all system fonts available in system. Disabling this option might improve startup time.
+
+- **Supported values**:
+    - `true` or `1`, to enable
+    - `false` or `0`, to disable
+- **Defaults to**: `true`
+
+### `SMELTER_WHIP_WHEP_SERVER_PORT`
+Specify port where API for WHIP and WHEP servers should be served.
+
+- **Defaults to**: `9000`
+
+### `SMELTER_START_WHIP_WHEP_SERVER`
+
+If enabled, the Smelter server will start HTTP server that implement WHIP and WHEP endpoints. If disabled it won't be
+possible to register WHIP inputs.
+
+- **Defaults to**: `true`
+
+### `SMELTER_LOG_FILE`
+
+Location of a file where all Smelter logs should be saved. Logging to file does not stop printing logs to standard output.
+
+### `SMELTER_STUN_SERVERS`
+
+List of comma separated URLs that specify STUN servers that should be used in connection negotiation for WHIP/WHEP.
+
+- **Defaults to**: `stun:stun.l.google.com:19302`

@@ -1,0 +1,94 @@
+---
+title: View
+slug: ts-sdk/1.0/ts-sdk/components/view
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import viewExample from "./examples/View.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-view-example.webp";
+
+The `View` component serves as the core layout mechanism in the Smelter API, similar to the `<div>` tag in HTML. It acts as a container that offers basic styling options and can be further customized and composed.
+
+## Usage
+
+<Code code={viewExample} title="ViewExample.tsx" lang="tsx" collapse={["16-37"]} />
+
+<CollapsibleDetails summaryTitle="Example output">
+  <img src={ExampleImage.src} />
+</CollapsibleDetails>
+
+## Positioning
+
+### Absolute
+
+A component is absolutely positioned when it specifies style properties such as top, left, right, bottom, or rotation. These properties determine the component's position relative to its parent. However, the parent component must support absolute positioning for these values to take effect.
+
+* `View` supports absolute positioning for its child components. If the `width` and `height` are not explicitly provided, an absolutely positioned child will inherit `width` and `height` from its parent.
+* `View` can be absolutely positioned relative to its parent if the parent component supports it.
+
+### Static
+
+When children of a `View` component have a static position, they are placed next to each other.
+
+<Aside type="caution">
+  The parent `View` doesn't respect the size of its children, so it will not be
+  expanded by default. To learn more, visit the [Layout
+  docs](/ts-sdk/1.0/fundamentals/concepts/layouts/).
+</Aside>
+
+## Transitions
+
+During a scene update, a `View` component will animate transitions between the original and the new state if `transition` prop is specified. For a transition to proceed, both the original and the new scene must define a component with the same ID. However, currently, only certain fields support animated transitions:
+
+* `width` / `height` - Transitions for these dimensions are only supported within the same positioning mode. If the positioning mode changes from the old scene to the new one, the transition will fail.
+* `bottom` / `top` / `left` / `right` / `rotation` - Transitions are supported only when changing the value of the same field. For example, if the `left` field is defined in the old scene but not in the new one, the transition will not be executed. If the positioning type of the `View` changes, the transition will not be applied either.
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type ViewProps = {
+  id?: string;
+  children?: ReactNode;
+  style?: ViewStyleProps;
+  transition?: Transition;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+## Props
+
+### children
+
+Content to be displayed within the `View`.
+
+* **Type**: `ReactNode`
+
+***
+
+### id
+
+ID of a component.
+
+* **Type**: `string`
+* **Default value**: Value produced by `useId` hook
+
+***
+
+### style
+
+View styling properties.
+
+* **Type**: [`ViewStyleProps`](/ts-sdk/1.0/ts-sdk/props/view-style-props)
+
+***
+
+### transition
+
+Defines the behavior of the `View` during a scene update. This will only have an effect if the previous scene already contained a `View` component with a matching `id`.
+
+* **Type**: [`Transition`](/ts-sdk/1.0/ts-sdk/props/transition)

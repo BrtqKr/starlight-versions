@@ -1,0 +1,92 @@
+---
+title: Standalone server - Docker
+sidebar:
+    order: 0
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+## How to get images?
+
+### Image registry
+
+Image are available in `ghcr.io/software-mansion/smelter` registry.
+
+Available image tags:
+- `v{VERSION}` e.g. `v0.4.0` - Base version
+- `v{VERSION}-web-renderer` e.g. `v0.4.0` - Base version with web rendering enabled. Includes Chromium Embedded Framework.
+
+### Build your own image
+
+If you need to customize something or just want to build the images yourself you can find Dockerfiles in:
+- [`build_tools/docker/slim.Dockerfile`](https://github.com/software-mansion/smelter/blob/master/build_tools/docker/slim.Dockerfile) - Base version
+- [`build_tools/docker/full.Dockerfile`](https://github.com/software-mansion/smelter/blob/master/build_tools/docker/full.Dockerfile) - Smelter version with web rendering enabled. Includes Chromium Embedded Framework.
+
+To build it, run:
+```
+docker build -f build_tools/docker/slim.Dockerfile -t smelter .
+```
+
+## Enabling hardware acceleration
+
+By default, if you run
+```sh frame=none
+docker run -p 8081:8081 ghcr.io/software-mansion/smelter
+```
+it will launch the server in the CPU only mode. Encoding and decoding will be purely CPU based, and
+rendering will be emulated using LLVMpipe.
+
+To leverage the power of your GPU you need to pass it to the docker container:
+
+### AMD GPU - Linux
+
+Add `--device /dev/dri` to your docker run command to pass GPU access to the container.
+
+```sh frame=none
+docker run 
+    --device /dev/dri
+    -p 8081:8081 ghcr.io/software-mansion/smelter
+```
+
+### Nvidia GPU - Linux
+
+Add `--gpus all --runtime=nvidia` to your docker run command to pass GPU access to the container.
+
+```sh frame=none
+docker run 
+    --gpus all --runtime=nvidia
+    -p 8081:8081 ghcr.io/software-mansion/smelter
+```
+
+### Hardware requirements
+
+Smelter can fully work on the machine with CPU only, but to leverage GPU acceleration your hardware
+and drivers needs to meet some requirements.
+
+#### WebGPU features
+
+To support GPU-based rendering your hardware and drivers needs to support specific features.
+
+Required features:
+- `TEXTURE_BINDING_ARRAY`
+- `PUSH_CONSTANTS`
+
+Enabled by default, but it can be disabled:
+- `SAMPLED_TEXTURE_AND_STORAGE_BUFFER_ARRAY_NON_UNIFORM_INDEXING`
+- `UNIFORM_BUFFER_AND_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING`
+
+Those options are enabled by default, but can be disabled using
+[`SMELTER_REQUIRED_WGPU_FEATURES`](/deployment/configuration#smelter_required_wgpu_features) environment variable.
+
+:::note
+All of the above features should be available on almost any GPU. If you are getting an error
+about unsupported features, then most likely, the issue is caused by missing or too old drivers.
+:::
+
+#### Hardware decoding
+
+To leverage hardware decoding, your GPU and drivers need to support following Vulkan extension;
+
+- `VK_KHR_video_queue`
+- `VK_KHR_video_decode_queue`
+- `VK_KHR_video_decode_h264`

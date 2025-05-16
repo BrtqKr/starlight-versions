@@ -1,0 +1,47 @@
+---
+import PrimaryButton from "@components/base/buttons/PrimaryButton.astro";
+import Image from "astro/components/Image.astro";
+import HeroStreams from "./hero-streams/HeroStreams.astro";
+
+import heroGradient from "@assets/hero/gradient.webp";
+import ArrowRight from "/public/images/arrow-right.svg";
+import swmLogo from "/public/images/swm-logo.svg";
+
+import "./heroSection.scss";
+import SecondaryButton from "@components/base/buttons/SecondaryButton.astro";
+---
+
+<section class="px-4 sm:px-12 xl:pl-40 flex h-screen flex-row justify-center sm:py-14 items-center relative 2xl:h-fit 2xl:py-80">
+  <div id="descriptionLayer" class="flex-1">
+    <div class="flex gap-x-2 py-2 sm:px-4 mb-4 xl:mb-8">
+      <p class="par-xs text-hero-authorLabel">Created by</p>
+      <a rel="noreferrer noopener" href="https://swmansion.com/" target="_blank">
+        <Image src={swmLogo} alt="SoftwareMansion logo" class="fill-hero-authorLabel" loading="eager" />
+      </a>
+    </div>
+    <div class="mb-14 flex flex-col gap-y-4">
+      <h1 class="text-hero-title">Real-time video compositing software</h1>
+      <p class="par-l text-hero-subtitle">
+        Low-latency multimedia composition<br/>for your live streams and pre-recorded videos
+      </p>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-2">
+      <a href="/#pricing" style="text-decoration: none; color: inherit;">
+        <PrimaryButton>
+          <p class="par-xl">Try it for free</p>
+          <ArrowRight />
+        </PrimaryButton>
+      </a>
+      <a href="/#use-cases" style="text-decoration: none; color: inherit;">
+        <SecondaryButton>
+          <p class="par-xl" data-astro-prefetch>See live demos</p>
+          <ArrowRight />
+        </SecondaryButton>
+      </a>
+    </div>
+  </div>
+  <HeroStreams />
+  <Image src={heroGradient} alt="Hero" class="hero-gradient fade-in" loading="eager" />
+</section>
+
+<script src="./hero-streams/heroStreams.ts" />

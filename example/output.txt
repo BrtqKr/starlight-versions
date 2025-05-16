@@ -1,0 +1,723 @@
+{
+  "type": "group",
+  "label": "ts-sdk/1.0",
+  "entries": [
+    {
+      "type": "group",
+      "label": "Fundamentals",
+      "entries": [
+        {
+          "type": "link",
+          "label": "Getting started",
+          "href": "/fundamentals/getting-started",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "link",
+          "label": "Glossary of terms",
+          "href": "/fundamentals/glossary",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "group",
+          "label": "Concepts",
+          "entries": [],
+          "collapsed": false
+        }
+      ],
+      "collapsed": false
+    },
+    {
+      "type": "group",
+      "label": "Deployment",
+      "entries": [
+        {
+          "type": "link",
+          "label": "Setup",
+          "href": "/deployment/setup",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "link",
+          "label": "Configuration",
+          "href": "/deployment/configuration",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "group",
+          "label": "Variants",
+          "entries": [],
+          "collapsed": false
+        }
+      ],
+      "collapsed": false
+    },
+    {
+      "type": "group",
+      "label": "TypeScript SDK",
+      "entries": [
+        {
+          "type": "link",
+          "label": "Overview",
+          "href": "/ts-sdk/1.0/overview",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "link",
+          "label": "Project configuration",
+          "href": "/ts-sdk/1.0/configuration",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "link",
+          "label": "Smelter",
+          "href": "/ts-sdk/1.0/smelter",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "link",
+          "label": "OfflineSmelter",
+          "href": "/ts-sdk/1.0/smelter-offline",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "group",
+          "label": "Smelter Managers",
+          "entries": [
+            {
+              "type": "link",
+              "label": "Node.js - Existing Instance",
+              "href": "/ts-sdk/1.0/managers/node-existing-instance/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Node.js - Locally Spawned Instance",
+              "href": "/ts-sdk/1.0/managers/node-locally-spawned/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Browser - in-browser WASM Smelter",
+              "href": "/ts-sdk/1.0/managers/web-wasm/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Components",
+          "entries": [
+            {
+              "type": "link",
+              "label": "Image",
+              "href": "/ts-sdk/1.0/components/image/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "InputStream",
+              "href": "/ts-sdk/1.0/components/inputstream/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Mp4",
+              "href": "/ts-sdk/1.0/components/mp4/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Rescaler",
+              "href": "/ts-sdk/1.0/components/rescaler/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Shader",
+              "href": "/ts-sdk/1.0/components/shader/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Show",
+              "href": "/ts-sdk/1.0/components/show/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "SlideShow",
+              "href": "/ts-sdk/1.0/components/slideshow/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Text",
+              "href": "/ts-sdk/1.0/components/text/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Tiles",
+              "href": "/ts-sdk/1.0/components/tiles/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "View",
+              "href": "/ts-sdk/1.0/components/view/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "WebView",
+              "href": "/ts-sdk/1.0/components/webview/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Props",
+          "entries": [
+            {
+              "type": "link",
+              "label": "Transition",
+              "href": "/ts-sdk/1.0/props/transition/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "EasingFunction",
+              "href": "/ts-sdk/1.0/props/easing-function/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "RescalerStyleProps",
+              "href": "/ts-sdk/1.0/props/rescaler-style-props/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "TextStyleProps",
+              "href": "/ts-sdk/1.0/props/text-style-props/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "TilesStyleProps",
+              "href": "/ts-sdk/1.0/props/tiles-style-props/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "ViewStyleProps",
+              "href": "/ts-sdk/1.0/props/view-style-props/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Hooks",
+          "entries": [
+            {
+              "type": "link",
+              "label": "useInputStreams",
+              "href": "/ts-sdk/1.0/hooks/use-input-streams/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "useAudioInput",
+              "href": "/ts-sdk/1.0/hooks/use-audio-input/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "useAfterTimestamp",
+              "href": "/ts-sdk/1.0/hooks/use-after-timestamp/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "useBlockingTask",
+              "href": "/ts-sdk/1.0/hooks/use-blocking-task/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Inputs",
+          "entries": [
+            {
+              "type": "link",
+              "label": "WHIP",
+              "href": "/ts-sdk/1.0/inputs/whip/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "MP4",
+              "href": "/ts-sdk/1.0/inputs/mp4/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "RTP",
+              "href": "/ts-sdk/1.0/inputs/rtp/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Camera (Web API)",
+              "href": "/ts-sdk/1.0/inputs/wasm-camera/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Screen capture (Web API)",
+              "href": "/ts-sdk/1.0/inputs/wasm-screen/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "MediaStream (Web API)",
+              "href": "/ts-sdk/1.0/inputs/wasm-stream/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Outputs",
+          "entries": [
+            {
+              "type": "link",
+              "label": "WHIP",
+              "href": "/ts-sdk/1.0/outputs/whip/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "MP4",
+              "href": "/ts-sdk/1.0/outputs/mp4/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "RTP",
+              "href": "/ts-sdk/1.0/outputs/rtp/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Canvas (Web API)",
+              "href": "/ts-sdk/1.0/outputs/wasm-canvas/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "MediaStream (Web API)",
+              "href": "/ts-sdk/1.0/outputs/wasm-stream/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "WHIP (Web API)",
+              "href": "/ts-sdk/1.0/outputs/wasm-whip/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Resources",
+          "entries": [
+            {
+              "type": "link",
+              "label": "Image",
+              "href": "/ts-sdk/1.0/resources/image/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Shader",
+              "href": "/ts-sdk/1.0/resources/shader/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "WebRenderer",
+              "href": "/ts-sdk/1.0/resources/web-renderer/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Guides",
+          "entries": [
+            {
+              "type": "link",
+              "label": "Quick start - Node.js",
+              "href": "/ts-sdk/1.0/guides/quick-start/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Quick start - Browser (WASM)",
+              "href": "/ts-sdk/1.0/guides/quick-start-wasm/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Basic layouts",
+              "href": "/ts-sdk/1.0/guides/basic-layouts/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Transitions",
+              "href": "/ts-sdk/1.0/guides/transitions/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Web rendering",
+              "href": "/ts-sdk/1.0/guides/web-rendering/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        }
+      ],
+      "collapsed": false
+    },
+    {
+      "type": "group",
+      "label": "HTTP API",
+      "entries": [
+        {
+          "type": "link",
+          "label": "Overview",
+          "href": "/http-api/overview",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "link",
+          "label": "Routes",
+          "href": "/http-api/routes",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "link",
+          "label": "Events",
+          "href": "/http-api/events",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "group",
+          "label": "Components",
+          "entries": [],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Inputs",
+          "entries": [],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Outputs",
+          "entries": [],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Resources",
+          "entries": [],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Guides",
+          "entries": [],
+          "collapsed": true
+        }
+      ],
+      "collapsed": false
+    }
+  ],
+  "collapsed": false
+}ef": "/http-api/routes",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "link",
+          "label": "Events",
+          "href": "/http-api/events",
+          "isCurrent": false,
+          "attrs": {}
+        },
+        {
+          "type": "group",
+          "label": "Components",
+          "entries": [
+            {
+              "type": "link",
+              "label": "Image",
+              "href": "/http-api/components/image/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "InputStream",
+              "href": "/http-api/components/inputstream/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Rescaler",
+              "href": "/http-api/components/rescaler/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Shader",
+              "href": "/http-api/components/shader/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Text",
+              "href": "/http-api/components/text/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Tiles",
+              "href": "/http-api/components/tiles/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "View",
+              "href": "/http-api/components/view/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "WebView",
+              "href": "/http-api/components/webview/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Inputs",
+          "entries": [
+            {
+              "type": "link",
+              "label": "DeckLink",
+              "href": "/http-api/inputs/decklink/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "MP4",
+              "href": "/http-api/inputs/mp4/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "RTP",
+              "href": "/http-api/inputs/rtp/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "WHIP",
+              "href": "/http-api/inputs/whip/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Outputs",
+          "entries": [
+            {
+              "type": "link",
+              "label": "MP4",
+              "href": "/http-api/outputs/mp4/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "RTP",
+              "href": "/http-api/outputs/rtp/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "WHIP",
+              "href": "/http-api/outputs/whip/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Resources",
+          "entries": [
+            {
+              "type": "link",
+              "label": "Image",
+              "href": "/http-api/resources/image/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Shader",
+              "href": "/http-api/resources/shader/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "WebRenderer",
+              "href": "/http-api/resources/web-renderer/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        },
+        {
+          "type": "group",
+          "label": "Guides",
+          "entries": [
+            {
+              "type": "link",
+              "label": "Quick start",
+              "href": "/http-api/guides/quick-start/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Basic layouts",
+              "href": "/http-api/guides/basic-layouts/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Transitions",
+              "href": "/http-api/guides/transitions/",
+              "isCurrent": false,
+              "attrs": {}
+            },
+            {
+              "type": "link",
+              "label": "Web rendering",
+              "href": "/http-api/guides/web-rendering/",
+              "isCurrent": false,
+              "attrs": {}
+            }
+          ],
+          "collapsed": true
+        }
+      ],
+      "collapsed": false
+    }
+  ],
+  "collapsed": false
+}

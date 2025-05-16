@@ -1,0 +1,36 @@
+---
+title: Shader
+slug: ts-sdk/1.0/ts-sdk/resources/shader
+---
+
+import { Aside, Code, Badge } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<Badge text="Node.js" variant="tip" size="large" />
+
+<br />
+
+<br />
+
+Represents compiled shader. It can be used by a [Shader component](/ts-sdk/1.0/ts-sdk/components/shader).
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type Shader = {
+  source: string;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties
+
+#### source
+
+Shader source code. To learn more visit [Shaders documentation](/ts-sdk/1.0/fundamentals/concepts/shaders).
+
+* **Type**: `string`

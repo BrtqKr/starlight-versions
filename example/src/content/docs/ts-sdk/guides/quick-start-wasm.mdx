@@ -1,10 +1,11 @@
 ---
 title: Quick start - Browser (WASM)
 sidebar:
-    order: 1
+  order: 1
 ---
-import { Aside, Steps, Code } from '@astrojs/starlight/components';
-import CollapsibleDetails from '../../../../components/CollapsibleDetails.astro';
+
+import { Aside, Steps, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
 
 In this guide, you'll learn how to create a basic Smelter setup in browser using TypeScript SDK.
 We will show you how to take camera input, compose it with some other elements, and send it over
@@ -16,257 +17,252 @@ race condition between initialization and starting certain actions. This is not 
 to Smelter itself, so to keep this example clean we will not focus on that in this guide.
 
 For a more complete, production ready examples checkout our [demo applications](https://github.com/software-mansion/smelter/tree/master/demos).
+
 </Aside>
 
 <Steps>
 
 1. Create Smelter object and initialize it.
-    ```tsx
-    import Smelter from "@swmansion/smelter-web-wasm"
 
-    function DemoPage() {
-      const videoRef = useRef<HTMLVideoElement>();
-      const [smelter, setSmelter] = useState<Smelter | undefined>();
+   ```tsx
+   import Smelter from "@swmansion/smelter-web-wasm";
 
-      useEffect(() => {
-        (async () => {
-          const smelter = await start(videoRef.current);
-          setSmelter(smelter);
-        })();
-      }, []);
+   function DemoPage() {
+     const videoRef = useRef<HTMLVideoElement>();
+     const [smelter, setSmelter] = useState<Smelter | undefined>();
 
-      return (
+     useEffect(() => {
+       (async () => {
+         const smelter = await start(videoRef.current);
+         setSmelter(smelter);
+       })();
+     }, []);
+
+     return (
        <div>
-         <video ref={videoRef}/>
+         <video ref={videoRef} />
        </div>
-      )
-    }
+     );
+   }
 
-    async function start(videoElement: HTMLVideoElement): Promise<Smelter> {
-      const smelter = new Smelter();
-      await smelter.init();
-      return smelter;
-    }
-    ```
+   async function start(videoElement: HTMLVideoElement): Promise<Smelter> {
+     const smelter = new Smelter();
+     await smelter.init();
+     return smelter;
+   }
+   ```
 
-    We are starting with a simple page with empty `<div />` and the `<video />` tag that will latter be used
-    as a stream preview. When component is mounted a new Smelter instance is created.
+   We are starting with a simple page with empty `<div />` and the `<video />` tag that will latter be used
+   as a stream preview. When component is mounted a new Smelter instance is created.
 
 2. Register an output stream and call `Smelter.start()`.
 
-    ```tsx collapse={5-19}
-    import { View } from "@swmansion/smelter"
-    import Smelter from "@swmansion/smelter-web-wasm"
+   ```tsx collapse={5-19}
+   import { View } from "@swmansion/smelter";
+   import Smelter from "@swmansion/smelter-web-wasm";
 
-    function DemoPage() {
-      const videoRef = useRef<HTMLVideoElement>();
-      const [smelter, setSmelter] = useState<Smelter | undefined>();
+   function DemoPage() {
+     const videoRef = useRef<HTMLVideoElement>();
+     const [smelter, setSmelter] = useState<Smelter | undefined>();
 
-      useEffect(() => {
-        (async () => {
-          const smelter = await start(videoRef.current);
-          setSmelter(smelter);
-        })();
-      }, []);
+     useEffect(() => {
+       (async () => {
+         const smelter = await start(videoRef.current);
+         setSmelter(smelter);
+       })();
+     }, []);
 
-      return (
+     return (
        <div>
-         <video ref={videoRef}/>
+         <video ref={videoRef} />
        </div>
-      )
-    }
+     );
+   }
 
-    async function start(videoElement: HTMLVideoElement): Promise<Smelter> {
-      const smelter = new Smelter();
-      await smelter.init();
+   async function start(videoElement: HTMLVideoElement): Promise<Smelter> {
+     const smelter = new Smelter();
+     await smelter.init();
 
-      const { stream } = await smelter.registerOutput(
-        'output',
-        <View />,
-        {
-          type: 'whip',
-          endpointUrl: 'https://example.com/whip',
-          bearerToken: '<STREAM TOKEN>',
-          video: {
-            resolution: { width: 1920, height: 1080 },
-          },
-          audio: true,
-        }
-      );
+     const { stream } = await smelter.registerOutput("output", <View />, {
+       type: "whip",
+       endpointUrl: "https://example.com/whip",
+       bearerToken: "<STREAM TOKEN>",
+       video: {
+         resolution: { width: 1920, height: 1080 },
+       },
+       audio: true,
+     });
 
-      await smelter.start();
+     await smelter.start();
 
-      videoElement.srcObject = stream;
-      await videoElement.play();
+     videoElement.srcObject = stream;
+     await videoElement.play();
 
-      return smelter;
-    }
-    ```
+     return smelter;
+   }
+   ```
 
-    This step creates an output that renders just an empty `<View />` component. Resulting
-    blank image is encoded and sent via WHIP protocol to specified url.
+   This step creates an output that renders just an empty `<View />` component. Resulting
+   blank image is encoded and sent via WHIP protocol to specified url.
 
-    Additionally, `stream` returned from `registerOutput` call is assigned as a source to
-    the HTML `<video>` tag, which will display stream preview on that element.
+   Additionally, `stream` returned from `registerOutput` call is assigned as a source to
+   the HTML `<video>` tag, which will display stream preview on that element.
 
 3. Register camera input and add it to the scene.
 
-    ```tsx collapse={13-27,41-46,50-55} {34,38}
-    import { Rescaler, InputStream } from "@swmansion/smelter"
-    import Smelter from "@swmansion/smelter-web-wasm"
+   ```tsx collapse={13-27,41-46,50-55} {34,38}
+   import { Rescaler, InputStream } from "@swmansion/smelter";
+   import Smelter from "@swmansion/smelter-web-wasm";
 
-    function SmelterScene() {
-      return (
-        <Rescaler>
-          <InputStream inputId="camera" />
-        </Rescaler>
-      )
-    }
+   function SmelterScene() {
+     return (
+       <Rescaler>
+         <InputStream inputId="camera" />
+       </Rescaler>
+     );
+   }
 
-    function DemoPage() {
-      const videoRef = useRef<HTMLVideoElement>();
-      const [smelter, setSmelter] = useState<Smelter | undefined>();
+   function DemoPage() {
+     const videoRef = useRef<HTMLVideoElement>();
+     const [smelter, setSmelter] = useState<Smelter | undefined>();
 
-      useEffect(() => {
-        (async () => {
-          const smelter = await start(videoRef.current);
-          setSmelter(smelter);
-        })();
-      }, []);
+     useEffect(() => {
+       (async () => {
+         const smelter = await start(videoRef.current);
+         setSmelter(smelter);
+       })();
+     }, []);
 
-      return (
+     return (
        <div>
-         <video ref={videoRef}/>
+         <video ref={videoRef} />
        </div>
-      )
-    }
+     );
+   }
 
-    async function start(videoElement: HTMLVideoElement): Promise<Smelter> {
-      const smelter = new Smelter();
-      await smelter.init();
+   async function start(videoElement: HTMLVideoElement): Promise<Smelter> {
+     const smelter = new Smelter();
+     await smelter.init();
 
-      await smelter.registerInput('camera', { type: 'camera' });
+     await smelter.registerInput("camera", { type: "camera" });
 
-      const { stream } = await smelter.registerOutput(
-        'output',
-        <SmelterScene />,
-        {
-          type: 'whip',
-          endpointUrl: 'https://example.com/whip',
-          bearerToken: '<STREAM TOKEN>',
-          video: {
-            resolution: { width: 1920, height: 1080 },
-          },
-          audio: true,
-        }
-      );
+     const { stream } = await smelter.registerOutput(
+       "output",
+       <SmelterScene />,
+       {
+         type: "whip",
+         endpointUrl: "https://example.com/whip",
+         bearerToken: "<STREAM TOKEN>",
+         video: {
+           resolution: { width: 1920, height: 1080 },
+         },
+         audio: true,
+       }
+     );
 
-      await smelter.start();
+     await smelter.start();
 
-      videoElement.srcObject = stream;
-      await videoElement.play();
+     videoElement.srcObject = stream;
+     await videoElement.play();
 
-      return smelter
-    }
-    ```
+     return smelter;
+   }
+   ```
 
-    In this step we registered a new input (`camera`) and replaced `<View />` in a
-    `registerOutput` call with a `<SmelterScene />` component. New output stream
-    will include camera output resized to match output resolution.
-
+   In this step we registered a new input (`camera`) and replaced `<View />` in a
+   `registerOutput` call with a `<SmelterScene />` component. New output stream
+   will include camera output resized to match output resolution.
 
 4. Add button that adds screen capture to the output stream.
 
    ```tsx {50-52} collapse={32-41,58-82}
-    import {
-      View,
-      Rescaler,
-      InputStream,
-      useInputStreams
-    } from "@swmansion/smelter"
-    import Smelter from "@swmansion/smelter-web-wasm"
+   import {
+     View,
+     Rescaler,
+     InputStream,
+     useInputStreams,
+   } from "@swmansion/smelter";
+   import Smelter from "@swmansion/smelter-web-wasm";
 
-    function SmelterScene() {
-      const inputs = useInputStreams();
-      const hasScreenCapture = !!inputs['screen'];
-      if (!hasScreenCapture) {
-        return (
-          <Rescaler>
-            <InputStream inputId="camera" />
-          </Rescaler>
-        )
-      }
-      return (
-        <View>
-          <Rescaler>
-            <InputStream inputId="camera" />
-          </Rescaler>
-          <Rescaler style={{ top: 20, left: 20, width: 640, height: 360 }}>
-            <InputStream inputId="screen" />
-          </Rescaler>
-        </View>
-      )
-    }
+   function SmelterScene() {
+     const inputs = useInputStreams();
+     const hasScreenCapture = !!inputs["screen"];
+     if (!hasScreenCapture) {
+       return (
+         <Rescaler>
+           <InputStream inputId="camera" />
+         </Rescaler>
+       );
+     }
+     return (
+       <View>
+         <Rescaler>
+           <InputStream inputId="camera" />
+         </Rescaler>
+         <Rescaler style={{ top: 20, left: 20, width: 640, height: 360 }}>
+           <InputStream inputId="screen" />
+         </Rescaler>
+       </View>
+     );
+   }
 
-    function DemoPage() {
-      const videoRef = useRef<HTMLVideoElement>();
-      const [smelter, setSmelter] = useState<Smelter | undefined>();
+   function DemoPage() {
+     const videoRef = useRef<HTMLVideoElement>();
+     const [smelter, setSmelter] = useState<Smelter | undefined>();
 
-      useEffect(() => {
-        (async () => {
-          const smelter = await start(videoRef.current);
-          setSmelter(smelter);
-        })();
-      }, []);
+     useEffect(() => {
+       (async () => {
+         const smelter = await start(videoRef.current);
+         setSmelter(smelter);
+       })();
+     }, []);
 
+     const startScreenCapture = () => {
+       smelter?.registerInput("screen", { type: "screen_capture" });
+     };
 
-      const startScreenCapture = () => {
-        smelter?.registerInput('screen', { type: 'screen_capture' })
-      };
+     return (
+       <div>
+         <video ref={videoRef} />
+         <button onClick={startScreenCapture}>Start screen sharing</button>
+       </div>
+     );
+   }
 
-      return (
-        <div>
-          <video ref={videoRef}/>
-          <button onClick={startScreenCapture} >
-            Start screen sharing
-          </button>
-        </div>
-      )
-    }
+   async function start(videoElement: HTMLVideoElement): Promise<Smelter> {
+     const smelter = new Smelter();
+     await smelter.init();
 
-    async function start(videoElement: HTMLVideoElement): Promise<Smelter> {
-      const smelter = new Smelter();
-      await smelter.init();
+     await smelter.registerInput("camera", { type: "camera" });
 
-      await smelter.registerInput('camera', { type: 'camera' });
+     const { stream } = await smelter.registerOutput(
+       "output",
+       <SmelterScene />,
+       {
+         type: "whip",
+         endpointUrl: "https://example.com/whip",
+         bearerToken: "<STREAM TOKEN>",
+         video: {
+           resolution: { width: 1920, height: 1080 },
+         },
+         audio: true,
+       }
+     );
 
-      const { stream } = await smelter.registerOutput(
-        'output',
-        <SmelterScene />,
-        {
-          type: 'whip',
-          endpointUrl: 'https://example.com/whip',
-          bearerToken: '<STREAM TOKEN>',
-          video: {
-            resolution: { width: 1920, height: 1080 },
-          },
-          audio: true,
-        }
-      );
+     await smelter.start();
 
-      await smelter.start();
+     videoElement.srcObject = stream;
+     await videoElement.play();
 
-      videoElement.srcObject = stream;
-      await videoElement.play();
+     return smelter;
+   }
+   ```
 
-      return smelter;
-    }
-    ```
+   In this example:
 
-    In this example:
-    - We are adding `<button />` to `DemoPage` component that will trigger adding screen share as an input.
-    - Modify `SmelterScreen` component to change it based on connected inputs:
-      - Camera input scaled to output when screen share is not used.
-      - Screen share scaled to output and camera in top left corner when it is.
+   - We are adding `<button />` to `DemoPage` component that will trigger adding screen share as an input.
+   - Modify `SmelterScreen` component to change it based on connected inputs:
+     - Camera input scaled to output when screen share is not used.
+     - Screen share scaled to output and camera in top left corner when it is.
 
 </Steps>

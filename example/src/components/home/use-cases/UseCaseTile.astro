@@ -1,0 +1,60 @@
+---
+import { Image } from "astro:assets";
+
+import type { ImageMetadata } from "astro";
+import ArrowRight from "/public/images/arrow-right.svg";
+import GhostButton from "../../base/buttons/GhostButton.astro";
+
+interface Props {
+  header: string;
+  subHeader: string;
+  image: ImageMetadata;
+  uri: string;
+}
+
+const { header, subHeader, image, uri } = Astro.props;
+---
+
+<div id="useCaseTile" class:list={["sticky top-28 items-center"]}>
+  <div
+    class:list={"w-full rounded-[calc(2rem-1px)] bg-useCases-tileBackgroundOpacity border-gradient"}
+  >
+    <div
+      class="-z-10 bg-useCases-tileBackground rounded-[calc(2rem-1px)] h-full w-full absolute"
+    >
+      <div
+        id="gradient"
+        class="w-[256px] h-[72px] absolute left-1/2 top-[-36px] -z-10 -translate-x-1/2 use-case-tile-gradient"
+      >
+      </div>
+    </div>
+    <div class="flex flex-col justify-between p-6 sm:p-10 sm:pb-8 text-center">
+      <div class="flex flex-col gap-y-2 min-h-[100px]">
+        <h3 class="text-useCases-tileHeader">{header}</h3>
+        <p class="par-l text-useCases-tileSubheader">{subHeader}</p>
+      </div>
+      <a
+        href={uri}
+        target="_blank"
+        data-astro-prefetch
+        class="mt-6 flex flex-col items-end"
+      >
+        <Image
+          src={image}
+          alt={`${header}`}
+          class="aspect-video w-full rounded-2xl"
+        />
+        <span
+          aria-label={`${header} example`}
+          class="transition-transform duration-300 ease-in-out py-2"
+        >
+          <GhostButton
+            id="exampleGhostButton"
+            class="mt-4 self-end hover:text-example-link transition-colors duration-300 ease-in-out"
+            >See the demo <ArrowRight /></GhostButton
+          >
+        </span>
+      </a>
+    </div>
+  </div>
+</div>

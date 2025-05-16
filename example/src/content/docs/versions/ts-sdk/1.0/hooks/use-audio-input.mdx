@@ -1,0 +1,53 @@
+---
+title: useAudioInput
+sidebar:
+  order: 1
+slug: ts-sdk/1.0/ts-sdk/hooks/use-audio-input
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import useAudioInput from "./examples/useAudioInput.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+`useAudioInput` can be used to control audio configuration. If you're using the `InputStream` component, you can use the `mute` and `volume` properties to control the audio instead.
+
+<Aside type="caution">
+  Adding this hook or `<InputStream />` component more than once or for the
+  specific input will sum the configured volume.
+</Aside>
+
+## Usage
+
+<Code code={useAudioInput} title="useAudioInputExample.tsx" lang="tsx" collapse={["10-42"]} />
+
+## Reference
+
+```tsx
+function useAudioInput(inputId: string, audioOptions: AudioOptions);
+```
+
+<CollapsibleDetails summaryTitle="Type definitions">
+  ```tsx
+  type AudioOptions = {
+    volume: number;
+  };
+
+  function useAudioInput(inputId: string, audioOptions: AudioOptions);
+  ```
+</CollapsibleDetails>
+
+## Arguments
+
+### inputId
+
+ID of an input. It identifies a stream registered using a [Smelter.registerInput](/ts-sdk/1.0/ts-sdk/smelter#registerinput) method.
+
+* **Type**: `string`
+
+***
+
+### audioOptions
+
+`volume` - Number between 0 and 1 representing the audio volume.
+
+* **Type**: `{ volume: number }`

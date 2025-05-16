@@ -1,0 +1,111 @@
+---
+title: TilesStyleProps
+slug: ts-sdk/1.0/ts-sdk/props/tiles-style-props
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type TilesStyleProps = {
+  width?: number;
+  height?: number;
+  backgroundColor?: string;
+  tileAspectRatio?: string;
+  margin?: number;
+  padding?: number;
+  horizontalAlign?: "left" | "right" | "justified" | "center";
+  verticalAlign?: "top" | "center" | "bottom" | "justified";
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+## Properties
+
+### width
+
+Width of a component in pixels.
+
+* **Type**: `number`
+
+<Aside type="caution">
+  The behavior of the `Tiles` component varies depending on the type of its
+  parent component: - **Non-layout parent** - When the parent is not a layout
+  component, the `width` property is **required**. - **Layout parent** - For
+  parents that are layout components, please refer to the relevant component
+  documentation.
+</Aside>
+
+***
+
+### height
+
+Height of a component in pixels.
+
+* **Type**: `number`
+
+<Aside type="caution">
+  The behavior of the `Tiles` component varies depending on the type of its
+  parent component: - **Non-layout parent** - When the parent is not a layout
+  component, the `height` property is **required**. - **Layout parent** - For
+  parents that are layout components, please refer to the relevant component
+  documentation.
+</Aside>
+
+***
+
+### backgroundColor
+
+Background color in `#RRGGBBAA` or `#RRGGBB` format.
+
+* **Type**: `string`
+* **Default value**: `#00000000`
+
+***
+
+### tileAspectRatio
+
+Aspect ratio of each tile in `W:H` format, where `W` and `H` are integers.
+
+* **Type**: `string`
+* **Default value**: `16:9`
+
+***
+
+### margin
+
+Margin on each tile in pixels.
+
+* **Type**: `number`
+* **Default value**: `0`
+
+***
+
+### padding
+
+Padding on each tile in pixels.
+
+* **Type**: `number`
+* **Default value**: `0`
+
+***
+
+### horizontalAlign
+
+Horizontal alignment of tiles.
+
+* **Type**: `"left" | "right" | "justified" | "center"`
+* **Default value**: `"center"`
+
+***
+
+### verticalAlign
+
+Vertical alignment of tiles.
+
+* **Type**: `"top" | "center" | "bottom" | "justified"`
+* **Default value**: `"center"`

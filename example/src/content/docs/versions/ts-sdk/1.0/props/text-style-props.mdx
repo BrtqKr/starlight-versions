@@ -1,0 +1,175 @@
+---
+title: TextStyleProps
+slug: ts-sdk/1.0/ts-sdk/props/text-style-props
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type TextStyleProps = {
+  width?: number;
+  height?: number;
+  maxWidth?: number;
+  maxHeight?: number;
+  fontSize: number;
+  lineHeight?: number;
+  color?: string;
+  backgroundColor?: string;
+  fontFamily?: string;
+  fontStyle?: "normal" | "italic" | "oblique";
+  align?: "left" | "right" | "justified" | "center";
+  wrap?: "none" | "glyph" | "word";
+  fontWeight?: 
+    | "thin"
+    | "extra_light"
+    | "light"
+    | "normal"
+    | "medium"
+    | "semi_bold"
+    | "bold"
+    | "extra_bold"
+    | "black";
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+## Properties
+
+### width
+
+Specifies the width of the texture for rendering text. If undefined, the texture size adjusts to the text while not exceeding the `max_width`.
+
+* **Type**: `number`
+
+***
+
+### height
+
+Sets the height of the texture for rendering text. If undefined, the texture size adjusts to the text up to the `max_height`.
+
+* **Type**: `number`
+
+<Aside type="caution">
+  Providing `height` without defining `width` results in an error.
+</Aside>
+
+***
+
+### maxWidth
+
+Limits the width of the texture that the text will be rendered on.
+
+* **Type**: `number`
+* **Default value**: `7682`
+
+<Aside type="caution">Value is ignored if `width` is defined.</Aside>
+
+***
+
+### maxHeight
+
+Limits the height of the texture that the text will be rendered on.
+
+* **Type**: `number`
+* **Default value**: `4320`
+
+<Aside type="caution">Value is ignored if `height` is defined.</Aside>
+
+***
+
+### fontSize
+
+Font size in pixels.
+
+* **Type**: `number`
+
+***
+
+### lineHeight
+
+Distance between lines in pixels.
+
+* **Type**: `number`
+* **Default value**: value of the `fontSize`
+
+***
+
+### color
+
+Font color in `#RRGGBBAA` or `#RRGGBB` format.
+
+* **Type**: `string`
+* **Default value**: `#FFFFFFFF`
+
+***
+
+### backgroundColor
+
+Background color in `#RRGGBBAA` or `#RRGGBB` format.
+
+* **Type**: `string`
+* **Default value**: `#00000000`
+
+***
+
+### fontFamily
+
+Font family. Specifies the family name of the font. Note that "generic-family" values such as "sans-serif" are not supported.
+
+* **Type**: `string`
+* **Default value**: `"Verdana"`
+
+***
+
+### style
+
+Font style. The selected font needs to support the specified style.
+
+* **Type**: `"normal" | "italic" | "oblique";`
+* **Default value**: `"normal"`
+
+***
+
+### align
+
+Text align.
+
+* **Type**: `"left" | "right" | "justified" | "center"`
+* **Default value**: `"left"`
+
+***
+
+### wrap
+
+Defines the options for handling text that exceeds the available space.
+
+* **Type**: `"none" | "glyph" | "word"`
+* **Default value**: `"none"`
+* **Supported values**:
+  * `"none"` - Disables text wrapping; any text that exceeds the texture boundary will be truncated.
+  * `"glyph"` - Enables text wrapping at the glyph level.
+  * `"word"` - Wraps text at the word level, preventing word splits during wrapping.
+
+***
+
+### fontWeight
+
+Specifies the weight of the font, as defined in the <a href="https://learn.microsoft.com/en-gb/typography/opentype/spec/os2#usweightclass" target="_blank">OpenType specification</a>. Ensure the selected font supports this weight.
+
+* **Type**: `"thin" | "extra_light" | "light" | "normal" | "medium" | "semi_bold" | "bold" | "extra_bold" | "black"`
+* **Default value**: `"normal"`
+* **Supported values**:
+  * `"thin"` - Weight 100.
+  * `"extra_light"` - Weight 200.
+  * `"light"` - Weight 300.
+  * `"normal"` - Weight 400.
+  * `"medium"` - Weight 500.
+  * `"semi_bold"` - Weight 600.
+  * `"bold"` - Weight 700.
+  * `"extra_bold"` - Weight 800.
+  * `"black"` - Weight 900.

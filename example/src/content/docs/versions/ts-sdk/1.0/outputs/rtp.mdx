@@ -1,0 +1,348 @@
+---
+title: RTP
+sidebar:
+  order: 3
+slug: ts-sdk/1.0/ts-sdk/outputs/rtp
+---
+
+import { Code, Badge } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<Badge text="Node.js" variant="tip" size="large" />
+
+<br />
+
+<br />
+
+An output type that allows streaming video and audio from Smelter over RTP.
+
+## Usage
+
+```tsx title=rtpOutputExample.tsx
+import Smelter from "@swmansion/smelter-node";
+import { View } from "@swmansion/smelter";
+
+async function run() {
+  const smelter = new Smelter();
+  await smelter.init();
+  await smelter.registerOutput("example", <View />, {
+    type: "rtp_stream",
+    port: 8001,
+    transportProtocol: "tcp_server",
+    video: {
+      encoder: { type: "ffmpeg_h264" },
+      resolution: { width: 1920, height: 1080 },
+    },
+  });
+  // At this point you can connect to 8001 TCP port
+  // and start receiving RTP traffic.
+}
+void run();
+```
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type RegisterRtpOutput = {
+    type: "rtp_stream";
+    port: string | number;
+    ip?: string;
+    transportProtocol?: "udp" | "tcp_server";
+    video?: RtpVideoOptions;
+    audio?: RtpAudioOptions;
+  };
+  ```
+</CollapsibleDetails>
+
+Parameters for registering an output that sends composed video/audio as an RTP stream.
+
+## Properties
+
+### port
+
+Depends on the value of the `transportProtocol` field:
+
+* `udp` - Specifies a UDP port number to which RTP packets will be sent.
+* `tcp_server` - Specifies a local TCP port number or a range of ports that Smelter will listen to for incoming connections.
+
+<br />
+
+* **Type**: `string | number`
+
+***
+
+### transportProtocol
+
+Transport layer protocol that will be used to send RTP packets.
+
+* **Type**: `"udp" | "tcp_server"`
+* **Default value**: `udp`
+* **Supported values**:
+  * `udp` - UDP protocol.
+  * `tcp_server` - TCP protocol where Smelter is the server side of the connection.
+
+***
+
+### ip
+
+IP address to which RTP packets should be sent. This field is only valid if `transportProtocol` field is set to `udp`.
+
+* **Type**: `string | number`
+
+***
+
+### video
+
+Parameters of a video included in the RTP stream.
+
+* **Type**: [`RtpVideoOptions`](/ts-sdk/1.0/ts-sdk/outputs/rtp#rtpvideooptions)
+
+***
+
+### audio
+
+Parameters of an audio included in the RTP stream.
+
+* **Type**: [`RtpAudioOptions`](/ts-sdk/1.0/ts-sdk/outputs/rtp#rtpaudiooptions)
+
+## RtpVideoOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type RtpVideoOptions = {
+  resolution: {
+    width: number;
+    height: number;
+  };
+  sendEosWhen?: OutputEndCondition;
+  encoder: RtpVideoEncoderOptions;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Parameters of a video source included in the RTP stream.
+
+### Properties
+
+#### resolution
+
+Output resolution in pixels.
+
+* **Type**: `{ width: number; height: number;}`
+
+***
+
+#### sendEosWhen
+
+Condition for termination of the output stream based on the input streams states. If output includes both audio and video streams, then EOS needs to be sent for every type.
+
+* **Type**: [`OutputEndCondition`](/ts-sdk/1.0/ts-sdk/outputs/rtp#outputendcondition)
+
+***
+
+#### encoder
+
+Video encoder options.
+
+* **Type**: [`RtpVideoEncoderOptions`](/ts-sdk/1.0/ts-sdk/outputs/rtp#rtpvideoencoderoptions)
+
+## RtpVideoEncoderOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type RtpVideoEncoderOptions = {
+    type: "ffmpeg_h264";
+    preset: 
+      | "ultrafast"
+      | "superfast"
+      | "veryfast"
+      | "faster"
+      | "fast"
+      | "medium"
+      | "slow"
+      | "slower"
+      | "veryslow"
+      | "placebo";
+    ffmpegOptions?: Map<string, string>;
+  }
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Configuration for the video encoder, based on the selected codec.
+
+### Properties (type: “ffmpeg\_h264”)
+
+#### preset
+
+Video output encoder preset. Visit <a href="https://trac.ffmpeg.org/wiki/Encode/H.264#Preset" target="_blank">FFmpeg docs</a> to learn more.
+
+* **Type**: `"ultrafast" | "superfast" | "veryfast" | "faster" | "fast" | "medium" | "slow" | "slower" | "veryslow" | "placebo"`
+* **Default value**: `fast`
+* **Supported values**:
+  * `ultrafast`
+  * `superfast`
+  * `veryfast`
+  * `faster`
+  * `fast`
+  * `medium`
+  * `slow`
+  * `slower`
+  * `veryslow`
+  * `placebo`
+
+***
+
+#### ffmpegOptions
+
+Raw FFmpeg encoder options. Visit <a href="https://ffmpeg.org/ffmpeg-codecs.html" target="_blank">FFmpeg docs</a> to learn more.
+
+* **Type**: `Map<string, string>`
+
+## RtpAudioOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type RtpAudioOptions = {
+  mixingStrategy?: "sum_clip" | "sum_scale";
+  sendEosWhen?: OutputEndCondition;
+  encoder: RtpAudioEncoderOptions;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Parameters of an audio source included in the RTP stream.
+
+### Properties
+
+#### mixingStrategy
+
+Specifies how audio should be mixed.
+
+* **Type**: `"sum_clip" | "sum_scale"`
+* **Default value**: `"sum_clip"`
+* **Supported values**:
+  * `sum_clip` - First, the input samples are summed. If the result exceeds the i16 PCM range, it is clipped.
+  * `sum_scale` - First, the input samples are summed. If the result exceeds the i16 PCM range, the summed samples are scaled down by a factor to fit within the range.
+
+***
+
+#### sendEosWhen
+
+Condition for termination of the output stream based on the input streams states. If output includes both audio and video streams, then EOS needs to be sent for every type.
+
+* **Type**: [`OutputEndCondition`](/ts-sdk/1.0/ts-sdk/outputs/rtp#outputendcondition)
+
+***
+
+#### encoder
+
+Audio encoder options.
+
+* **Type**: [`RtpAudioEncoderOptions`](/ts-sdk/1.0/ts-sdk/outputs/rtp#rtpaudioencoderoptions)
+
+## RtpAudioEncoderOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type RtpAudioEncoderOptions = {
+    type: "opus";
+    channels: "mono" | "stereo";
+    preset?: "quality" | "voip" | "lowest_latency";
+  }
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Configuration for the audio encoder, based on the selected codec.
+
+### Properties(type: "opus")
+
+#### channels
+
+Channels configuration
+
+* **Type**: `"mono" | "stereo"`
+* **Supported values**:
+  * `mono` - Mono audio (single channel).
+  * `stereo` - Stereo audio (two channels).
+
+***
+
+#### preset
+
+Audio output encoder preset.
+
+* **Type**: `"quality" | "voip" | "lowest_latency"`
+* **Default value**: `voip`
+* **Supported values**:
+  * `quality` - Recommended for broadcast and high-fidelity applications requiring decoded audio to maintain maximum fidelity to the input signal.
+  * `voip` - Recommended for VoIP and videoconferencing applications, prioritizing listening quality and speech intelligibility.
+  * `lowest_latency` - Recommended **only** when achieving the lowest possible latency is the highest priority.
+
+## OutputEndCondition
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type OutputEndCondition = 
+  | { anyOf: string[]; }
+  | { allOf: string[]; }
+  | { anyInput: boolean; }
+  | { allInputs: boolean; };
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Defines when the output stream should end based on the state of the input streams. Only one of the nested fields can be set at a time.
+
+By default, the input stream is considered finished/ended when:
+
+* TCP connection was dropped/closed.
+* RTCP Goodbye packet (BYE) was received.
+* MP4 track has ended.
+* Input was unregistered already (or never registered).
+
+### Properties
+
+#### anyOf
+
+List of the input streams. The output stream will terminate if any stream in the list finishes.
+
+* **Type**: `string[]`
+
+***
+
+#### allOf
+
+List of the input streams. The output stream will terminate when all streams in the list finish.
+
+* **Type**: `string[]`
+
+***
+
+#### anyInput
+
+Terminate the output stream if any of the input streams end, including streams added after the output was registered. Notably, the output stream will not terminate if no inputs were ever connected.
+
+* **Type**: `boolean`
+
+***
+
+#### allInputs
+
+Terminate the output stream only when all input streams have finished. Notably, the output stream will terminate if no inputs were ever connected.
+
+* **Type**: `boolean`

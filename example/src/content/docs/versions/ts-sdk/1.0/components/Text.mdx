@@ -1,0 +1,56 @@
+---
+title: Text
+slug: ts-sdk/1.0/ts-sdk/components/text
+---
+
+import { Code } from "@astrojs/starlight/components";
+import textExample from "./examples/Text.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-text-example.webp";
+
+A component for rendering text.
+
+## Usage
+
+<Code code={textExample} title="TextExample.tsx" lang="tsx" collapse={["34-55"]} />
+
+<CollapsibleDetails summaryTitle="Example output">
+  <img src={ExampleImage.src} />
+</CollapsibleDetails>
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type TextProps = {
+    id?: string;
+    children?: (string | number)[] | string | number;
+    style?: TextStyleProps;
+  };
+  ```
+</CollapsibleDetails>
+
+## Props
+
+### children
+
+Text content to be displayed.
+
+* **Type**: `string | number | (string | number)[]`
+
+***
+
+### id
+
+ID of a component.
+
+* **Type**: `string`
+* **Default value**: Value produced by `useId` hook
+
+***
+
+### style
+
+Text styling properties.
+
+* **Type**: [`TextStyleProps`](/ts-sdk/1.0/ts-sdk/props/text-style-props)

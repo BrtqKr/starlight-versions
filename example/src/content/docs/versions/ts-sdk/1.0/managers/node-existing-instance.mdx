@@ -1,0 +1,69 @@
+---
+title: Node.js - Existing Instance
+slug: ts-sdk/1.0/ts-sdk/managers/node-existing-instance
+---
+
+import { Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+`ExistingInstanceManager` allows you to create a new `Smelter` instance that will connect
+to already running smelter server. This manager assumes that it is the only instance that
+connects to a specific smelter server.
+
+<Code
+  title="ExistingInstanceManagerExample.tsx"
+  code={`
+import Smelter, { ExistingInstanceManager } from "@swmansion/smelter-node"
+
+async function run() {
+const manager = new ExistingInstanceManager({
+ip: "127.0.0.1",
+port: 8000,
+protocol: 'https',
+});
+const smelter = new Smelter(manager);
+await smelter.init()
+}
+void run();
+`}
+  lang="tsx"
+/>
+
+## ExistingInstanceOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type ExistingInstanceOptions = {
+  port: number;
+  ip: string;
+  protocol: 'http' | 'https';
+};
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties
+
+#### ip
+
+IP of a running smelter server.
+
+* **Type**: `string`
+
+***
+
+#### port
+
+Port number where smelter API endpoint is exposed.
+
+* **Type**: `number`
+
+***
+
+#### protocol
+
+Protocol for connection. It also implies protocol of a WebSocket connection (`http -> ws` and `https -> wss`).
+
+* **Type**: `'http' | 'https'`

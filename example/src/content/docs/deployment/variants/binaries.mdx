@@ -1,0 +1,82 @@
+---
+title: Standalone server - Binaries
+sidebar:
+    order: 1
+---
+import { Aside } from '@astrojs/starlight/components';
+
+## How to get binaries
+
+You can get Smelter binaries from [GitHub releases](https://github.com/software-mansion/smelter/releases) or build them yourself.
+
+### GitHub releases
+
+GitHub Releases section includes binaries for:
+- `smelter_linux_x86_64.tar.gz` - Linux x86 default build.
+- `smelter_linux_aarch64.tar.gz` - Linux ARM default build.
+- `smelter_darwin_aarch64.tar.gz` - macOS (ARM) default build.
+- `smelter_darwin_x86_64.tar.gz` - macOS (Intel-based) default build.
+- `smelter_with_web_renderer_linux_x86_64.tar.gz` - Linux x86 build with web rendering enabled.
+- `smelter_with_web_renderer_darwin_aarch64.tar.gz` - macOS (ARM) with web rendering enabled.
+- `smelter_with_web_renderer_darwin_x86_64.tar.gz` - macOS (Intel-based) with web rendering enabled
+
+Web rendering increases the size of the binaries significantly, so the base binaries are built without
+support for it included.
+
+
+#### Runtime requirements
+
+For Linux:
+- FFmpeg 6
+- `glibc` 2.35 or higher (version used by Ubuntu 22.04)
+- MESA (e.g. `mesa-vulkan-drivers` package on Ubuntu)
+  - `23.2.1` or higher for CPU based rendering
+  - For GPU based rendering the lowest version we tested was `22.0.1`, but older version might also work.
+
+For macOS:
+- FFmpeg 7 (this version will mostly follow a default version available in Homebrew)
+
+<Aside>
+Changing FFmpeg version on macOS might be troublesome, so we decided to produce binaries that will
+be easiest to use for most users, even if this means updating FFmpeg version in a minor or patch release.
+Changes like that might be considered unsafe, but in case of Smelter, the macOS platform will be used
+mostly for development, and it is highly unlikely to be used for a production deployment.
+</Aside>
+
+
+### Building from source
+
+#### Prerequisites
+
+To build base version without web rendering you will need:
+- FFmpeg 6 or higher. Build time version has to be the same as runtime version.
+- Rust toolchain.
+- Following libraries (for build time you will need version with header files if your distro ships them separately):
+  - FFmpeg dependencies: `libavcodec`, `libavformat`, `libavfilter`, `libavdevice`, `libavutil`, `libswscale`, `libswresample`
+  - `libopus`
+  - `libssl`
+- cmake
+- pkg-config
+
+Linux specific (with a Vulkan backend):
+- MESA
+  - `23.2.1` or higher for CPU based rendering
+  - For GPU based rendering the lowest version we tested was `22.0.1`, but older version might also work.
+  - e.g. for Ubuntu
+    - build time: `apt-get install libegl1-mesa-dev libgl1-mesa-dri libxcb-xfixes0-dev`
+    - runtime: `apt-get install mesa-vulkan-drivers`
+
+To build version with web rendering support you will also need runtime dependencies of Chromium Embedded Framework (CEF).
+See [their documentation](https://github.com/chromiumembedded/cef) for details or our Dockerfile ([`build_tools/docker/full.Dockerfile`](https://github.com/software-mansion/smelter/blob/master/build_tools/docker/full.Dockerfile)).
+
+#### Building
+
+Building base version without web rendering support:
+```sh frame=none
+cargo build --no-defatult-features
+```
+
+Building version with web rendering support:
+```sh frame=none
+cargo build
+```

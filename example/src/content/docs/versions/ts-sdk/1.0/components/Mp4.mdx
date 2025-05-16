@@ -1,0 +1,63 @@
+---
+title: Mp4
+slug: ts-sdk/1.0/ts-sdk/components/mp4
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import mp4Example from "./examples/Mp4.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-mp4-example.mp4";
+
+A component that renders content of Mp4 file. It is simpler alternative to the [`InputStream`](/ts-sdk/1.0/ts-sdk/components/inputstream)
+component that does not require registration, but with more limited set of options.
+
+<Aside type="caution">
+  `@swmansion/smelter-web-wasm` currently does not support audio from mp4 files.
+</Aside>
+
+## Usage
+
+<Code code={mp4Example} title="Mp4Example.tsx" lang="tsx" collapse={["12-33"]} />
+
+<CollapsibleDetails summaryTitle="Example output">
+  <video autoplay loop muted src={ExampleImage} alt="example output" />
+</CollapsibleDetails>
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type Mp4Props = {
+    source: string;
+    volume?: number;
+    muted?: boolean;
+  };
+  ```
+</CollapsibleDetails>
+
+## Props
+
+### source
+
+Url or local path to the mp4 file. Note that the path has to be local to the machine where
+Smelter server runs.
+
+* **Type**: `string`
+
+***
+
+### volume
+
+Audio volume of the input stream. Accepts values between 0 and 1.
+
+* **Type**: `number`
+* **Default value**: 1
+
+***
+
+### muted
+
+Determines whether to mute audio of the input stream.
+
+* **Type**: `boolean`
+* **Default value**: `false`

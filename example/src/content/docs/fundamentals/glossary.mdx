@@ -1,0 +1,39 @@
+---
+title: Glossary of terms
+---
+
+### Offline processing
+
+Offline processing represents a mode where Smelter is operating only non-real time inputs and
+outputs e.g. combining 2 mp4 files into one. In particular in this mode, the processing time is
+not tied to the real time, processing progresses as fast as hardware allows.
+
+### Live processing
+
+Live processing represents a mode where Smelter is operating on some real time inputs or outputs.
+Processing will be synchronized with real time clock (plus some buffer).
+
+### Timestamp
+
+Unless stated otherwise all user-facing timestamps are defined in milliseconds and measure time
+from the queue start.
+
+For offline processing it measures the time of the processed stream. This value is different than
+real (wall-clock) time, because offline processing might be faster or slower than real-time.
+
+### Input
+
+Input is an entity that needs to be registered before use and can be used as a source of frames.
+For example, incoming RTP stream or MP4 file.
+
+### Output
+
+Output is an entity that needs to be registered before use and can be used as a destination for generated frames.
+For example, outgoing RTP stream or writing to disk as MP4 file.
+
+### Resource
+
+Resource is an entity that needs to be registered before use, but it is neither an [Input](#input) nor an [Output](#output).
+For example, shader source, font, or an image.
+
+

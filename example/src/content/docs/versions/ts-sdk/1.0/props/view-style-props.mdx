@@ -1,0 +1,199 @@
+---
+title: ViewStyleProps
+slug: ts-sdk/1.0/ts-sdk/props/view-style-props
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type ViewStyleProps = {
+  width?: number;
+  height?: number;
+  direction?: "row" | "column";
+  top?: number;
+  left?: number;
+  bottom?: number;
+  right?: number;
+  rotation?: number;
+  overflow?: "visible" | "hidden" | "fit";
+  backgroundColor?: string;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+## Properties
+
+### width
+
+Width of a component in pixels.
+
+* **Type**: `number`
+
+<Aside type="caution">
+  The behavior of the `View` component varies depending on the type of its
+  parent component: - **Non-layout parent** - When the parent is not a layout
+  component, the `width` property is **required**. - **Layout parent** - For
+  parents that are layout components, please refer to the relevant component
+  documentation.
+</Aside>
+
+***
+
+### height
+
+Height of a component in pixels.
+
+* **Type**: `number`
+
+<Aside type="caution">
+  The behavior of the `View` component varies depending on the type of its
+  parent component: - **Non-layout parent** - When the parent is not a layout
+  component, the `height` property is **required**. - **Layout parent** - For
+  parents that are layout components, please refer to the relevant component
+  documentation.
+</Aside>
+
+***
+
+### direction
+
+Defines how static children are positioned inside a View component.
+
+* **Type**: `"row" | "column"`
+* **Default value**: `"row"`
+* **Supported values**:
+  * `"row"` - Children are positioned from left to right.
+  * `"column"` - Children are positioned from top to bottom.
+
+***
+
+### top
+
+Specifies the distance in pixels from the top edge of a component to the top edge of its parent component. If this attribute is set, the element will be positioned absolutely, overriding any layout constraints imposed by its parent.
+
+* **Type**: `number`
+
+***
+
+### right
+
+Specifies the distance in pixels from the right edge of a component to the right edge of its parent component. If this attribute is set, the element will be positioned absolutely, overriding any layout constraints imposed by its parent.
+
+* **Type**: `number`
+
+***
+
+### bottom
+
+Specifies the distance in pixels from the bottom edge of a component to the bottom edge of its parent component. If this attribute is set, the element will be positioned absolutely, overriding any layout constraints imposed by its parent.
+
+* **Type**: `number`
+
+***
+
+### left
+
+Specifies the distance in pixels from the left edge of a component to the left edge of its parent component. If this attribute is set, the element will be positioned absolutely, overriding any layout constraints imposed by its parent.
+
+* **Type**: `number`
+
+***
+
+### padding
+
+Specifies the padding for each side of a component.
+
+* **Type**: `number`
+
+***
+
+### paddingVertical
+
+Specifies the padding for the top and bottom side of a component.
+
+* **Type**: `number`
+
+***
+
+### paddingHorizontal
+
+Specifies the padding for the left and right side of a component.
+
+* **Type**: `number`
+
+***
+
+### paddingTop
+
+Specifies the padding for the top side of a component.
+
+* **Type**: `number`
+
+***
+
+### paddingBottom
+
+Specifies the padding for the bottom side of a component.
+
+* **Type**: `number`
+
+***
+
+### paddingLeft
+
+Specifies the padding for the left side of a component.
+
+* **Type**: `number`
+
+***
+
+### paddingRight
+
+Specifies the padding for the right side of a component.
+
+* **Type**: `number`
+
+***
+
+### rotation
+
+Specifies the rotation of a component, measured in degrees. If this attribute is set, the element will be positioned absolutely, overriding any layout constraints imposed by its parent.
+
+* **Type**: `number`
+
+***
+
+### overflow
+
+Controls the behaviour of the content exceeding the area size.
+
+* **Type**: `"visible" | "hidden" | "fit"`
+* **Default value**: `"hidden"`
+* **Supported values**:
+  * `"visible"` - Render everything, including content that extends beyond their parent.
+  * `"hidden"` - Render only parts of the children that are inside their parent area.
+  * `"fit"` - If children components are too big to fit inside the parent, resize everything inside to fit.
+
+<Aside>
+  When using `fit`, components with unknown sizes are treated as if they had a
+  size of 0 when calculating the scaling factor.
+</Aside>
+
+<Aside type="caution">
+  `fit` will resize everything inside the parent, including absolutely
+  positioned elements.
+</Aside>
+
+***
+
+### backgroundColor
+
+Background color in `#RRGGBBAA` or `#RRGGBB` format.
+
+* **Type**: `string`
+* **Default value**: `#00000000`

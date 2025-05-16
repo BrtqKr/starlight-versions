@@ -1,0 +1,121 @@
+---
+title: WHIP (Web API)
+slug: ts-sdk/1.0/ts-sdk/outputs/wasm-whip
+---
+
+import { Aside, Code, Badge } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<Badge text="Browser (WASM)" variant="tip" size="large" />
+
+<br />
+
+<br />
+
+An output that sends the output stream via WHIP protocol.
+
+## Usage
+
+```tsx title=whipOutputExample.tsx
+import Smelter from "@swmansion/smelter-web-wasm";
+import { View } from "@swmansion/smelter";
+
+async function run() {
+  const smelter = new Smelter();
+  await smelter.init();
+  await smelter.registerOutput('example', <View />, {
+    type: 'whip',
+    endpointUrl: 'https://example.com/whip',
+    video: {
+      resolution: { width: 1920, height: 1080 },
+    },
+    audio: true;
+  });
+}
+void run()
+```
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type RegisterWhipOutput = {
+    type: "whip";
+    endpointUrl: string;
+    bearerToken?: string;
+    iceServers?: RTCConfiguration["iceServers"];
+    video: WhipOutputVideo;
+    audio?: boolean;
+  };
+  ```
+</CollapsibleDetails>
+
+## Properties
+
+### endpointUrl
+
+Url of a WHIP endpoint.
+
+* **Type**: `string`
+
+***
+
+### bearerToken
+
+Bearer token for a WHIP connection.
+
+* **Type**: `string`
+
+***
+
+### iceServers
+
+List of ICE servers that should be added to `RTCPeerConnection`
+
+* **Type**: [`RTCConfiguration['iceServers]`](https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/RTCPeerConnection#iceservers)
+* **Defaults to**: `[{ urls: 'stun:stun.l.google.com:19302' }]`
+
+***
+
+### video
+
+Parameters of an output video.
+
+* **Type**: [`WhipOutputVideo`](#whipoutputvideo)
+
+***
+
+### audio
+
+If `true` `MediaStream` returned from a register call will include audio track.
+
+* **Type**: `boolean`
+* **Defaults to**: `false`
+
+## WhipOutputVideo
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type RegisterCanvasOutput = {
+  resolution: { width: number; height: number; }
+  maxBitrate?: number;
+};
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties
+
+#### maxBitrate
+
+Max bitrate of a stream.
+
+* **Type**: `number`
+
+#### resolution
+
+Resolution of an output video
+
+* **Type**: `{ width: number; height: number }`

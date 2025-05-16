@@ -1,0 +1,13 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"button">;
+
+const { class: buttonClass, ...buttonProps } = Astro.props;
+---
+
+<button class:list={['h-8 w-fit text-white', buttonClass]} {...buttonProps}>
+  <div class="flex gap-x-1.5 sm:gap-x-3 text-xl">
+    <slot />
+  </div>
+</button>

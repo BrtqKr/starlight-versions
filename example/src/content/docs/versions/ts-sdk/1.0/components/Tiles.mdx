@@ -1,0 +1,141 @@
+---
+title: Tiles
+slug: ts-sdk/1.0/ts-sdk/components/tiles
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import tilesExample from "./examples/Tiles.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-tiles-example.mp4";
+
+Tiles is a layout component that arranges all child components side by side, optimizing the use of
+available space. It divides its area into multiple rectangles or tiles, assigning one to each child
+component. Each of these rectangles is of equal size, and they do not overlap.
+
+## Usage
+
+<Code code={tilesExample} title="TilesExample.tsx" lang="tsx" collapse={["28-45", "50-88"]} />
+
+<CollapsibleDetails summaryTitle="Example output">
+  <video autoplay loop muted src={ExampleImage} alt="example output" />
+</CollapsibleDetails>
+
+## Positioning
+
+### Absolute
+
+A component is absolutely positioned when it specifies style properties such as `top`, `left`, `right`, `bottom`, or `rotation`. These properties determine the component's position relative to its parent. However, the parent component must support absolute positioning for these values to take effect.
+
+<Aside type="caution">
+  * Tiles **do not** support absolute positioning for its child components. All
+    children will still be rendered, but all fields like top, left, right, bottom,
+    and rotation will be ignored. - Tiles **cannot** be absolutely positioned
+    relative to its parent.
+</Aside>
+
+### Static
+
+`Tiles` determine the number of rows and columns in which children should be placed, based on several factors:
+
+* The size of the `Tiles` component.
+* The aspect ratio of a single tile (specified by the `titleAspectRatio` field).
+* The number of child components.
+
+An optimal configuration of rows and columns aims to utilize the largest possible area of the component. Children are positioned in the order they appear, from left to right, and arranged row-by-row from top to bottom.
+
+The placement and sizing behavior of child components varies depending on their type, as detailed in the table below:
+
+{" "}
+
+<table>
+  <tr>
+    <th>
+      <strong>Component Type</strong>
+    </th>
+
+    <th>
+      <strong>Behavior</strong>
+    </th>
+  </tr>
+
+  <tr>
+    <td>
+      <strong>Non-layout Component</strong>
+    </td>
+
+    <td>
+      Scales proportionally to fit inside the parent. If the aspect ratios do
+      not match, the component will be centered vertically or horizontally.
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <strong>Layout Component</strong>
+    </td>
+
+    <td>
+      Takes the width and height of a tile, ignoring its own width/height fields
+      if they are defined.
+    </td>
+  </tr>
+</table>
+
+## Transitions
+
+`Tiles` do not support size transitions in the same way as `View` or `Rescaler`. The transitions provided by `Tiles` are predefined and applied automatically, but you can customize them using `transition` prop. Currently, we support:
+
+* **Adding a new component** - when a component is added, all existing components shift to their new locations within a period defined by `transition.duration_ms`. At the end of this transition, the new child component appears without any animation.
+* **Removing an existing component** - when a component is removed, the tile containing that item disappears immediately without animation. Subsequently, the remaining elements relocate to their new positions within the time specified by `transition.duration_ms`.
+* **Reordering child components** - whenever the order of the children is changed, the elements relocate to their new positions within the time specified by `transition.duration_ms`.
+
+<Aside>
+  To further customize animations, consider wrapping the `Tiles` component
+  within a `View` and apply your desired transition to the wrapper.
+</Aside>
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type TilesProps = {
+    id?: string;
+    children: ReactNode;
+    style?: TilesStyleProps;
+    transition?: Transition;
+  };
+  ```
+</CollapsibleDetails>
+
+## Props
+
+### children
+
+Each individual child will be displayed within single tile of a `Tiles` component.
+
+* **Type**: `ReactNode`
+
+***
+
+### id
+
+ID of a component.
+
+* **Type**: `string`
+* **Default value**: Value produced by `useId` hook
+
+***
+
+### style
+
+Tiles styling properties.
+
+* **Type**: [`TilesStyleProps`](/ts-sdk/1.0/ts-sdk/props/tiles-style-props)
+
+***
+
+### transition
+
+Specification of the transition properties to be applied while reordering `Tiles` children
+
+* **Type**: [`Transition`](/ts-sdk/1.0/ts-sdk/props/transition)

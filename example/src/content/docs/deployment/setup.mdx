@@ -1,0 +1,59 @@
+---
+title: Deployment setup
+---
+import { Aside } from '@astrojs/starlight/components';
+
+Smelter can be deployed in various ways, depending on your platform, used features and whether it is used standalone or via Membrane Framework plugin.
+
+### Standalone server 
+
+Standalone server can be deployed by:
+- [Using docker images from `ghcr.io/software-mansion/smelter`](/deployment/variants/docker/#image-registry)
+- [Building your own docker images](/deployment/variants/docker/#build-your-own-image)
+- [Using binaries from GitHub release](/deployment/variants/binaries/#github-releases)
+- [Building from source](/deployment/variants/binaries/#building-from-source)
+
+Each of SDKs listed below implements a way to automatically provision a Smelter server. However, standalone guides
+above will still be useful even if you are using Smelter from TypeScript or Elixir (Membrane Framework). For example,
+you might want to build binaries or deploy the server yourself, and just use SDK to manage that instance.
+
+### TypeScript SDK - Node.js 
+
+When using TypeScript SDK, the Node.js process will execute only the React code, but actual
+rendering and media processing will happen in a separate process. By default, SDK downloads
+compositor binaries and starts a new Smelter servers on its own. However, you can also connect
+to an existing instance that you start yourself.
+
+First, you need to decide:
+- Where will your React code run?
+- Where will your Smelter server run?
+
+The easiest and the most practical scenario would be to:
+- For production run both Node.js and Smelter server in the same Docker container.
+- For development run Node.js on your machine and Smelter server locally (either directly or in a Docker container).
+
+<Aside>
+It is possible to run your React code on the different machine than Smelter server. However,
+it is only useful in very limited circumstances, for example if you are running untrusted 
+JavaScript that controls the streams.
+</Aside>
+
+### TypeScript SDK - Browser (WASM)
+
+When running Smelter in browser everything is purely client-side, so there is no need
+to deploy anything, but there are some additional steps you need to take to configure
+your project.
+
+### Membrane Framework plugin
+
+To use Smelter in a Membrane pipeline you can use [`membrane_smelter_plugin`](https://hexdocs.pm/membrane_smelter_plugin/readme.html)
+that wraps our server. For instructions how to deploy Membrane based applications check out [their documentation](https://membrane.stream/learn).
+
+The plugin serves as a bridge between Membrane and the Smelter server, which must still be deployed. By default, the plugin will
+download the necessary binaries and launch the server locally, but you must ensure that all software and hardware requirements are met.
+
+Refer to standalone guides for more information:
+- [Binaries](/deployment/variants/binaries)
+- [Docker](/deployment/variants/docker)
+
+

@@ -1,0 +1,68 @@
+---
+title: Overview
+---
+
+HTTP API is the most direct way to configure and manage a Smelter server. This section
+will highlight the base element that you need to be familiar to leverage this API.
+
+### Routes
+
+List of all HTTP routes can be found [here](/http-api/routes).
+
+### Events
+
+Smelter can deliver events in response to certain state changes. To receive them
+you need to establish WebSocket connection to
+[this endpoint](/http-api/routes#websocket-endpoint).
+
+See [events page](/http-api/events) to learn more.
+
+### Components
+
+Components are a fundamental building blocks for configuring video composition. Some of them
+represent final elements that will be rendered on an output stream, and some are just
+a way to define a layout for their child components.
+
+A scene is a component tree assigned to a specific Smelter output. It starts with a root
+component and includes are its children (both direct and indirect). Scene can be defined
+when:
+- registering a new output - [request](/http-api/routes#register-output)
+- updating a scene of existing output - [request](/http-api/routes#update-output)
+
+Smelter supports following components:
+- [Image](/http-api/components/image)
+- [InputStream](/http-api/components/inputstream)
+- [Rescaler](/http-api/components/rescaler)
+- [Shader](/http-api/components/shader)
+- [Text](/http-api/components/text)
+- [Tiles](/http-api/components/tiles)
+- [View](/http-api/components/view)
+- [WebView](/http-api/components/webview)
+
+### Inputs
+
+Inputs are a way of connecting external video and audio sources. They can consume media from
+static files, streams or connected devices. To use an input you need to register it first with
+a [input register request](/http-api/routes#register-input). After registration, you can use
+[InputStream](/http-api/components/inputstream) component in the scene definition to include
+it in the composed output.
+
+- [MP4](/http-api/inputs/mp4)
+- [RTP](/http-api/inputs/rtp)
+- [WHIP](/http-api/inputs/whip)
+- [DeckLink](/http-api/inputs/decklink)
+
+### Outputs
+
+Similar to inputs, outputs require registering them before they can be utilized. You can register an output by using [output register request](/http-api/routes#register-output). Part of the register requests are fields `video.initial` and `audio.initial` that describe starting scene that can be latter updated with [output update request](/http-api/routes#update-output)
+
+- [MP4](/http-api/outputs/mp4)
+- [RTP](/http-api/outputs/rtp)
+- [WHIP](/http-api/outputs/whip)
+
+### Resources
+Other than inputs and outputs, Smelter supports a few other types of entities that also need to be registered.
+- [Shader](/http-api/resources/shader)
+- [Image](/http-api/resources/image)
+- [WebRenderer](/http-api/resources/web-renderer)
+- [Fonts](/http-api/routes#register-font)

@@ -63,7 +63,7 @@ export default function starlightVersionsPlugin(userConfig: StarlightVersionsUse
             error instanceof Error ? error.message : 'An error occurred while generating versioned sidebars.',
           )
         }
-
+        
         addIntegration({
           name: 'starlight-versions-integration',
           hooks: {

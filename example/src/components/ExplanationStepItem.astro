@@ -1,0 +1,20 @@
+---
+import { Image, type LocalImageProps } from "astro:assets";
+interface Props {
+  index: number;
+  text: string;
+  indexImage: LocalImageProps["src"];
+}
+const { index, text, indexImage } = Astro.props;
+---
+
+<div class="gradient-light-1 flex h-full flex-1 rounded-4xl p-px">
+  <div class="h-full w-full rounded-[calc(2rem-1px)] bg-explanation-background">
+    <div class="relative z-0 flex h-full flex-col p-6 pt-12 text-center">
+      <Image src={indexImage} alt={`step ${index + 1}`} class="-z-10 self-center mb-8" />
+      <div class="mb-6">
+        <h3 class="text-explanation-text" set:html={text} />
+      </div>
+    </div>
+  </div>
+</div>

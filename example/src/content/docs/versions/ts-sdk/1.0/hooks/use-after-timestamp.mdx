@@ -1,0 +1,42 @@
+---
+title: useAfterTimestamp
+slug: ts-sdk/1.0/ts-sdk/hooks/use-after-timestamp
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import useAfterTimestampExample from "./examples/useAfterTimestamp.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+`useAfterTimestmp` returns boolean that represents whether specified [timestamp](/ts-sdk/1.0/fundamentals/glossary#timestamp) already passed.
+
+For [offline processing](/ts-sdk/1.0/fundamentals/glossary#offline-processing), you can't rely on real time clock to measure time. This hook replaces patterns
+where you would use `useEffect` + `setTimeout` in a live processing case.
+
+<Aside>
+  This hook works both for live and offline processing, but it is primarily
+  intended for offline processing.
+</Aside>
+
+## Usage
+
+<Code code={useAfterTimestampExample} title="useAfterTimestampExample.tsx" lang="tsx" collapse={["21-38"]} />
+
+## Reference
+
+```tsx
+function useAfterTimestamp(timestampMs: number): boolean;
+```
+
+## Arguments
+
+### timestampMs
+
+[Timestamp](/ts-sdk/1.0/fundamentals/glossary#timestamp) in milliseconds.
+
+* **Type**: `number`
+
+## Returns
+
+`true` if the time defined by the timestamp already passed, `false` otherwise.
+
+* **Type**: `boolean`

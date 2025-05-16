@@ -1,0 +1,83 @@
+---
+import Select from "./base/Select.astro";
+import TextArea from "./base/TextArea.astro";
+import TextInput from "./base/TextInput.astro";
+import PrimaryButton from "./base/buttons/PrimaryButton.astro";
+
+import ArrowRight from "/public/images/arrow-right.svg";
+---
+
+<section
+  id="contact"
+  class="mx-4 my-20 flex gap-x-28 rounded-4xl border border-form-border bg-mainBackground flex-col p-10 sm:mx-8 xl:mx-40 lg:flex-row"
+>
+  <div>
+    <h2 class="shrink-0 text-form-header md:mb-4">
+      Do you want to use<br/>Smelter?
+    </h2>
+    <p class="text-form-subtitle">Tell us about your needs and we’ll get back to you in 48 hours</p>
+  </div>
+  <form class="flex w-full flex-col gap-y-10 mt-12 sm:mt-0" method="POST">
+    <TextInput
+      label="Your e-mail"
+      type="email"
+      name="email"
+      placeholder="user@smelter.dev"
+      required
+    />
+    <Select label="Type of inquiry" name="inquiry">
+      <option value="demo-request"
+        >I'm interested in a demo/trial to see how Smelter works</option
+      >
+      <option value="question">I have a few questions regarding Smelter</option>
+      <option value="feature-request"
+        >I need additional features for my project</option
+      >
+      <option value="enterprise-request"
+        >I'm interested in enterprise-level deployment and integration</option
+      >
+      <option value="unique-application"
+        >I have a unique use case in mind and want to discuss it</option
+      >
+    </Select>
+    <TextArea
+      label="Tell us more about your needs"
+      name="message"
+      class="resize-none"
+      rows="6"
+      required
+    />
+    <PrimaryButton type="submit" class="self-end w-full sm:w-fit">
+      <p class="par-l">Send the message</p>
+      <ArrowRight />
+    </PrimaryButton>
+  </form>
+</section>
+
+<script>
+  import { actions } from "astro:actions";
+
+  function closeSnackbar() {
+    const snackbar = document.getElementById("successSnackbar");
+    snackbar?.classList.remove("translate-y-0", "opacity-100");
+    snackbar?.classList.add("translate-y-full", "opacity-0");
+  }
+
+  function showSnackbar() {
+    const snackbar = document.getElementById("successSnackbar");
+    snackbar?.classList.remove("translate-y-full", "opacity-0");
+    snackbar?.classList.add("translate-y-0", "opacity-100");
+    setTimeout(closeSnackbar, 5000);
+  }
+
+  const form = document.querySelector("form");
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const formData = new FormData(form);
+    const { error } = await actions.submitContact(formData);
+    if (!error) {
+      form?.reset();
+      showSnackbar();
+    }
+  });
+</script>

@@ -5,8 +5,8 @@ sidebar:
 slug: ts-sdk/1.0/ts-sdk/inputs/mp4
 ---
 
-import { Aside, Badge, Code } from '@astrojs/starlight/components';
-import CollapsibleDetails from '../../../../../components/CollapsibleDetails.astro';
+import { Aside, Badge, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
 
 <Badge text="Node.js" variant="tip" size="large" />
 
@@ -35,8 +35,8 @@ async function run() {
   const smelter = new Smelter();
   await smelter.init();
   await smelter.registerInput("example", {
-      type: "mp4",
-      serverPath: "./input.mp4"
+    type: "mp4",
+    serverPath: "./input.mp4",
   });
 }
 void run();
@@ -54,7 +54,7 @@ void run();
     required?: bool;
     offsetMs?: number;
     videoDecoder?: "ffmpeg_h264" | "vulkan_video";
-  }
+  };
   ```
 </CollapsibleDetails>
 
@@ -117,6 +117,7 @@ The decoder to use for decoding video.
 * **Option availability**: <Badge text="Node.js" variant="tip" />
 * **Default value**: `ffmpeg_h264`
 * **Supported values**:
+
   * `"ffmpeg_h264"` - Use the software decoder based on ffmpeg.
   * `"vulkan_video"` (<Badge text="Required feature:vk-video" variant="note" />) - Use hardware decoder based on Vulkan Video.
 

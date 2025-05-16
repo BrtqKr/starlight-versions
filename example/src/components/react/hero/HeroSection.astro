@@ -1,0 +1,49 @@
+---
+import PrimaryButton from "@components/base/buttons/PrimaryButton.astro";
+import Image from "astro/components/Image.astro";
+
+import ArrowRight from "/public/images/arrow-right.svg";
+import swmLogo from "/public/images/swm-logo.svg";
+
+import "./heroSection.scss";
+import TertiaryButton from "@components/base/buttons/TertiaryButton.astro";
+import Example from "./Example.astro";
+---
+
+<section class="px-4 sm:px-12 flex flex-col justify-center py-28 relative">
+  <div id="descriptionLayer" class="flex grow flex-col items-center text-center">
+    <div class="flex flex-col">
+      <div class="flex flex-col items-center">
+        <div class="flex gap-x-2 py-2 ">
+          <p class="par-xs text-hero-authorLabel">Created by</p>
+          <a rel="noreferrer noopener" href="https://swmansion.com/" target="_blank">
+            <Image src={swmLogo} alt="SoftwareMansion logo" class="fill-hero-authorLabel" loading="eager" />
+          </a>
+        </div>
+        <div class="mb-8 flex flex-col gap-y-4">
+          <h1 class="text-hero-title">Video compositing toolkit for React</h1>
+          <p class="par-l text-hero-subtitle">
+            Real-time. Low-latency. Made for React devs
+          </p>
+        </div>
+        <Example transition:animate="fade"/>
+      </div>
+      
+      <div class="flex mt-4 gap-4 justify-center items-center flex-col sm:flex-row sm:mt-12">
+        <a href="#pricing" style="text-decoration: none; color: inherit;">
+          <PrimaryButton class={"sm:h-16"} textClass="text-sm!">
+            <p class="par-xl">Try it for free</p>
+            <ArrowRight />
+          </PrimaryButton>
+        </a>
+        <a href="#examples" style="text-decoration: none; color: inherit;">
+          <TertiaryButton class={"sm:h-16"}>
+            <p class="par-xl">See a live demo</p>
+            <ArrowRight />
+          </TertiaryButton>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+

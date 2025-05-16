@@ -1,0 +1,42 @@
+---
+title: useBlockingTask
+slug: ts-sdk/1.0/ts-sdk/hooks/use-blocking-task
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import useBlockingTaskExample from "./examples/useBlockingTask.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+`useBlockingTask` hook provides a way to run an async function.
+
+For [offline processing](/ts-sdk/1.0/fundamentals/glossary#offline-processing), it will additionally block processing until that Promise resolves. As long
+as there are unresolved blocking tasks, the rendering for the next timestamp will not start.
+
+<Aside>
+  This hook works both for live and offline processing, but it is primarily
+  intended for offline processing.
+</Aside>
+
+## Usage
+
+<Code code={useBlockingTaskExample} title="useBlockingTaskExample.tsx" lang="tsx" collapse={["1-8", "27-44"]} />
+
+## Reference
+
+```tsx
+function useBlockingTask<T>(fn: () => Promise<T>): T | undefined;
+```
+
+## Arguments
+
+### fn
+
+Async function that hook should execute while blocking processing.
+
+* **Type**: `number`
+
+## Returns
+
+The value returned by `fn` function or `undefined`.
+
+* **Type**: `<T> | undefined`

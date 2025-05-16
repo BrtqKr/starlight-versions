@@ -1,0 +1,187 @@
+---
+title: OfflineSmelter
+slug: ts-sdk/1.0/ts-sdk/smelter-offline
+---
+
+import { Code, Aside } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<Code code={`import { OfflineSmelter } from "@swmansion/smelter-node"`} lang="tsx" />
+
+`OfflineSmelter` is intended for [offline processing](/ts-sdk/1.0/fundamentals/glossary#offline-processing) e.g. if you need to combine few mp4 files together.
+It has simplified API compared to the [`Smelter`](/ts-sdk/1.0/ts-sdk/smelter) class, optimized for rendering just one output file as a result.
+
+## new Smelter()
+
+Creates a new offline smelter instance. You have to call [`init()`](#init) first before this object can be used.
+
+<Code code={`new OfflineSmelter(manager?: SmelterManager)`} lang="tsx" />
+
+<CollapsibleDetails summaryTitle="Type definitions">
+  <Code
+    code={`
+type ApiRequest = {
+  method: 'GET' | 'POST';
+  route: string;
+  body?: object;
+};
+
+type MultipartRequest = {
+method: 'POST';
+route: string;
+body: any;
+};
+
+type SmelterManager = {
+setupInstance(): Promise<void>;
+sendRequest(request: ApiRequest): Promise<object>;
+sendMultipartRequest(request: MultipartRequest): Promise<object>;
+registerEventListener(cb: (event: unknown) => void): void;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Parameters
+
+#### manager
+
+Configures how the client code will connect and manage a Smelter server. Smelter SDK provides 2 implementations that you can use or extend:
+
+* [`LocallySpawnedInstnaceManager`](/ts-sdk/1.0/ts-sdk/managers/node-locally-spawned) (**Default Configuration**) - Automatically download the necessary Smelter binaries and launch the server on your local machine.
+* [`ExistingInstanceManager`](/ts-sdk/1.0/ts-sdk/managers/node-existing-instance) - Connect to a smelter server instance that is already running.
+
+<br />
+
+* **Type**: [`SmelterManager`](#new-smelter)
+
+## init()
+
+<Code code={`Smelter.init(): Promise<void>`} lang="tsx" />
+
+Initialize the Smelter instance. This might spawn a new instance or just establish a connection, depending on the `manager` used while creating Smelter instance.
+
+After `init()` you can start connecting inputs/outputs or register other elements. However, no output stream will be produced until `start()` method is called.
+
+## render()
+
+<Code
+  code={`
+import React from "react";
+
+Smelter.render(
+root: React.ReactElement,
+output: RegisterOutput,
+): Promise<object>`}
+  lang="tsx"
+/>
+
+<CollapsibleDetails summaryTitle="Type definitions">
+  <Code
+    code={`
+import {
+  RegisterRtpOutput,
+  RegisterMp4Output,
+  RegisterWhipOutput
+} from "@swmasnion/smelter"
+
+type RegisterOutput =
+| ({ type: 'rtp_stream' } & RegisterRtpOutput)
+| ({ type: 'mp4' } & RegisterMp4Output)
+| ({ type: 'whip' } & RegisterWhipOutput);
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Register external destination that can be used as a smelter output. Visit output documentation to learn more:
+
+* [MP4](/ts-sdk/1.0/ts-sdk/outputs/mp4)
+* [RTP](/ts-sdk/1.0/ts-sdk/outputs/rtp)
+* [WHIP](/ts-sdk/1.0/ts-sdk/outputs/whip)
+
+<Aside type="caution">
+  Remember that in this mode compositor will produce frames as fast as possible.
+  Protocols like RTP or WHIP can technically be used as output, but in most
+  cases it would not make sense.
+</Aside>
+
+## registerInput()
+
+<Code
+  code={`
+import { Inputs } from "@swmasnion/smelter"
+
+Smelter.registerInput(
+inputId: string,
+input: Inputs.RegisterInput,
+): Promise<object>`}
+  lang="tsx"
+/>
+
+<CollapsibleDetails summaryTitle="Type definitions">
+  <Code
+    code={`
+import {
+  RegisterRtpInput,
+  RegisterMp4Input,
+  RegisterWhipInput
+} from "@swmasnion/smelter"
+
+type RegisterInput =
+| ({ type: "rtp_stream" } & RegisterRtpInput)
+| ({ type: "mp4" } & RegisterMp4Input)
+| ({ type: "whip" } & RegisterWhipInput);
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Register external source that can be used as a smelter input. Visit input documentation to learn more:
+
+* [MP4](/ts-sdk/1.0/ts-sdk/inputs/mp4)
+* [RTP](/ts-sdk/1.0/ts-sdk/inputs/rtp)
+* [WHIP](/ts-sdk/1.0/ts-sdk/inputs/whip)
+
+<Aside type="caution">
+  Remember that in this mode compositor will consume input frames as fast as
+  possible. Protocols like RTP or WHIP can technically be used as input, but in
+  most cases it would limit processing back to real-time.
+</Aside>
+
+## registerImage()
+
+<Code
+  code={`
+import { Renderers } from "@swmansion/smelter"
+
+Smelter.registerImage(
+imageId: string,
+image: Renderers.RegisterImage,
+): Promise<void>`}
+  lang="tsx"
+/>
+
+Register an image asset. See [RegisterImage](/ts-sdk/1.0/ts-sdk/resources/image) to learn more.
+
+## registerShader()
+
+<Code
+  code={`
+import { Renderers } from "@swmnasion/smelter"
+
+Smelter.registerShader(
+shaderId: string,
+shader: Renderers.RegisterShader,
+): Promise<void>`}
+  lang="tsx"
+/>
+
+Register a shader. See [RegisterShader](/ts-sdk/1.0/ts-sdk/resources/shader) to learn more.
+
+## registerFont()
+
+<Code code={`Smelter.registerFont(source: string | ArrayBuffer): Promise<void>`} lang="tsx" />
+
+Register new font.

@@ -1,0 +1,392 @@
+---
+title: RTP
+---
+
+import { Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+An output type that allows streaming video and audio from Smelter over RTP.
+
+## Usage
+
+To use RTP Output you must register it first. You can do it by sending a request like this:
+
+<CollapsibleDetails summaryTitle='Example request' open>
+
+```http
+POST: /api/output/:output_id/register
+Content-Type: application/json
+
+{
+  "type": "rtp_stream",
+  "transport_protocol": "tcp_server",
+  "port": 9003,
+  "video": {
+    "resolution": { "width": 1280, "height": 720 },
+    "encoder": { "type": "ffmpeg_h264" },
+    "initial": {
+      "root": {
+        "type": "view",
+      }
+    }
+  },
+  "audio": {
+    "encoder": { "type": "opus", "channels": "stereo" },
+    "initial": {
+      "inputs": [{ "input_id": "input_1", "volume": 1 }]
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+See [HTTP Routes](/http-api/routes#outputs-configuration) documentation to learn more about managing outputs.
+
+## References
+
+<CollapsibleDetails summaryTitle='Type definitions' open>
+
+```tsx
+type RtpOutput = {
+  type: "rtp_stream";
+  port: string | u16;
+  ip?: string;
+  transport_protocol?: "udp" | "tcp_server";
+  video?: RtpVideoOptions;
+  audio?: RtpAudioOptions;
+};
+```
+
+</CollapsibleDetails>
+
+## Properties
+
+### port
+
+Depends on the value of the `transport_protocol` field:
+
+- `udp` - An UDP port number that RTP packets will be sent to.
+- `tcp_server` - A local TCP port number or a port range that Smelter will listen for incoming connections.l TCP port number or a range of ports that Smelter will listen to for incoming connections.
+
+- **Type**: `string | u16`
+
+---
+
+### ip
+
+IP address to which RTP packets should be sent. This field is only valid if `transport_protocol` field is set to `udp`.
+
+- **Type**: `string`
+
+---
+
+### transport_protocol
+
+Transport layer protocol that will be used to send RTP packets.
+
+- **Type**: `"udp" | "tcp_server"`
+- **Default value**: `udp`
+- **Supported values**:
+  - `udp` - UDP protocol.
+  - `tcp_server` - TCP protocol where Smelter is the server side of the connection.
+
+---
+
+### video
+
+Parameters of a video included in the RTP stream.
+
+- **Type**: [`RtpVideoOptions`](#rtpvideooptions)
+
+---
+
+### audio
+
+Parameters of an audio included in the RTP stream.
+
+- **Type**: [`RtpAudioOptions`](#rtpaudiooptions)
+
+## RtpVideoOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type RtpVideoOptions = {
+    resolution: {
+      width: u32;
+      height: u32;
+    };
+    send_eos_when?: OutputEndCondition;
+    encoder: RtpVideoEncoderOptions;
+    initial: { root: Component; };
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties
+
+#### resolution
+
+Output resolution in pixels.
+
+- **Type**: `{ width: u32; height: u32; }`
+
+---
+
+#### send_eos_when
+
+Condition for termination of the output stream based on the input streams states. If output includes both audio and video streams, then EOS needs to be sent for every type.
+
+- **Type**: [`OutputEndCondition`](#outputendcondition)
+
+---
+
+#### encoder
+
+Video encoder options.
+
+- **Type**: [`RtpVideoEncoderOptions`](#rtpvideoencoderoptions)
+
+#### initial
+
+Root of a component tree/scene that should be rendered for the output. Use [`update_output`](/http-api/routes#update-output) request to update this value after registration.
+
+- **Type**: `{ root: Component; }`
+
+## RtpVideoEncoderOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type RtpVideoEncoderOptions = {
+    type: "ffmpeg_h264";
+    preset?: 
+      | "ultrafast"
+      | "superfast"
+      | "veryfast"
+      | "faster"
+      | "fast"
+      | "medium"
+      | "slow"
+      | "slower"
+      | "veryslow"
+      | "placebo";
+    ffmpeg_options?: Map<string, string>;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties (`type: "ffmpeg_h264"`)
+
+#### preset
+
+Video output encoder preset. Visit <a href='https://trac.ffmpeg.org/wiki/Encode/H.264#Preset' target='_blank'>FFmpeg docs</a> to learn more.
+
+- **Type**: `"ultrafast" | "superfast" | "veryfast" | "faster" | "fast" | "medium" | "slow" | "slower" | "veryslow" | "placebo"`
+- **Default value**: `fast`
+- **Supported values**:
+  - `ultrafast`
+  - `superfast`
+  - `veryfast`
+  - `faster`
+  - `fast`
+  - `medium`
+  - `slow`
+  - `slower`
+  - `veryslow`
+  - `placebo`
+
+---
+
+#### ffmpeg_options
+
+Raw FFmpeg encoder options. Visit <a href='https://ffmpeg.org/ffmpeg-codecs.html' target='_blank'>FFmpeg docs</a> to learn more.
+
+- **Type**: `Map<string, string>`
+
+## RtpAudioOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type RtpAudioOptions = {
+    mixing_strategy?: "sum_clip" | "sum_scale";
+    send_eos_when?: OutputEndCondition;
+    encoder: RtpAudioEncoderOptions;
+    initial: { inputs: InputAudio[]; };
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties
+
+#### mixing_strategy
+
+Specifies how audio should be mixed.
+
+- **Type**: `"sum_clip" | "sum_scale"`
+- **Default value**: `"sum_clip"`
+- **Supported values**:
+  - `sum_clip` - First, the input samples are summed. If the result exceeds the i16 PCM range, it is clipped.
+  - `sum_scale` - First, the input samples are summed. If the result exceeds the i16 PCM range, the summed samples are scaled down by a factor to fit within the range.
+
+---
+
+#### send_eos_when
+
+Condition for termination of the output stream based on the input streams states. If output includes both audio and video streams, then EOS needs to be sent for every type.
+
+- **Type**: [`OutputEndCondition`](#outputendcondition)
+
+---
+
+#### encoder
+
+Audio encoder options.
+
+- **Type**: [`RtpAudioEncoderOptions`](#rtpaudioencoderoptions)
+
+#### initial
+
+Initial audio mixer configuration for output.
+
+- **Type**: `{ inputs: InputAudio[]; }`
+
+## RtpAudioEncoderOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type RtpAudioEncoderOptions = {
+    type: "opus";
+    channels: "mono" | "stereo";
+    preset?: "quality" | "voip" | "lowest_latency";
+    sample_rate?: u32;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties(type: "opus")
+
+#### channels
+
+Channels configuration
+
+- **Type**: `"mono" | "stereo"`
+- **Supported values**:
+  - `mono` - Mono audio (single channel).
+  - `stereo` - Stereo audio (two channels).
+
+#### preset
+
+Audio output encoder preset.
+
+- **Type**: `"quality" | "voip" | "lowest_latency"`
+- **Default value**: `voip`
+- **Supported values**:
+  - `quality` - Recommended for broadcast and high-fidelity applications requiring decoded audio to maintain maximum fidelity to the input signal.
+  - `voip` - Recommended for VoIP and videoconferencing applications, prioritizing listening quality and speech intelligibility.
+  - `lowest_latency` - Recommended **only** when achieving the lowest possible latency is the highest priority.
+
+#### sample_rate
+
+Sample rate.
+
+- **Type**: `u32`
+- **Default value**: `48000`
+- **Supported values**: `8000`, `16000`, `24000`, `48000`
+
+## InputAudio
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type InputAudio = {
+    input_id: string;
+    volume?: f32;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties
+
+#### input_id
+
+ID of an input. It identifies a stream registered using a [register input](/http-api/routes#register-input) method.
+
+- **Type**: `string`
+
+#### volume
+
+Input volume in range `[0, 1]`
+
+- **Type**: `f32`
+- **Default value**: `1.0`
+- **Supported values**: `[0, 1]`
+
+## OutputEndCondition
+
+This type defines when end of an input stream should trigger end of the output stream. Only one of those fields can be set at the time.
+Unless specified otherwise the input stream is considered finished/ended when:
+
+- TCP connection was dropped/closed.
+- RTCP Goodbye packet (`BYE`) was received.
+- Mp4 track has ended.
+- Input was unregistered already (or never registered).
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type OutputEndCondition = {
+    any_of?: string[];
+    all_of?: string[];
+    any_input?: bool;
+    all_inputs?: bool;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties
+
+#### any_of
+
+List of the input streams. The output stream will terminate if any stream in the list finishes.
+
+- **Type**: `string[]`
+
+---
+
+#### all_of
+
+List of the input streams. The output stream will terminate when all streams in the list finish.
+
+- **Type**: `string[]`
+
+---
+
+#### any_input
+
+Terminate the output stream if any of the input streams end, including streams added after the output was registered. Notably, the output stream will not terminate if no inputs were ever connected.
+
+- **Type**: `bool`
+
+---
+
+#### all_inputs
+
+Terminate the output stream only when all input streams have finished. Notably, the output stream will terminate if no inputs were ever connected.
+
+- **Type**: `bool`

@@ -1,0 +1,76 @@
+---
+title: WebRenderer
+slug: ts-sdk/1.0/ts-sdk/resources/web-renderer
+---
+
+import { Aside, Code, Badge } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<Badge text="Required feature:web_renderer" variant="note" size="large" />
+
+<br />
+
+<br />
+
+Represents an instance of a website rendered using Chromium embedded in the Smelter instance. It is utilized by a [WebView](/ts-sdk/1.0/ts-sdk/components/webview) component.
+
+<Aside>
+  You need to enable `SMELTER_WEB_RENDERER_ENABLE` environment variable to use
+  web rendering capabilities and Smelter binary needs to be build with web
+  rendering support.
+</Aside>
+
+<Aside type="caution">
+  Only one component can use specific instance at the time.
+</Aside>
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type RegisterWebRenderer = {
+    url: string;
+    resolution: {
+      width: number;
+      height: number;
+    };
+    embeddingMethod?:
+      | "chromium_embedding"
+      | "native_embedding_over_content"
+      | "native_embedding_under_content";
+  };
+  ```
+</CollapsibleDetails>
+
+## Properties
+
+### url
+
+Url of a website that to render.
+
+* **Type**: `string`
+
+***
+
+### resolution
+
+Resolution of the rendered website.
+
+* **Type**: `{ width: number; height: number; }`
+
+***
+
+### embeddingMethod
+
+Mechanism used to render input frames on the website.
+
+* **Type**: `"chromium_embedding" | "native_embedding_over_content" | "native_embedding_under_content"`
+* **Supported values**:
+  * `native_embedding_over_content` - Renders a website without any inputs, then overlays the inputs onto the website.
+  * `native_embedding_under_content` - Renders a website without any inputs, then underlays the inputs beneath the website.
+  * `chromium_embedding` - Pass raw input frames as JS buffers so they can be rendered, for example, using a `<canvas>` component.
+  {" "}
+  <Aside type="caution">
+    This method can significantly impact performance, particularly when handling
+    a large number of inputs.
+  </Aside>

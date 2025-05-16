@@ -1,27 +1,26 @@
 ---
 title: Camera (Web API)
 ---
-import { Aside, Badge, Code } from '@astrojs/starlight/components';
-import CollapsibleDetails from '../../../../components/CollapsibleDetails.astro';
+
+import { Aside, Badge, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
 
 <Badge text="Browser (WASM)" variant="tip" size="large" />
 
 <br />
 <br />
 
-
 An input that captures the camera and microphone output using Web API `getUserMedia()`.
 
 ## Usage
 
 ```tsx title=cameraInputExample.tsx
-import Smelter from "@swmansion/smelter-web-wasm"
+import Smelter from "@swmansion/smelter-web-wasm";
 
 async function run() {
-    const smelter = new Smelter();
-    await smelter.init();
-    await smelter.registerInput('example', { type: 'camera' })
+  const smelter = new Smelter();
+  await smelter.init();
+  await smelter.registerInput("example", { type: "camera" });
 }
-void run()
+void run();
 ```
-

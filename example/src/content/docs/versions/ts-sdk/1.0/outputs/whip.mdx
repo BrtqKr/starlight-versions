@@ -1,0 +1,332 @@
+---
+title: WHIP
+sidebar:
+  order: 1
+slug: ts-sdk/1.0/ts-sdk/outputs/whip
+---
+
+import { Code, Badge } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<Badge text="Node.js" variant="tip" size="large" />
+
+<br />
+
+<br />
+
+An output type that allows streaming video and audio from Smelter over WHIP.
+
+## Usage
+
+```tsx title=whipOutputExample.tsx
+import Smelter from "@swmansion/smelter-node";
+import { View } from "@swmansion/smelter";
+
+async function run() {
+  const smelter = new Smelter();
+  await smelter.init();
+  await smelter.registerOutput("example", <View />, {
+    type: "whip",
+    endpointUrl: "https://example.com/whip",
+    bearerToken: "<TOKEN>",
+    video: {
+      encoder: { type: "ffmpeg_h264" },
+      resolution: { width: 1920, height: 1080 },
+    },
+  });
+}
+void run();
+```
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type RegisterWhipOutput = {
+    type: "whip";
+    endpointUrl: string;
+    bearerToken?: string;
+    video?: WhipVideoOptions;
+    audio?: WhipAudioOptions;
+  };
+  ```
+</CollapsibleDetails>
+
+Parameters for an WHIP output stream from Smelter.
+
+## Properties
+
+### endpointUrl
+
+The destination URL for sending media streams using the WHIP.
+
+* **Type**: `string`
+
+### bearerToken
+
+Token used for authentication when connecting to the WHIP endpoint.
+
+* **Type**: `string`
+
+### video
+
+Parameters of a video included in the WHIP stream.
+
+* **Type**: [`WhipVideoOptions`](/ts-sdk/1.0/ts-sdk/outputs/whip#whipvideooptions)
+
+***
+
+### audio
+
+Parameters of an audio included in the WHIP stream.
+
+* **Type**: [`WhipAudioOptions`](/ts-sdk/1.0/ts-sdk/outputs/whip#whipaudiooptions)
+
+## WhipVideoOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type WhipVideoOptions = {
+    resolution: {
+      width: number;
+      height: number;
+    };
+    sendEosWhen?: OutputEndCondition;
+    encoder: WhipVideoEncoderOptions;
+  };
+  ```
+</CollapsibleDetails>
+
+Parameters for registering an output that sends composed video/audio as an WHIP stream.
+
+### Properties
+
+#### resolution
+
+Output resolution in pixels.
+
+* **Type**: `{ width: number; height: number;}`
+
+***
+
+#### sendEosWhen
+
+Condition for termination of the output stream based on the input streams states. If output includes both audio and video streams, then EOS needs to be sent for every type.
+
+* **Type**: [`OutputEndCondition`](/ts-sdk/1.0/ts-sdk/outputs/whip#outputendcondition)
+
+***
+
+#### encoder
+
+Video encoder options.
+
+* **Type**: [`WhipVideoEncoderOptions`](/ts-sdk/1.0/ts-sdk/outputs/whip#whipvideoencoderoptions)
+
+## WhipVideoEncoderOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type WhipVideoEncoderOptions = {
+    type: "ffmpeg_h264";
+    preset?: 
+      | "ultrafast"
+      | "superfast"
+      | "veryfast"
+      | "faster"
+      | "fast"
+      | "medium"
+      | "slow"
+      | "slower"
+      | "veryslow"
+      | "placebo";
+    ffmpegOptions?: Map<string, string>;
+  }
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Configuration for the video encoder, based on the selected codec.
+
+### Properties (type: “ffmpeg\_h264”)
+
+#### preset
+
+Video output encoder preset. Visit <a href="https://trac.ffmpeg.org/wiki/Encode/H.264#Preset" target="_blank">FFmpeg docs</a> to learn more.
+
+* **Type**: `"ultrafast" | "superfast" | "veryfast" | "faster" | "fast" | "medium" | "slow" | "slower" | "veryslow" | "placebo"`
+* **Default value**: `fast`
+* **Supported values**:
+  * `ultrafast`
+  * `superfast`
+  * `veryfast`
+  * `faster`
+  * `fast`
+  * `medium`
+  * `slow`
+  * `slower`
+  * `veryslow`
+  * `placebo`
+
+***
+
+#### ffmpegOptions
+
+Raw FFmpeg encoder options. Visit <a href="https://ffmpeg.org/ffmpeg-codecs.html" target="_blank">FFmpeg docs</a> to learn more.
+
+* **Type**: `Map<string, string>`
+
+## WhipAudioOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type WhipAudioOptions = {
+  mixingStrategy?: "sum_clip" | "sum_scale";
+  sendEosWhen?: OutputEndCondition;
+  encoder: WhipAudioEncoderOptions;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Parameters of an audio source included in the WHIP stream.
+
+### Properties
+
+#### mixingStrategy
+
+Specifies how audio should be mixed.
+
+* **Type**: `"sum_clip" | "sum_scale"`
+* **Default value**: `"sum_clip"`
+* **Supported values**:
+  * `sum_clip` - First, the input samples are summed. If the result exceeds the i16 PCM range, it is clipped.
+  * `sum_scale` - First, the input samples are summed. If the result exceeds the i16 PCM range, the summed samples are scaled down by a factor to fit within the range.
+
+***
+
+#### sendEosWhen
+
+Condition for termination of the output stream based on the input streams states. If output includes both audio and video streams, then EOS needs to be sent for every type.
+
+* **Type**: [`OutputEndCondition`](/ts-sdk/1.0/ts-sdk/outputs/whip#outputendcondition)
+
+***
+
+#### encoder
+
+Audio encoder options.
+
+* **Type**: [`WhipAudioEncoderOptions`](/ts-sdk/1.0/ts-sdk/outputs/whip#whipaudioencoderoptions)
+
+***
+
+## WhipAudioEncoderOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type WhipAudioEncoderOptions = {
+    type: "opus";
+    channels: "mono" | "stereo";
+    preset?: "quality" | "voip" | "lowest_latency";
+    sampleRate?: number
+  }
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Configuration for the audio encoder, based on the selected codec.
+
+### Properties(type: "opus")
+
+#### channels
+
+Channels configuration
+
+* **Type**: `"mono" | "stereo"`
+* **Supported values**:
+  * `mono` - Mono audio (single channel).
+  * `stereo` - Stereo audio (two channels).
+
+***
+
+#### preset
+
+Audio output encoder preset.
+
+* **Type**: `"quality" | "voip" | "lowest_latency"`
+* **Default value**: `voip`
+* **Supported values**:
+  * `quality` - Recommended for broadcast and high-fidelity applications requiring decoded audio to maintain maximum fidelity to the input signal.
+  * `voip` - Recommended for VoIP and videoconferencing applications, prioritizing listening quality and speech intelligibility.
+  * `lowest_latency` - Recommended **only** when achieving the lowest possible latency is the highest priority.
+
+#### sampleRate
+
+Sample rate for audio encoder.
+
+* **Type**: `number`
+* **Default value**: `48000`
+* **Supported values**: `8000`, `16000`, `24000`, `48000`.
+
+## OutputEndCondition
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type OutputEndCondition = 
+  | { anyOf: string[]; }
+  | { allOf: string[]; }
+  | { anyInput: boolean; }
+  | { allInputs: boolean; };
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Defines when the output stream should end based on the state of the input streams. Only one of the nested fields can be set at a time.
+
+By default, the input stream is considered finished/ended when:
+
+* TCP connection was dropped/closed.
+* RTCP Goodbye packet (BYE) was received.
+* MP4 track has ended.
+* Input was unregistered already (or never registered).
+
+### Properties
+
+#### anyOf
+
+List of the input streams. The output stream will terminate if any stream in the list finishes.
+
+* **Type**: `string[]`
+
+***
+
+#### allOf
+
+List of the input streams. The output stream will terminate when all streams in the list finish.
+
+* **Type**: `string[]`
+
+***
+
+#### anyInput
+
+Terminate the output stream if any of the input streams end, including streams added after the output was registered. Notably, the output stream will not terminate if no inputs were ever connected.
+
+* **Type**: `boolean`
+
+***
+
+#### allInputs
+
+Terminate the output stream only when all input streams have finished. Notably, the output stream will terminate if no inputs were ever connected.
+
+* **Type**: `boolean`

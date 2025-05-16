@@ -1,0 +1,30 @@
+---
+import { Image } from "astro:assets";
+import smelterDiagramMobile from "../assets/explanation/smelter-diagram-mobile.svg";
+import smelterDiagram from "../assets/explanation/smelter-diagram.svg";
+---
+
+<section
+  class="flex flex-col items-center justify-center py-28 sm:px-8 xl:px-32 2xl:h-fit"
+>
+  <h2 class=" text-explanation-header mb-6">How does Smelter work?</h2>
+  <div class="sm:hidden">
+    <div class="flex">
+      <Image
+        src={smelterDiagramMobile}
+        alt="smelter diagram"
+        class="-z-10 self-center mb-8"
+      />
+    </div>
+  </div>
+
+  <div class="hidden sm:block">
+    <div class="flex">
+      <Image
+        src={smelterDiagram}
+        alt="smelter diagram"
+        class="-z-10 self-center mb-8"
+      />
+    </div>
+  </div>
+</section>

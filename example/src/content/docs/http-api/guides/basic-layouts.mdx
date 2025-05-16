@@ -1,0 +1,168 @@
+---
+title: Basic layouts
+sidebar:
+    order: 1
+---
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Step1Image from '../../../../assets/guides/basic-layouts-1.mp4'
+import Step2Image from '../../../../assets/guides/basic-layouts-2.mp4'
+import Step3Image from '../../../../assets/guides/basic-layouts-3.mp4'
+import Step4Image from '../../../../assets/guides/basic-layouts-4.mp4'
+import Step5Image from '../../../../assets/guides/basic-layouts-5.mp4'
+
+In this guide, you'll learn how layouts in Smelter works and how to position and resize components.
+It includes examples and explanation how component size is calculated.
+
+<Steps>
+
+1. Init Smelter and connect inputs and outputs
+
+    Start Smelter server, register inputs (`input_1`, `input_2`) and register video output (`output_1`) similarly to examples shown in [`Quick start`](/http-api/guides/quick-start) guide.
+
+    After configuration, you should see the following output:
+
+    <video autoplay loop muted src={Step1Image} alt="Basic layouts - intial" />
+
+2. Update scene to show `input_1`.
+    ```http
+    POST: /api/output/output_1/update
+    Content-Type: application/json
+
+    {
+      "video": {
+        "root": {
+          "type": "view",
+          "background_color": "#4d4d4d",
+          "children": [
+            { "type": "input_stream", "input_id": "input_1" }
+          ]
+        }
+      }
+    }
+    ```
+
+    The input stream in the example has a resolution `1920x1080`, but it is rendered
+    on the `1270x720` output. as a result only part of the stream is visible.
+
+    <video autoplay loop muted src={Step2Image} alt="basic layouts - add input" />
+
+
+3. Resize `input_1` to fill the output.
+    ```http
+    POST: /api/output/output_1/update
+    Content-Type: application/json
+
+    {
+      "video": {
+        "root": {
+          "type": "view",
+          "background_color": "#4d4d4d",
+          "children": [
+            {
+              "type": "rescaler",
+              "child": { "type": "input_stream", "input_id": "input_1" }
+            }
+          ]
+        }
+      }
+    }
+    ```
+
+    Input stream now fully fits inside the output.
+
+    Explanation:
+    - Root `View` component in the example takes it size from the output itself (`1280x720`).
+    - `Rescaler` is the only child without width/height specified, so it takes its size from the `View` component.
+    - `InputStream` is resized by `Rescaler` to fit inside it.
+
+    <video autoplay loop muted src={Step3Image} alt="basic layouts - resize input" />
+
+    
+    <Aside>
+    The same effect (for single input) could be achieved by either:
+    - Setting `InputStream` as a root directly. It would only work if aspect ratio of input and output is the same.
+    - Replacing `View` component with a `Rescaler`.
+    </Aside>
+
+4. Show both inputs side-by-side.
+    ```http
+    POST: /api/output/output_1/update
+    Content-Type: application/json
+
+    {
+      "video": {
+        "root": {
+          "type": "view",
+          "background_color": "#4d4d4d",
+          "children": [
+            {
+              "type": "rescaler",
+              "child": { "type": "input_stream", "input_id": "input_1" }
+            },
+            {
+              "type": "rescaler",
+              "child": { "type": "input_stream", "input_id": "input_2" }
+            }
+          ]
+        }
+      }
+    }
+    ```
+
+    Both input streams are now visible.
+    
+    Explanation:
+    - Root `View` component in the example takes it size from the output itself (`1280x720`).
+    - Root `View` has 2 child components, each without any dimensions specified, so both child
+      components (`Rescaler`) will have size `640x720`.
+    - `InputStream` is resized by `Rescaler` to fit inside it. Aspect ratio does not match,
+      so it is centered vertically.
+
+    <video autoplay loop muted src={Step4Image} alt="basic layouts - side-by-side" />
+
+5. Put one of the inputs in the corner 
+    ```http
+    POST: /api/output/output_1/update
+    Content-Type: application/json
+
+    {
+      "video": {
+        "root": {
+          "type": "view",
+          "background_color": "#4d4d4d",
+          "children": [
+            {
+              "type": "rescaler",
+              "child": { "type": "input_stream", "input_id": "input_1" }
+            },
+            {
+              "type": "rescaler",
+              "width": 320,
+              "height": 180,
+              "top": 20,
+              "right": 20,
+              "child": { "type": "input_stream", "input_id": "input_2" }
+            }
+          ]
+        }
+      }
+    }
+    ```
+
+    Both input streams are now visible.
+    
+    Explanation:
+    - Root `View` component in the example takes it size from the output itself (`1280x720`)
+    - Root `View` has 2 child components, but only one is positioned statically.
+      (See [absolute positioning](/fundamentals/concepts/layouts/#absolute-positioning))
+      - First `Rescaler` is the only static child of the View, so it has the same size as its
+        parent
+      - Second `Rescaler` has fields `top` and `right` defined so it is positioned absolutely.
+        It is rendered on top of static content of the View and it does not affect layout of 
+        the other sibling components.
+    - `InputStream` components are resized by `Rescaler` components to fit inside them.
+
+    <video autoplay loop muted src={Step5Image} alt="basic layouts - side-by-side" />
+
+</Steps>
+

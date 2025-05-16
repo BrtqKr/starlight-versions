@@ -1,0 +1,38 @@
+---
+title: Transition
+sidebar:
+  order: 0
+slug: ts-sdk/1.0/ts-sdk/props/transition
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type Transition {
+  durationMs: number;
+  easingFunction?: EasingFunction | null;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+## Properties
+
+### durationMs
+
+Duration of a transition in milliseconds.
+
+* **Type**: `number`
+
+***
+
+### easingFunction
+
+Easing functions are used to interpolate between two values over time during transition.
+
+* **Type**: [`EasingFunction`](/ts-sdk/1.0/ts-sdk/props/easing-function)
+* **Default value**: `"linear"`

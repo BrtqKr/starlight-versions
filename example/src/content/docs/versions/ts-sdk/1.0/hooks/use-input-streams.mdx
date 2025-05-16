@@ -1,0 +1,103 @@
+---
+title: useInputStreams
+sidebar:
+  order: 0
+slug: ts-sdk/1.0/ts-sdk/hooks/use-input-streams
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import useInputStreamsExample from "./examples/useInputStreams.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+`useInputStreams` returns an object representing registered streams and their current state.
+
+## Usage
+
+<Code code={useInputStreamsExample} title="useInputStreams.tsx" lang="tsx" collapse={["1-12", "43-80"]} />
+
+## Reference
+
+```tsx
+function useInputStreams(): Record<string, InputStreamInfo>;
+```
+
+<CollapsibleDetails summaryTitle="Type definitions">
+  ```tsx
+  type InputStreamInfo = {
+    inputId: Id;
+    videoState?: "ready" | "playing" | "finished";
+    audioState?: "ready" | "playing" | "finished";
+    offsetMs?: number;
+    videoDurationMs?: number;
+    audioDurationMs?: number;
+  };
+
+  function useInputStreams(): Record<string, InputStreamInfo>;
+  ```
+</CollapsibleDetails>
+
+## Returns
+
+Object that maps ids of registered input streams to info about their state.
+
+* **Type**: `Record<string, InputStreamInfo>` where ([`InputStreamInfo`](#inputstreaminfo))
+
+## InputStreamInfo
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type InputStreamInfo = {
+  inputId: string;
+  videoState?: "ready" | "playing" | "finished"; 
+  audioState?: "ready" | "playing" | "finished";
+  offsetMs?: number;
+  videoDurationMs?: number;
+  audioDurationMs?: number;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties
+
+#### inputId
+
+ID of an input. It identifies a stream registered using a [Smelter.registerInput](/ts-sdk/1.0/ts-sdk/smelter#registerinput) method.
+
+* **Type**: `string`
+
+***
+
+#### videoState
+
+Current state of a video track in the specific input.
+
+* **Type**: `"ready" | "playing" | "finished"`
+
+***
+
+#### audioState
+
+Current state of an audio track in the specific input.
+
+* **Type**: `"ready" | "playing" | "finished"`
+
+#### videoDurationMs
+
+Length of a video track if available. Only supported for some inputs e.g. mp4.
+
+* **Type**: `number`
+
+#### audioDurationMs
+
+Length of an audio track if available. Only supported for some inputs e.g. mp4.
+
+* **Type**: `number`
+
+#### offsetMs
+
+Timestamp (relative to the queue start) representing time when input was added.
+
+* **Type**: `number`

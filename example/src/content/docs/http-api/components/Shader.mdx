@@ -1,0 +1,172 @@
+---
+title: Shader
+---
+
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import { Aside, Code } from "@astrojs/starlight/components";
+import ExampleImage from "@assets/guides/component-shader-example.mp4";
+import ShaderExample from "./shader.wgsl?raw";
+
+Component that represents output of a user provided WGSL shader. All children components are available as textures inside the shader code.
+For more information on using shaders in Smelter, please visit [Shaders documentation](/fundamentals/concepts/shaders).
+
+<Aside>
+  {" "}
+  To use this component, you need to first register the shader with matching `shader_id`
+  using [`register shader`](/http-api/routes#register-shader) request.{" "}
+</Aside>
+
+## Usage
+
+Register a shader with an id `example_shader`:
+
+<CollapsibleDetails summaryTitle='Register shader' open>
+
+<Code
+  code={ShaderExample}
+  title="example_shader.wgsl"
+  lang="wgsl"
+  collapse={["1-100"]}
+/>
+
+```http
+POST: /api/shader/example_shader/register
+Content-Type: application/json
+
+{
+  "source": "<SHADER CODE FROM ./example_shader.wgsl>"
+}
+```
+
+</CollapsibleDetails>
+
+Update output with a new scene that is using a shader `example_shader`:
+
+<CollapsibleDetails summaryTitle='Update request' open>
+
+```http
+POST: /api/output/example_output/update
+Content-Type: application/json
+
+{
+  "video": {
+    "root": {
+      "type": "shader",
+      "shader_id": "example_shader",
+      "children": [
+        {
+          "type": "input_stream",
+          "input_id": "example_input"
+        }
+      ],
+      "resolution": { "width": 1920, "height": 1080 }
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle="Example output">
+  <video autoplay loop muted src={ExampleImage} alt="example output" />
+</CollapsibleDetails>
+
+## Reference
+
+<CollapsibleDetails summaryTitle='Type definitions' open>
+```tsx
+type Shader = {
+  id?: string;
+  children?: Component[];
+  shader_id: string;
+  shader_param?: ShaderParam;
+  resolution: {
+    width: u32;
+    height: u32;
+  };
+}
+```
+</CollapsibleDetails>
+
+## Properties
+
+### id
+
+ID of a component.
+
+- **Type**: `string`
+
+---
+
+### children
+
+A single child component to be transformed.
+
+- **Type**: `Component[]`
+
+---
+
+### shader_id
+
+ID of a shader. It identifies a shader registered using a [register shader](/http-api/routes#register-shader) method.
+
+- **Type**: `string`
+
+---
+
+### shaderParam
+
+Object that will be serialized into a struct and passed to the shader as `@group(1) @binding(0) var<uniform>`. ShaderParam object must match the structure defined in a shader source code.
+
+- **Type**: [`ShaderParam`](#shaderparam-1)
+
+<Aside>
+  Right now, we don't handle memory layout automatically. To get the correct
+  memory alignment, you might need to add some extra fields as padding. Visit
+  the{" "}
+  <a href="https://www.w3.org/TR/WGSL/#alignment-and-size" target="_blank">
+    WGSL documentation
+  </a>{" "}
+  for more details.
+</Aside>
+
+---
+
+### resolution
+
+Resolution of the texture where shader will be executed.
+
+- **Type**: `{ width: u32; height: u32;}`
+
+## ShaderParam
+
+```typescript
+type ShaderParam =
+  | { type: "f32"; value: f32 }
+  | { type: "u32"; value: u32 }
+  | { type: "i32"; value: i32 }
+  | { type: "list"; value: ShaderParam[] }
+  | {
+      type: "struct";
+      value: ShaderParamStructField[];
+    };
+```
+
+## ShaderParamStructField
+
+```typescript
+type ShaderParamStructField =
+  | { field_name: string; type: "f32"; value: f32 }
+  | { field_name: string; type: "u32"; value: u32 }
+  | { field_name: string; type: "i32"; value: i32 }
+  | {
+      field_name: string;
+      type: "list";
+      value: ShaderParam[];
+    }
+  | {
+      field_name: string;
+      type: "struct";
+      value: ShaderParamStructField[];
+    };
+```

@@ -1,0 +1,342 @@
+---
+title: Smelter
+slug: ts-sdk/1.0/ts-sdk/smelter
+---
+
+import { Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+The primary element required to start using the Smelter TypeScript SDK is the `Smelter` class. This class is crucial
+for initializing and managing the Smelter server instance.
+
+It is available in 2 variants for different runtimes:
+
+* Node.js
+  <Code code={`import Smelter from "@swmansion/smelter-node"`} lang="tsx" />
+* Browser (WASM)
+  <Code code={`import Smelter from "@swmansion/smelter-web-wasm"`} lang="tsx" />
+
+## new Smelter()
+
+Creates a new Smelter instance. You have to call [init()](#init) first before this object can be used.
+
+### Runtime: Node.js
+
+<Code code={`new Smelter(manager?: SmelterManager)`} lang="tsx" />
+
+<CollapsibleDetails summaryTitle="Type definitions">
+  <Code
+    code={`
+type ApiRequest = {
+  method: 'GET' | 'POST';
+  route: string;
+  body?: object;
+};
+
+type MultipartRequest = {
+method: 'POST';
+route: string;
+body: any;
+};
+
+type SmelterManager = {
+setupInstance(): Promise<void>;
+sendRequest(request: ApiRequest): Promise<object>;
+sendMultipartRequest(request: MultipartRequest): Promise<object>;
+registerEventListener(cb: (event: unknown) => void): void;
+}
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+#### manager
+
+Configures how the client code will connect and manage a Smelter server. Smelter SDK provides 2 implementations that you can use or extend:
+
+* [`LocallySpawnedInstnaceManager`](/ts-sdk/1.0/ts-sdk/managers/node-locally-spawned) (**default**) - Automatically download the necessary Smelter binaries and launch the server on your local machine.
+* [`ExistingInstanceManager`](/ts-sdk/1.0/ts-sdk/managers/node-existing-instance) - Connect to a smelter server instance that is already running.
+
+<br />
+
+* **Type**: [`SmelterManager`](/ts-sdk/1.0/ts-sdk/smelter#runtime-nodejs)
+
+### Runtime: Browser (WASM)
+
+<Code code={`new Smelter(options: WebWasmSmelterOptions)`} lang="tsx" />
+
+<CollapsibleDetails summaryTitle="Type definitions">
+  <Code
+    code={`
+type Framerate = {
+  num: number;
+  den: number;
+};
+type WebWasmSmelterOptions = {
+  framerate?: Framerate | number;
+  streamFallbackTimeoutMs: number;
+};
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+See [WebWasmSmelterOptions](/ts-sdk/1.0/ts-sdk/managers/web-wasm/#webwasmsmelteroptions) to learn more.
+
+## init()
+
+<Code code={`Smelter.init(): Promise<void>`} lang="tsx" />
+
+Initialize the Smelter instance. This might spawn a new instance or just establish a connection.
+
+After `init()` you can start connecting inputs/outputs or register other elements. However, no output stream will be produced until `start()` method is called.
+
+## start()
+
+<Code code={`Smelter.start(): Promise<void>`} lang="tsx" />
+
+Starts the processing pipeline. Any previously registered output will start producing the video/audio stream.
+
+## registerOutput()
+
+<Code
+  code={`
+Smelter.registerOutput(
+  outputId: string,
+  output: RegisterOutput,
+): Promise<object>`}
+  lang="tsx"
+/>
+
+<CollapsibleDetails summaryTitle="Type definitions @swmnasion/smelter-node">
+  <Code
+    code={`
+import {
+  RegisterRtpOutput,
+  RegisterMp4Output,
+  RegisterWhipOutput
+} from "@swmasnion/smelter"
+
+type RegisterOutput =
+| ({ type: 'rtp_stream' } & RegisterRtpOutput)
+| ({ type: 'mp4' } & RegisterMp4Output)
+| ({ type: 'whip' } & RegisterWhipOutput);
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle="Type definitions @swmansion/smelter-web-wasm">
+  <Code
+    code={`
+export type RegisterOutput =
+  | {
+      type: 'stream';
+      video: {
+        resolution: Api.Resolution;
+      };
+      audio?: boolean;
+    }
+  | {
+      type: 'canvas';
+      video: {
+        canvas: HTMLCanvasElement;
+        resolution: Api.Resolution;
+      };
+      audio?: boolean;
+    }
+  | {
+      type: 'whip';
+      endpointUrl: string;
+      bearerToken?: string;
+      iceServers?: RTCConfiguration['iceServers'];
+      video: {
+        resolution: Api.Resolution;
+        maxBitrate?: number;
+      };
+      audio?: boolean;
+    };
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Register external destination that can be used as a smelter output. Visit output documentation to learn more.
+
+`@swmansion/smelter-node`:
+
+* [RTP](/ts-sdk/1.0/ts-sdk/outputs/rtp)
+* [MP4](/ts-sdk/1.0/ts-sdk/outputs/mp4)
+* [WHIP](/ts-sdk/1.0/ts-sdk/outputs/whip)
+
+`@swmansion/smelter-web-wasm`
+
+* [Canvas (Web API)](/ts-sdk/1.0/ts-sdk/outputs/wasm-canvas)
+* [MediaStream (Web API)](/ts-sdk/1.0/ts-sdk/outputs/wasm-stream)
+* [WHIP (Web API)](/ts-sdk/1.0/ts-sdk/outputs/wasm-whip)
+
+## unregisterOutput()
+
+<Code code={`Smelter.unregisterOutput(outputId: string): Promise<void>`} lang="tsx" />
+
+Unregister previously registered output.
+
+## registerInput()
+
+<Code
+  code={`
+Smelter.registerInput(
+  inputId: string,
+  input: RegisterInput
+): Promise<object>
+`}
+  lang="tsx"
+/>
+
+<CollapsibleDetails summaryTitle="Type definitions @swmnasion/smelter-node">
+  <Code
+    code={`
+import {
+  RegisterRtpInput,
+  RegisterMp4Input,
+  RegisterWhipInput
+} from "@swmasnion/smelter"
+
+type RegisterInput =
+| ({ type: "rtp_stream" } & RegisterRtpInput)
+| ({ type: "mp4" } & RegisterMp4Input)
+| ({ type: "whip" } & RegisterWhipInput);
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle="Type definitions @swmansion/smelter-web-wasm">
+  <Code
+    code={`
+type RegisterInput =
+  | { type: 'mp4'; url: string }
+  | { type: 'camera' }
+  | { type: 'screen_capture' }
+  | { type: 'stream'; stream: MediaStream };
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Register external source that can be used as a smelter input. Visit input documentation to learn more.
+
+`@swmansion/smelter-node`
+
+* [RTP](/ts-sdk/1.0/ts-sdk/inputs/rtp)
+* [MP4](/ts-sdk/1.0/ts-sdk/inputs/mp4)
+* [WHIP](/ts-sdk/1.0/ts-sdk/inputs/whip)
+
+`@swmansion/smelter-web-wasm`
+
+* [Camera (Web API)](/ts-sdk/1.0/ts-sdk/inputs/wasm-camera)
+* [Screen capture (Web API)](/ts-sdk/1.0/ts-sdk/inputs/wasm-screen)
+* [MediaStream (Web API)](/ts-sdk/1.0/ts-sdk/inputs/wasm-stream)
+* [MP4](/ts-sdk/1.0/ts-sdk/inputs/mp4)
+
+## unregisterInput()
+
+<Code code={`Smelter.unregisterInput(inputId: string): Promise<void>`} lang="tsx" />
+
+Unregister previously registered input.
+
+## registerImage()
+
+<Code
+  code={`
+import { Renderers } from "@swmansion/smelter"
+
+Smelter.registerImage(
+imageId: string,
+image: Renderers.RegisterImage,
+): Promise<void>`}
+  lang="tsx"
+/>
+
+Register an image asset. See [RegisterImage](/ts-sdk/1.0/ts-sdk/resources/image) to learn more.
+
+## unregisterImage()
+
+<Code code={`Smelter.unregisterImage(imageId: string): Promise<void>`} lang="tsx" />
+
+Unregister a previously registered image asset.
+
+## registerShader()
+
+<Code
+  code={`
+import { Renderers } from "@swmnasion/smelter"
+
+Smelter.registerShader(
+shaderId: string,
+shader: Renderers.RegisterShader,
+): Promise<void>`}
+  lang="tsx"
+/>
+
+Register a shader. See [RegisterShader](/ts-sdk/1.0/ts-sdk/resources/shader) to learn more.
+
+## unregisterShader()
+
+<Code code={`Smelter.unregisterShader(shaderId: string): Promise<void>`} lang="tsx" />
+
+Unregister a previously registered shader.
+
+## registerWebRenderer()
+
+<Code
+  code={`
+import { Renderers } from "@swmansion/smelter"
+
+Smelter.registerWebRenderer(
+instanceId: string,
+instance: Renderers.RegisterWebRenderer,
+): Promise<object>`}
+  lang="tsx"
+/>
+
+Register a web renderer instance. See [RegisterWebRenderer](/ts-sdk/1.0/ts-sdk/resources/web-renderer) to learn more.
+
+## unregisterWebRenderer()
+
+<Code code={`Smelter.unregisterWebRenderer(instanceId: string): Promise<void>`} lang="tsx" />
+
+Unregister a previously registered web renderer.
+
+## registerFont()
+
+<Code code={`Smelter.registerFont(source: FontSource): Promise<void>`} lang="tsx" />
+
+<CollapsibleDetails summaryTitle="Type definitions @swmnasion/smelter-node">
+  <Code
+    code={`
+type FontSource =
+  | 'string' // URL
+  | ArrayBuffer
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle="Type definitions @swmansion/smelter-web-wasm">
+  <Code
+    code={`
+type Source = 'string' // URL
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+Register new font.
+
+## terminate()
+
+<Code code={`Smelter.terminate(): Promise<void>`} lang="tsx" />
+
+Terminate the compositor instance. Depending on implementation it might just drop connection to
+the server, shutdown server itself, or in case of WASM build shutdown Web Worker responsible for running it.

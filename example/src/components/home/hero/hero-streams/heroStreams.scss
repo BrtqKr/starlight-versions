@@ -1,0 +1,15 @@
+$animationDelay: 0.3s;
+
+.heroStreamLayer {
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    z-index: -10;
+
+    &--2 {
+        @extend .heroStreamLayer;
+    }
+    &--3 {
+        @extend .heroStreamLayer;
+    }
+}

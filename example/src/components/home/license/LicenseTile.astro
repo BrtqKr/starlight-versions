@@ -1,0 +1,27 @@
+---
+import { Image, type LocalImageProps } from "astro:assets";
+
+interface Props {
+  label: string;
+  text: string;
+  icon: LocalImageProps["src"];
+}
+
+const { label, text, icon } = Astro.props;
+---
+
+<div class="h-full rounded-4xl border border-capabilities-border p-10">
+  <div class="flex items-center gap-4 mb-6">
+    <div class="flex grow aspect-square w-14 h-14 max-w-14 max-h-14 rounded-2xl border border-homeLicense-border overflow-clip md:w-16 md:h-16 md:max-w-16 md:max-h-16">
+      <div class="gradient-light-1 w-full h-full aspect-square">
+        <div class="flex items-center justify-center p-3 md:p-4">
+          <Image src={icon} alt="capability icon" class="w-full h-full object-cover" />
+        </div>
+      </div>
+    </div>
+    <div class="flex">
+      <h3 class="text-capabilities-header text-start">{label}</h3>
+    </div>
+  </div>
+  <div class="text-capabilities-text list-disc par-l" set:html={text} />
+</div>

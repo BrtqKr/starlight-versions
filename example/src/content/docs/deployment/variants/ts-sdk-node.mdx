@@ -1,0 +1,76 @@
+---
+title: TypeScript SDK - Node.js
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+You can generate a new starter project using the following commands:
+<Tabs syncKey="package-manager">
+  <TabItem label="npm" icon="seti:npm">
+    ```sh frame=none
+    npx create-smelter-app
+    ```
+  </TabItem>
+  <TabItem label="pnpm" icon="pnpm">
+    ```sh frame=none
+    pnpx create-smelter-app 
+    ```
+  </TabItem>
+  <TabItem label="yarn" icon="seti:yarn">
+    ```sh frame=none
+    yarn create smelter-app
+    ```
+  </TabItem>
+    <TabItem label="bun" icon="bun">
+    ```sh frame=none
+    bunx create-smelter-app
+    ```
+  </TabItem>
+</Tabs>
+
+By default, newly created project will download Smelter binaries and run them on local system. Make sure
+to check [runtime dependencies](/deployment/variants/binaries/#runtime-requirements) required for those
+binaries.
+
+Alternatively, you can point SDK to server you started yourself. See [`ExistingInstanceManager`](/ts-sdk/managers/node-existing-instance/)
+to configure it. For instructions how to start the server itself check out documentation for [docker deployment](/deployment/variants/docker)
+or [running binaries directly](/deployment/variants/binaries).
+
+### Docker
+
+You can package your Node.js application and smelter server using below Dockerfile.
+
+```dockerfile
+FROM ghcr.io/software-mansion/smelter:v0.4.0
+
+ENV NODE_VERSION 20.18.0
+
+RUN sudo apt-get update -y -qq && \
+  sudo apt-get install -y curl xz-utils && \
+  sudo rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" && \
+  sudo tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 --no-same-owner && \
+  rm "node-v$NODE_VERSION-linux-x64.tar.xz"
+
+ENV SMELTER_PATH=/home/smelter/smelter/main_process
+
+ADD --chown=smelter . /home/smelter/project
+WORKDIR /home/smelter/project
+
+RUN npm install && npm run build
+
+ENTRYPOINT ["node", "/home/smelter/project/dist/index.js"]
+```
+
+Build it with:
+
+```sh frame=none
+docker build -t smelter-app .
+```
+
+And run
+
+```sh frame=none
+docker run -it smelter-app
+```

@@ -1,0 +1,62 @@
+---
+title: Show
+slug: ts-sdk/1.0/ts-sdk/components/show
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import showExample from "./examples/Show.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-show-example.mp4";
+
+A simple component that allows scheduling when element should be added. It allows specifying
+timestamp or delay after mount.
+
+This functionality is primarily useful for [offline processing](/ts-sdk/1.0/fundamentals/glossary#offline-processing).
+For live cases the same functionality can be easily reproduced with `useEffect`+`setTimeout`.
+
+## Usage
+
+<Code code={showExample} title="ShowExample.tsx" lang="tsx" collapse={["20-39"]} />
+
+<CollapsibleDetails summaryTitle="Example output">
+  <video autoplay loop muted src={ExampleImage} alt="example output" />
+</CollapsibleDetails>
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type ShowProps = {
+    children: ReactNode;
+    timeRangeMs?: { start?: number; end?: number };
+    delayMs?: number;
+  };
+  ```
+</CollapsibleDetails>
+
+## Props
+
+Either `timeRangeMs` or `delayMs` has to be specified.
+
+### children
+
+Content to be displayed if condition specified by `timeRangeMs` or `delayMs` are met.
+
+* **Type**: `ReactNode`
+
+### timeRangeMs
+
+Time range defined by `start` and `end` [timestamps](/ts-sdk/1.0/fundamentals/glossary#timestamp). At least on of them
+needs to be defined.
+
+* **Type**: `{ start?: number; end?: number }`
+
+***
+
+### delayMs
+
+Duration after `Show` component is mounted when children components
+will be visible.
+
+* **Type**: `number`
+* **Default value**: 1

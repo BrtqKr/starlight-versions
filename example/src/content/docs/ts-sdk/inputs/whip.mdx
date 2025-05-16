@@ -3,15 +3,16 @@ title: WHIP
 sidebar:
   order: 1
 ---
-import { Aside, Badge, Code } from '@astrojs/starlight/components';
-import CollapsibleDetails from '../../../../components/CollapsibleDetails.astro';
+
+import { Aside, Badge, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
 
 <Badge text="Node.js" variant="tip" size="large" />
 
 <br />
 <br />
 
-An input type that allows streaming video and audio to Smelter over WHIP. 
+An input type that allows streaming video and audio to Smelter over WHIP.
 
 Smelter exposes WHIP endpoint on port 9000 under `/whip/:input_id` route. A different port can be
 configured with [`SMELTER_WHIP_WHEP_SERVER_PORT`](/deployment/configuration#smelter_whip_whep_server_port).
@@ -32,7 +33,7 @@ async function run() {
     {
       type: "whip",
       video: { decoder: "ffmpeg_h264" },
-      audio: { decoder: "opus" }
+      audio: { decoder: "opus" },
     }
   );
   // At this point you can establish WHIP connection to
@@ -55,6 +56,7 @@ type RegisterWhipInput = {
   offsetMs?: number;
 };
 ```
+
 </CollapsibleDetails>
 
 Parameters for registering an WHIP endpoint as an input.
@@ -64,6 +66,7 @@ Parameters for registering an WHIP endpoint as an input.
 ## Properties
 
 ### video
+
 Parameters of a video included in the WHIP stream.
 
 - **Type**: [`InputWhipVideoOptions`](/ts-sdk/inputs/whip#inputwhipvideooptions)
@@ -71,6 +74,7 @@ Parameters of a video included in the WHIP stream.
 ---
 
 ### audio
+
 Parameters of an audio included in the WHIP stream.
 
 - **Type**: [`InputWhipAudioOptions`](/ts-sdk/inputs/whip#inputwhipaudiooptions)
@@ -78,6 +82,7 @@ Parameters of an audio included in the WHIP stream.
 ---
 
 ### required
+
 Determines if the input stream is essential for output frame production. If set to true and the stream is delayed, Smelter will postpone output frames until the stream is received.
 
 - **Type**: `boolean`
@@ -86,6 +91,7 @@ Determines if the input stream is essential for output frame production. If set 
 ---
 
 ### offsetMs
+
 Offset in milliseconds relative to the pipeline start (start request). If unspecified, the stream synchronizes based on the delivery time of the initial frames.
 
 - **Type**: `number`
@@ -99,8 +105,9 @@ Parameters of a video source included in the WHIP stream.
 ```tsx
 type InputWhipVideoOptions = {
   decoder: "ffmpeg_h264" | "vulkan_video";
-}
+};
 ```
+
 </CollapsibleDetails>
 
 ### Properties
@@ -111,10 +118,10 @@ type InputWhipVideoOptions = {
 - **Supported values**:
   - `"ffmpeg_h264"` - Use the software decoder based on ffmpeg.
   - `"vulkan_video"` (<Badge text="Required feature:vk-video" variant="note" />) - Use hardware decoder based on Vulkan Video.
-    
+
     This should be faster and more scalable than the ffmpeg decoder, if the hardware and OS
     support it.
-    
+
     This requires hardware that supports Vulkan Video. Another requirement is this program has
     to be compiled with the `vk-video` feature enabled (enabled by default on platforms which
     support Vulkan, i.e. non-Apple operating systems and not the web).
@@ -129,13 +136,15 @@ Parameters of an audio source included in the WHIP stream.
 type InputWhipAudioOptions = {
   decoder: "opus";
   forwardErrorCorrection?: boolean;
-}
+};
 ```
+
 </CollapsibleDetails>
 
 ### Properties (decoder: "opus")
 
 #### forwardErrorCorrection
+
 Specifies whether the stream uses forward error correction. It's specific for the `Opus` codec. For more information, visit <a href='https://datatracker.ietf.org/doc/html/rfc6716#section-2.1.7' target='_blank'>RFC specification</a>.
 
 - **Type**: `boolean`

@@ -1,0 +1,91 @@
+---
+title: Node.js - Locally Spawned Instance
+slug: ts-sdk/1.0/ts-sdk/managers/node-locally-spawned
+---
+
+import { Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+`LocallySpawnedInstanceManager` allows you to create a new `Smelter` instance that will
+download a smelter binaries and start a new server on the local machine.
+
+This is a default manager for smelter on Node.js.
+
+## Reference
+
+<Code
+  title="LocallySpawnedInstanceManagerExample.tsx"
+  code={`
+import Smelter, { LocallySpawnedInstanceManager } from "@swmansion/smelter-node"
+
+async function run() {
+const manager = new LocallySpawnedInstanceManager({
+port: 8000
+});
+const smelter = new Smelter(manager);
+await smelter.init()
+}
+void run();
+`}
+  lang="tsx"
+/>
+
+## ExistingInstanceOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type LocallySpawnedInstanceOptions = {
+  port: number;
+  workingdir?: string;
+  executablePath?: string;
+  enableWebRenderer?: boolean;
+};
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties
+
+#### port
+
+Port number where smelter API endpoint is exposed.
+
+* **Type**: `number`
+
+***
+
+#### workingdir
+
+Working directory that smelter instance will use:
+
+* For temporary downloads. See [`SMELTER_DOWNLOAD_DIR`](/ts-sdk/1.0/deployment/configuration#smelter_download_dir).
+
+* To resolve relative paths for options that accept paths.
+
+* As a CWD of a smelter process.
+
+* **Type**: `string`
+
+***
+
+#### executablePath
+
+Path to the compositor executable. If provided compositor will use that instead of downloading official binaries.
+
+* **Type**: `string`
+
+***
+
+#### enableWebRenderer
+
+This option affects whether Web Renderer functionality will be enabled.
+
+* Based on that value appropriate compositor binaries are downloaded (with or without web rendering support).
+
+* It configures [`SMELTER_WEB_RENDERER_ENABLE`](/ts-sdk/1.0/deployment/configuration#smelter_web_renderer_enable) environment variable.
+
+* **Type**: `boolean`
+
+* **Default value**: `false`

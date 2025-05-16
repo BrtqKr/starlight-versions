@@ -31,22 +31,22 @@ export const onRequest = defineRouteMiddleware(async (context, next) => {
 
   const selectedVersion = context.cookies.get('selectedVersion')
 
-  const commonSidebarEntries = filterGroups(getVersionSidebar(
+  const currentSidebarEntries = filterGroups(getVersionSidebar(
     getVersionFromSlug(starlightVersionsConfig, starlightConfig, ''),
     sidebar,
   ), versionRegex)
 
-  const baseSidebarEntries = filterGroups(commonSidebarEntries, versionedSectionRegex)
+  const baseSidebarEntries = filterGroups(currentSidebarEntries, versionedSectionRegex)
 
   const versionSidebarEntries = selectedVersion?.value ? getVersionSidebar(
     getVersionFromSlug(starlightVersionsConfig, starlightConfig, selectedVersion.value),
     sidebar,
   ) : []
   
-  // console.log('versionSidebarEntries ',JSON.stringify(versionSidebarEntries, null, 2))
+  // console.log('versionSidebarEntries ',JSON.stringify(currentSidebarEntries, null, 2))
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  starlightRoute.sidebar =  selectedVersion?.value && getVersionFromSlug(starlightVersionsConfig, starlightConfig, selectedVersion.value) ? [...baseSidebarEntries, ...versionSidebarEntries] : commonSidebarEntries
+  starlightRoute.sidebar =  selectedVersion?.value && getVersionFromSlug(starlightVersionsConfig, starlightConfig, selectedVersion.value) ? [...baseSidebarEntries, ...versionSidebarEntries] : currentSidebarEntries
   
   const pageVersion = getVersionFromSlug(starlightVersionsConfig, starlightConfig, entry.slug)
 

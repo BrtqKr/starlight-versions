@@ -1,0 +1,62 @@
+---
+title: Image
+slug: ts-sdk/1.0/ts-sdk/components/image
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import imageExample from "./examples/Image.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-image-example.webp";
+
+A component for rendering images:
+
+* From external URLs
+* From a local path on the server hosting a Smelter instance
+
+## Usage
+
+<Code code={imageExample} title="ImageExample.tsx" lang="tsx" collapse={["12-33"]} />
+
+<CollapsibleDetails summaryTitle="Example output">
+  <img src={ExampleImage.src} />
+</CollapsibleDetails>
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type ImageProps = {
+      id?: string;
+      imageId?: string;
+      source?: string;
+  }
+  ```
+</CollapsibleDetails>
+
+<Aside>Exactly one of `imageId` and `source` has to be defined.</Aside>
+
+## Props
+
+### imageId
+
+ID of an image. It identifies an image registered using a [Smelter.registerImage](/ts-sdk/1.0/ts-sdk/smelter#registerimage) method.
+
+* **Type**: `string`
+
+***
+
+### source
+
+Url or local path to the mp4 file. Note that the path has to be local to the machine where
+Smelter server runs.
+
+* **Type**: `string`
+
+***
+
+### id
+
+ID of a component.
+
+* **Type**: `string`
+* **Default value**: Value produced by `useId` hook

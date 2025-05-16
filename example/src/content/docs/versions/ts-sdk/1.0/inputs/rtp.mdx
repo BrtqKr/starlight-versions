@@ -5,8 +5,8 @@ sidebar:
 slug: ts-sdk/1.0/ts-sdk/inputs/rtp
 ---
 
-import { Aside, Badge, Code } from '@astrojs/starlight/components';
-import CollapsibleDetails from '../../../../../components/CollapsibleDetails.astro';
+import { Aside, Badge, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
 
 <Badge text="Node.js" variant="tip" size="large" />
 
@@ -26,11 +26,11 @@ async function run() {
   const smelter = new Smelter();
   await smelter.init();
   await smelter.registerInput("example", {
-      type: "rtp_stream",
-      port: 8001,
-      transportProtocol: "tcp_server",
-      video: { decoder: "ffmpeg_h264" },
-      audio: { decoder: "opus" }
+    type: "rtp_stream",
+    port: 8001,
+    transportProtocol: "tcp_server",
+    video: { decoder: "ffmpeg_h264" },
+    audio: { decoder: "opus" },
   });
   // At this point you can connect to 8001 TCP port
   // and start sending RTP traffic
@@ -50,7 +50,7 @@ void run();
     audio?: InputRtpAudioOptions;
     required?: bool;
     offsetMs?: number;
-  }
+  };
   ```
 </CollapsibleDetails>
 
@@ -134,6 +134,7 @@ Video decoder.
 
 * **Type**: `"ffmpeg_h264" | "vulkan_video"`
 * **Supported values**:
+
   * `"ffmpeg_h264"` - Use the software decoder based on ffmpeg.
   * `"vulkan_video"` (<Badge text="Required feature:vk-video" variant="note" />) - Use hardware decoder based on Vulkan Video.
 
@@ -196,21 +197,46 @@ For detailed instructions on obtaining this value, refer to the information prov
 
   <tbody>
     <tr>
-      <td><strong>FFmpeg Streaming</strong></td>
+      <td>
+        <strong>FFmpeg Streaming</strong>
+      </td>
+
       <td>SDP file</td>
-      <td>Use the <code>-sdp\_file FILENAME</code> option when streaming to a smelter to generate an SDP file containing the ASC.</td>
+
+      <td>
+        Use the <code>-sdp\_file FILENAME</code> option when streaming to a
+        smelter to generate an SDP file containing the ASC.
+      </td>
     </tr>
 
     <tr>
-      <td><strong>MP4 Files</strong></td>
-      <td>Inside the <code>esds</code> box</td>
-      <td>The ASC is embedded as part of the <code>esds</code> box, not the entire box. Applies to regular MP4 and fragmented MP4s (used in HLS playlists with MP4 files).</td>
+      <td>
+        <strong>MP4 Files</strong>
+      </td>
+
+      <td>
+        Inside the <code>esds</code> box
+      </td>
+
+      <td>
+        The ASC is embedded as part of the <code>esds</code> box, not the entire
+        box. Applies to regular MP4 and fragmented MP4s (used in HLS playlists
+        with MP4 files).
+      </td>
     </tr>
 
     <tr>
-      <td><strong>FLV Files / RTMP</strong></td>
-      <td>Inside the <code>AACAUDIODATA</code> tag</td>
-      <td>The ASC is contained within the <code>AACAUDIODATA</code> tag.</td>
+      <td>
+        <strong>FLV Files / RTMP</strong>
+      </td>
+
+      <td>
+        Inside the <code>AACAUDIODATA</code> tag
+      </td>
+
+      <td>
+        The ASC is contained within the <code>AACAUDIODATA</code> tag.
+      </td>
     </tr>
   </tbody>
 </table>

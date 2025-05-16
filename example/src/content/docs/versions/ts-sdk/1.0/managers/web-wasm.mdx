@@ -1,0 +1,62 @@
+---
+title: Browser - in-browser WASM Smelter
+slug: ts-sdk/1.0/ts-sdk/managers/web-wasm
+---
+
+import { Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+When running in-browser WASM build of Smelter there is only one possible SmelterManager, and it
+does not have to be created explicitly
+
+<Code
+  title="WebWasmExample.tsx"
+  code={`
+import Smelter, { setWasmBundleUrl } from "@swmansion/smelter-web-wasm"
+
+// URL where you are hosting smelter wasm bundle
+setWasmBundleUrl('/assets/smelter.wasm');
+
+async function run() {
+const smelter = new Smelter({ framerate: 30 });
+await smelter.init();
+}
+void run();
+`}
+  lang="tsx"
+/>
+
+## WebWasmSmelterOptions
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  <Code
+    code={`
+type Framerate = {
+  num: number;
+  den: number;
+};
+type WebWasmSmelterOptions = {
+  framerate?: Framerate | number;
+  streamFallbackTimeoutMs?: number;
+};
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+### Properties
+
+#### framerate
+
+Output framerate defined as a number or a ratio.
+
+* **Type**: `number | { num: number, den: number }`
+
+***
+
+#### streamFallbackTimeoutMs
+
+Timeout duration (in ms) that specifies when Smelter should switch to a fallback option if the input stream ceases to send frames.
+
+* **Type**: `number`
+* **Default value**: `500`

@@ -1,0 +1,73 @@
+---
+title: InputStream
+slug: ts-sdk/1.0/ts-sdk/components/inputstream
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import inputStreamExample from "./examples/InputStream.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-input-stream-example.mp4";
+
+A component for displaying registered media inputs.
+
+<Aside>
+  To use this component, you need to first register the input with a matching
+  `inputId` using the [`Smelter.registerInput`](/ts-sdk/1.0/ts-sdk/smelter#registerinput)
+  function.
+</Aside>
+
+## Usage
+
+<Code code={inputStreamExample} title="InputStreamExample.tsx" lang="tsx" collapse={["21-42"]} />
+
+<CollapsibleDetails summaryTitle="Example output">
+  <video autoplay loop muted src={ExampleImage} alt="example output" />
+</CollapsibleDetails>
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type InputStreamProps = {
+    id?: string;
+    inputId: string;
+    volume?: number;
+    muted?: boolean;
+  }
+  ```
+</CollapsibleDetails>
+
+## Props
+
+### inputId
+
+ID of an input. It identifies a stream registered using a [Smelter.registerInput](/ts-sdk/1.0/ts-sdk/smelter#registerinput) method.
+
+* **Type**: `string`
+
+***
+
+### id
+
+ID of a component.
+
+* **Type**: `string`
+* **Default value**: Value produced by `useId` hook
+
+***
+
+### volume
+
+Audio volume of the input stream. Accepts values between 0 and 1.
+
+* **Type**: `number`
+* **Default value**: 1
+
+***
+
+### muted
+
+Determines whether to mute audio of the input stream.
+
+* **Type**: `boolean`
+* **Default value**: `false`

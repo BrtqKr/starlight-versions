@@ -5,13 +5,13 @@ sidebar:
 slug: ts-sdk/1.0/ts-sdk/guides/basic-layouts
 ---
 
-import { Steps, Code } from '@astrojs/starlight/components';
-import CollapsibleDetails from '../../../../../components/CollapsibleDetails.astro';
-import Step1Image from '../../../../../assets/guides/basic-layouts-1.mp4'
-import Step2Image from '../../../../../assets/guides/basic-layouts-2.mp4'
-import Step3Image from '../../../../../assets/guides/basic-layouts-3.mp4'
-import Step4Image from '../../../../../assets/guides/basic-layouts-4.mp4'
-import Step5Image from '../../../../../assets/guides/basic-layouts-5.mp4'
+import { Steps, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import Step1Image from "@assets/guides/basic-layouts-1.mp4";
+import Step2Image from "@assets/guides/basic-layouts-2.mp4";
+import Step3Image from "@assets/guides/basic-layouts-3.mp4";
+import Step4Image from "@assets/guides/basic-layouts-4.mp4";
+import Step5Image from "@assets/guides/basic-layouts-5.mp4";
 
 In this guide, you'll learn how layouts in Smelter works and how to position and resize components.
 It includes examples and explanation how component size is calculated.
@@ -20,13 +20,11 @@ It includes examples and explanation how component size is calculated.
   1. Init Smelter and connect inputs and outputs
 
      ```tsx collapse={15-16, 20-21, 25-35}
-     import { View } from "@swmansion/smelter"
-     import Smelter from "@swmansion/smelter-node"
+     import { View } from "@swmansion/smelter";
+     import Smelter from "@swmansion/smelter-node";
 
      function App() {
-       return (
-         <View style={{ backgroundColor: "#4d4d4d" }} />
-       )
+       return <View style={{ backgroundColor: "#4d4d4d" }} />;
      }
 
      async function start() {
@@ -35,13 +33,13 @@ It includes examples and explanation how component size is calculated.
 
        await smelter.registerInput("input_1", {
          type: "mp4",
-         serverPath: "input1.mp4"
+         serverPath: "input1.mp4",
        });
 
        await smelter.registerInput("input_2", {
          type: "mp4",
-         serverPath: "input2.mp4"
-       })
+         serverPath: "input2.mp4",
+       });
 
        await smelter.registerOutput("output", <App />, {
          type: "rtp_stream",
@@ -54,7 +52,7 @@ It includes examples and explanation how component size is calculated.
          },
          audio: {
            encoder: { type: "opus", channels: "stereo" },
-         }
+         },
        });
 
        await smelter.start();
@@ -69,15 +67,15 @@ It includes examples and explanation how component size is calculated.
   2. Add `input_1` to the scene.
 
      ```tsx collapse={12-59}
-     import { View, InputStream } from "@swmansion/smelter"
-     import Smelter from "@swmansion/smelter-node"
+     import { View, InputStream } from "@swmansion/smelter";
+     import Smelter from "@swmansion/smelter-node";
 
      function App() {
        return (
          <View style={{ backgroundColor: "#4d4d4d" }}>
            <InputStream inputId="input_1" />
          </View>
-       )
+       );
      }
 
      async function start() {
@@ -86,12 +84,12 @@ It includes examples and explanation how component size is calculated.
 
        await smelter.registerInput("input_1", {
          type: "mp4",
-         serverPath: "input1.mp4"
+         serverPath: "input1.mp4",
        });
 
        await smelter.registerInput("input_2", {
          type: "mp4",
-         serverPath: "input2.mp4"
+         serverPath: "input2.mp4",
        });
 
        await smelter.registerOutput("output", <App />, {
@@ -105,7 +103,7 @@ It includes examples and explanation how component size is calculated.
          },
          audio: {
            encoder: { type: "opus", channels: "stereo" },
-         }
+         },
        });
 
        await smelter.start();
@@ -120,8 +118,8 @@ It includes examples and explanation how component size is calculated.
   3. Resize `input_1` to fill the output.
 
      ```tsx collapse={14-59}
-     import { View, Rescaler, InputStream } from "@swmansion/smelter"
-     import Smelter from "@swmansion/smelter-node"
+     import { View, Rescaler, InputStream } from "@swmansion/smelter";
+     import Smelter from "@swmansion/smelter-node";
 
      function App() {
        return (
@@ -130,7 +128,7 @@ It includes examples and explanation how component size is calculated.
              <InputStream inputId="input_1" />
            </Rescaler>
          </View>
-       )
+       );
      }
 
      async function start() {
@@ -139,13 +137,13 @@ It includes examples and explanation how component size is calculated.
 
        await smelter.registerInput("input_1", {
          type: "mp4",
-         serverPath: "input1.mp4"
+         serverPath: "input1.mp4",
        });
 
        await smelter.registerInput("input_2", {
          type: "mp4",
-         serverPath: "input2.mp4"
-       })
+         serverPath: "input2.mp4",
+       });
 
        await smelter.registerOutput("output", <App />, {
          type: "rtp_stream",
@@ -158,7 +156,7 @@ It includes examples and explanation how component size is calculated.
          },
          audio: {
            encoder: { type: "opus", channels: "stereo" },
-         }
+         },
        });
 
        await smelter.start();
@@ -178,8 +176,8 @@ It includes examples and explanation how component size is calculated.
   4. Show both inputs side-by-side.
 
      ```tsx collapse={17-59}
-     import { View, Rescaler, InputStream } from "@swmansion/smelter"
-     import Smelter from "@swmansion/smelter-node"
+     import { View, Rescaler, InputStream } from "@swmansion/smelter";
+     import Smelter from "@swmansion/smelter-node";
 
      function App() {
        return (
@@ -191,7 +189,7 @@ It includes examples and explanation how component size is calculated.
              <InputStream inputId="input_2" />
            </Rescaler>
          </View>
-       )
+       );
      }
 
      async function start() {
@@ -200,13 +198,13 @@ It includes examples and explanation how component size is calculated.
 
        await smelter.registerInput("input_1", {
          type: "mp4",
-         serverPath: "input1.mp4"
+         serverPath: "input1.mp4",
        });
 
        await smelter.registerInput("input_2", {
          type: "mp4",
-         serverPath: "input2.mp4"
-       })
+         serverPath: "input2.mp4",
+       });
 
        await smelter.registerOutput("output", <App />, {
          type: "rtp_stream",
@@ -219,7 +217,7 @@ It includes examples and explanation how component size is calculated.
          },
          audio: {
            encoder: { type: "opus", channels: "stereo" },
-         }
+         },
        });
 
        await smelter.start();
@@ -241,8 +239,8 @@ It includes examples and explanation how component size is calculated.
   5. Put one of the inputs in the corner
 
      ```tsx collapse={17-59}
-     import { View, Rescaler, InputStream } from "@swmansion/smelter"
-     import Smelter from "@swmansion/smelter-node"
+     import { View, Rescaler, InputStream } from "@swmansion/smelter";
+     import Smelter from "@swmansion/smelter-node";
 
      function App() {
        return (
@@ -254,7 +252,7 @@ It includes examples and explanation how component size is calculated.
              <InputStream inputId="input_2" />
            </Rescaler>
          </View>
-       )
+       );
      }
 
      async function start() {
@@ -263,13 +261,13 @@ It includes examples and explanation how component size is calculated.
 
        await smelter.registerInput("input_1", {
          type: "mp4",
-         serverPath: "input1.mp4"
+         serverPath: "input1.mp4",
        });
 
        await smelter.registerInput("input_2", {
          type: "mp4",
-         serverPath: "input2.mp4"
-       })
+         serverPath: "input2.mp4",
+       });
 
        await smelter.registerOutput("output", <App />, {
          type: "rtp_stream",
@@ -282,7 +280,7 @@ It includes examples and explanation how component size is calculated.
          },
          audio: {
            encoder: { type: "opus", channels: "stereo" },
-         }
+         },
        });
 
        await smelter.start();

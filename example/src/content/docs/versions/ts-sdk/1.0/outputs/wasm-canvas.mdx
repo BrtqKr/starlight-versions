@@ -1,0 +1,91 @@
+---
+title: Canvas (Web API)
+slug: ts-sdk/1.0/ts-sdk/outputs/wasm-canvas
+---
+
+import { Aside, Code, Badge } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+<Badge text="Browser (WASM)" variant="tip" size="large" />
+
+<br />
+
+<br />
+
+An output that renders mixed video to the canvas and plays audio in current tab using browser API.
+
+## Usage
+
+```tsx title=canvasOutputExample.tsx
+import Smelter from "@swmansion/smelter-web-wasm";
+import { View } from "@swmansion/smelter";
+
+async function run() {
+  const canvas = document.createElement("canvas");
+  const smelter = new Smelter();
+  await smelter.init();
+  await smelter.registerOutput("example", <View />, {
+    type: "canvas",
+    video: {
+      canvas,
+      resolution: { width: 1920, height: 1080 },
+    },
+    audio: true,
+  });
+}
+void run();
+```
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type RegisterCanvasOutput = {
+    type: "canvas";
+    video?: CanvasOutputVideo;
+    audio?: boolean;
+  };
+  ```
+</CollapsibleDetails>
+
+## Properties
+
+### video
+
+Parameters of an output video.
+
+* **Type**: [`CanvasOutputVideo`](#canvasoutputvideo)
+
+***
+
+### audio
+
+If `true` output audio will be played in the browser tab.
+
+* **Type**: `boolean`
+* **Defaults to**: `false`
+
+## CanvasOutputVideo
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type RegisterCanvasOutput = {
+    canvas: HTMLCanvasElement;
+    resolution: { width: number; height: number };
+  };
+  ```
+</CollapsibleDetails>
+
+### Properties
+
+#### canvas
+
+Canvas element that video should be rendered on.
+
+* **Type**: `HTMLCanvasElement`
+
+#### resolution
+
+Resolution of an output video
+
+* **Type**: `{ width: number; height: number }`

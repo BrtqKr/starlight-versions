@@ -1,0 +1,63 @@
+---
+title: Image
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+Represents an image asset. It can be used via an [Image component](/http-api/components/image).
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definition" open>
+  <Code
+    code={`
+type Image =
+    | { asset_type: "png"; url?: string; path?: string; }
+    | { asset_type: "jpeg"; url?: string; path?: string; }
+    | { asset_type: "gif"; url?: string; path?: string; }
+    | { 
+        asset_type: "svg";
+        url?: string;
+        path?: string;
+        resolution?: {
+          width: u32,
+          height: u32,
+        };
+      }
+`}
+    lang="tsx"
+  />
+</CollapsibleDetails>
+
+## Properties
+
+### asset_type
+
+Format of an image.
+
+- **Type**: `"png" | "jpeg" | "gif" | "svg"`
+
+---
+
+### url
+
+Url to download an image. This field is mutually exclusive with the `path` field.
+
+- **Type**: `string`
+
+---
+
+### path
+
+Path to an image. This field is mutually exclusive with the `url` field.
+
+- **Type**: `string`
+
+---
+
+### resolution
+
+The resolution to use when rendering an SVG image.
+
+- **Type**: `{ width: u32; height: u32; }`

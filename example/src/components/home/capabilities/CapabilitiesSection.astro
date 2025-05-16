@@ -1,0 +1,199 @@
+---
+import { Image } from "astro:assets";
+import CapabilitiesItem from "./CapabilitiesItem.astro";
+
+import chevronLeft from "/public/images/chevron-left.svg";
+import chevronRight from "/public/images/chevron-right.svg";
+import api from "../../../assets/capabilities/api.svg";
+import bolt from "../../../assets/capabilities/bolt.svg";
+import capabilitiesBlur from "../../../assets/capabilities/capabilities-blur2.svg";
+import wavePattern from "../../../assets/capabilities/capabilities-wave.svg";
+import cog from "../../../assets/capabilities/cog.svg";
+import flexbility from "../../../assets/capabilities/flexbility.svg";
+import multiSource from "../../../assets/capabilities/multi-source.svg";
+import offline from "../../../assets/capabilities/offline.svg";
+import rocket from "../../../assets/capabilities/rocket.svg";
+import wand from "../../../assets/capabilities/wand.svg";
+import CapabilitiesItemSmall from "./CapabilitiesItemSmall.astro";
+
+const CAPABILITIES = [
+  {
+    label: "Ultra-low latency",
+    text: "Compose and stream your videos with minimal delay. Smelter means seamless experience for use cases that demand immediate responsiveness.",
+    icon: bolt,
+  },
+  {
+    label: "Multi-source support",
+    text: "Combine live feeds, screen recordings, and pre-recorded videos into a single composition. Mix multiple inputs at the same time without any frame drops.",
+    icon: multiSource,
+  },
+  {
+    label: "Dynamic overlays",
+    text: "Add text, animations, transitions, and graphics seamlessly — both to live and to recorded videos. Change layouts on the fly.",
+    icon: wand,
+  },
+  {
+    label: "Browser-based experience",
+    text: "Run high-performance video processing directly in the browser with WASM. Also, leverage GPU processing by rendering with WebGL or WebGPU.",
+    icon: cog,
+  },
+  {
+    label: "Simple API",
+    text: "Thanks to the declarative API, Smelter is quick to pick up for anyone familiar with web development. Which means you can customize it in no time.",
+    icon: api,
+  },
+  {
+    label: "Tech-stack flexibility",
+    text: "You can use Smelter with TypeScript (React), Elixir (Membrane Framework) or just HTTP API with any language. Also, you need no deep video expertise.",
+    icon: flexbility,
+  },
+  {
+    label: "Easy deployment",
+    text: "We provide pre-built binaries and publish images to the Docker registry. This way, you can set up Smelter in just a few steps.",
+    icon: rocket,
+  },
+  {
+    label: "Offline processing available",
+    text: "It’s not only about real-time streaming. With Smelter, you can also process data offline and then save the result as a file.",
+    icon: offline,
+  },
+] as const;
+---
+
+<section id="features" class="md:px-4 relative mb-28 text-center lg:px-8 xl:px-10 scroll-mt-[10svh]">
+  <Image id="capabilitiesWave" src={wavePattern} alt="wave pattern" class="absolute -right-56 opacity-45 sm:top-36 sm:-right-40 -z-10" />
+  <Image id="capabilitiesBlur" src={capabilitiesBlur} alt="gradient" class="absolute bottom-40 sm:-bottom-52 sm:-left-40 -translate-x-1/2 -z-10" />
+  <h2 class="mb-2 text-capabilities-header">The only video<br />compositing software you need</h2>
+
+  <div class="carousel-container sm:hidden relative mt-8">
+    <button id="prevButton" class="absolute left-0 top-1/2 -translate-y-1/2 aspect-square bg-[#38314b] border border-solid border-gradient-redLight rounded-full active:scale-110 transition-all duration-300">
+      <Image id="capabilitiesBlur" src={chevronLeft} alt="previous" class="w-10 h-10 aspect-square"/>
+    </button>
+    <div id="carouselTrack" class="gap-x-4 px-4 md:px-0">
+      {CAPABILITIES.map((capability) => (
+        <div>
+          <CapabilitiesItemSmall {...capability} />
+        </div>
+      ))}
+    </div>
+    <button id="nextButton" class="absolute right-0 top-1/2 -translate-y-1/2 aspect-square bg-[#38314b] border border-solid border-gradient-redLight rounded-full active:scale-110 transition-all duration-300">
+      <Image id="capabilitiesBlur" src={chevronRight} alt="previous" class="w-10 h-10 aspect-square"/>
+    </button>
+  </div>
+  
+  <div class="hidden sm:grid capabilities-grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mt-12 sm:mt-20 justify-center">
+    {
+      CAPABILITIES.map(capability => (
+        <CapabilitiesItem {...capability} />
+      ))
+    }
+  </div>
+
+</section>
+
+
+<script is:inline data-astro-rerun>
+  document.addEventListener('astro:page-load', function () {
+    const capabilitiesBlur = document.getElementById('capabilitiesBlur');
+	  const capabilitiesWave = document.getElementById('capabilitiesWave');
+    
+	  const parentSection = capabilitiesBlur?.closest('section');
+
+    const handleScroll = () => {
+        if(!parentSection) return;
+        const sectionBottom = parentSection.getBoundingClientRect().bottom;
+        const scrollY = window.screenY;
+        const sectionBottomToPageTop = scrollY + sectionBottom;
+        const relativeBottom = scrollY - sectionBottomToPageTop + window.innerHeight;
+        
+        if (relativeBottom > -window.innerHeight && sectionBottom < window.innerHeight) {
+            const translateY = relativeBottom;
+            capabilitiesBlur.style.transform = `translateY(-${translateY * 0.7}px) translateX(-50%)`;
+			capabilitiesWave.style.transform = `translateY(${translateY * 0.4}px)`
+        }
+    };
+    
+
+    handleScroll();
+
+    const track = document.getElementById('carouselTrack');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+
+    let scrollAmount = 0;
+    const scrollInterval = 4000;
+    let autoScrollInterval;
+
+    function setAutoScroll() {
+        autoScrollInterval = setInterval(advanceScroll, scrollInterval);
+    }
+
+    function advanceScroll() {
+        if (scrollAmount < track.scrollWidth - track.clientWidth - (window.innerWidth - 16)) {
+            scrollAmount += window.innerWidth - 16;
+        } else {
+            scrollAmount = 0;
+        }
+        track.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+    }
+
+    function manualScroll(isNext) {
+        clearInterval(autoScrollInterval);
+
+        if (isNext) {
+            if (scrollAmount < track.scrollWidth - track.clientWidth - (window.innerWidth - 16)) {
+                scrollAmount += window.innerWidth - 16;
+            } else {
+                scrollAmount = 0;
+            }
+        } else {
+            if (scrollAmount > 0) {
+                scrollAmount -= window.innerWidth - 16;
+            } else {
+                scrollAmount = track.scrollWidth - track.clientWidth;
+            }
+        }
+        track.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+
+        setAutoScroll();
+    }
+
+    nextButton.addEventListener('click', () => manualScroll(true));
+    prevButton.addEventListener('click', () => manualScroll(false));
+
+    setAutoScroll();
+
+  	window.addEventListener('scroll', handleScroll);
+    window.addEventListener('pagehide', () => clearInterval(interval));
+  });
+</script>
+
+<style>
+  .carousel-container {
+    display: none;
+    overflow: hidden;
+    position: relative;
+  }
+
+  @media (max-width: 640px) {
+    .carousel-container {
+      display: block;
+    }
+    
+    .capabilities-grid {
+      display: none;
+    }
+  }
+
+  #carouselTrack::-webkit-scrollbar {
+    display: none;
+  }
+  #carouselTrack {
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
+    overflow-x: auto;
+    display: flex;
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
+  }
+</style>

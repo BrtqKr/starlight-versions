@@ -1,0 +1,48 @@
+---
+import Broadcast from "../../../assets/examples/news.webp";
+import StreamingApp from "../../../assets/examples/streaming-app.webp";
+import VideoConference from "../../../assets/examples/video-conference.webp";
+
+import ExampleItem from "./ExampleItem.astro";
+
+const EXAMPLES = [
+  {
+    uri: "/demos/streaming-app-setup",
+    text: "Streaming applications",
+    description:
+      "Share the screen, mix it with your camera input, display chat messages – and layout everything just the way you want.",
+    image: StreamingApp,
+  },
+  {
+    uri: "/demos/broadcast",
+    text: "News broadcasts",
+    description:
+      "Make a real-time broadcast, enrich the video with a customizable news bar – and provide your viewers with the lowest latency possible.",
+    image: Broadcast,
+  },
+
+  {
+    uri: "/demos/video-conference",
+    text: "Video calls",
+    description:
+      "Provide a modern video chat experience for multiple users – using out-of-the-box React components.",
+    image: VideoConference,
+  },
+] as const;
+---
+
+<section
+  id="examples"
+  class="px-4 flex flex-col items-center relative py-28 text-center lg:px-8 xl:px-28 scroll-mt-[10svh]"
+>
+  <h2 class="mb-2 text-capabilities-header">
+    What can you develop with Smelter?
+  </h2>
+  <div
+    class="flex w-full gap-6 overflow-hidden relative flex-col sm:flex-row mt-12 sm:mt-20"
+  >
+    <div class="flex w-full flex-col sm:flex-row gap-4 lg:gap-8">
+      {EXAMPLES.map((example) => <ExampleItem {...example} />)}
+    </div>
+  </div>
+</section>

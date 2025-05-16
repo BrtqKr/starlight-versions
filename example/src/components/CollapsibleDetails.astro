@@ -1,0 +1,18 @@
+---
+interface Props {
+  summaryTitle: string;
+  open: boolean;
+}
+
+const { summaryTitle = "Details", open = false } = Astro.props;
+---
+
+<details
+  class="overflow-hidden transition-[max_height] duration-300 ease-in-out"
+  aria-label={summaryTitle}
+  open={open}>
+  <summary class="cursor-pointer focus:outline-none">{summaryTitle}</summary>
+  <p>
+    <slot />
+  </p>
+</details>

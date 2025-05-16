@@ -1,0 +1,93 @@
+---
+title: Image
+---
+
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import { Aside } from "@astrojs/starlight/components";
+import ExampleImage from "@assets/guides/component-image-example.webp";
+
+A component for rendering images:
+
+- From external URLs
+- From a local path
+
+<Aside>
+  {" "}
+  To use this component, you need to first register the image with matching `image_id`
+  using [`register image`](/http-api/routes#register-image) request.{" "}
+</Aside>
+
+## Usage
+
+Register an image with an id `example_image`:
+
+<CollapsibleDetails summaryTitle='Register image request' open>
+
+```http
+POST: /api/image/example_image/register
+Content-Type: application/json
+
+{
+  "asset_type": "svg",
+  "url": "https://example.com/image.svg"
+}
+```
+
+</CollapsibleDetails>
+
+Update output with a new scene that is using image `example_image`:
+
+<CollapsibleDetails summaryTitle='Update request' open>
+
+```http
+POST: /api/output/example_output/update
+Content-Type: application/json
+
+{
+  "video": {
+    "root": {
+      "type": "view",
+      "background_color": "#52505b",
+      "children": [
+        {
+          "type": "image",
+          "image_id": "example_image"
+        }
+      ]
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle="Example output">
+  <img src={ExampleImage.src} />
+</CollapsibleDetails>
+
+## Reference
+
+<CollapsibleDetails summaryTitle='Type definitions' open>
+```tsx
+type Image = {
+  id?: string;
+  image_id: string;
+}
+```
+</CollapsibleDetails>
+
+## Properties
+
+### id
+
+ID of a component.
+
+- **Type**: `string`
+
+---
+
+### image_id
+
+ID of an image. It identifies an image registered using a [register image](/http-api/routes#register-image) request.
+
+- **Type**: `string`

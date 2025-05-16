@@ -1,0 +1,95 @@
+---
+title: TypeScript SDK
+slug: ts-sdk/1.0/ts-sdk/overview
+---
+
+import { Aside, Code } from '@astrojs/starlight/components';
+
+TypeScript SDK is a library that provides a set of React components, hooks, and utility functions you can use to control how Smelter manipulates videos. In this section, we'll briefly describe its interface so you can get the general impression of how to process multimedia using Smelter TypeScript SDK.
+
+### Smelter
+
+The primary element required to start using the Smelter TypeScript SDK is the `Smelter` class. This class is crucial for initializing and managing the Smelter server instance. You can import `Smelter` class from:
+
+* `@swmansion/smelter-node`
+* `@swmansion/smelter-web-wasm`
+
+Visit [`Smelter` class documentation](/ts-sdk/1.0/ts-sdk/smelter) for more details, or for [offline processing](/ts-sdk/1.0/fundamentals/glossary#offline-processing) checkout [`OfflineSmelter` class](/ts-sdk/1.0/ts-sdk/smelter-offline).
+
+### Components
+
+Smelter TypeScript SDK draws heavy inspiration from React Native in terms of the syntax. It's important to note that standard DOM components, such as `<div/>`, are not supported. Instead, you should use Smelter-specific components, such as:
+
+* [Image](/ts-sdk/1.0/ts-sdk/components/image)
+* [InputStream](/ts-sdk/1.0/ts-sdk/components/inputstream)
+* [Mp4](/ts-sdk/1.0/ts-sdk/components/mp4)
+* [Rescaler](/ts-sdk/1.0/ts-sdk/components/rescaler)
+* [Shader](/ts-sdk/1.0/ts-sdk/components/shader)
+* [Show](/ts-sdk/1.0/ts-sdk/components/show)
+* [SlideShow](/ts-sdk/1.0/ts-sdk/components/slideshow)
+* [Text](/ts-sdk/1.0/ts-sdk/components/text)
+* [Tiles](/ts-sdk/1.0/ts-sdk/components/tiles)
+* [View](/ts-sdk/1.0/ts-sdk/components/view)
+* [WebView](/ts-sdk/1.0/ts-sdk/components/webview)
+
+#### Styling
+
+Smelter components can be customized in a way similar to React inline styling. Most of the components accept `style` prop - an object defining custom visual aspects. However, some of the animation-related customizations, such as `transition` are handled by specific dedicated props.
+
+<Aside type="caution">Despite some of the component names overlapping with React Native, the supported styles differ. Visit a specific component section to see supported styles.</Aside>
+
+### Hooks
+
+Our hooks are primarily designed for managing stream configurations and accessing information about them. Smelter currently offers following hooks:
+
+* [useInputStreams](/ts-sdk/1.0/ts-sdk/hooks/use-input-streams)
+* [useAudioInput](/ts-sdk/1.0/ts-sdk/hooks/use-audio-input)
+* [useAfterTimestamp](/ts-sdk/1.0/ts-sdk/hooks/use-after-timestamp)
+* [useBlockingTask](/ts-sdk/1.0/ts-sdk/hooks/use-blocking-task)
+
+You're free to use any standard React hooks such as `useState`, `useEffect`, and more.
+
+### Inputs
+
+You can handle most of the stream composing by using React components. However, delivering multimedia to Smelter requires registering the input beforehand. You can register an input by using [Smelter.registerInput](/ts-sdk/1.0/ts-sdk/smelter#registerinput), which accepts `inputId` and object representing input configurations. Supported inputs depend on the runtime.
+
+Node.js:
+
+* [MP4](/ts-sdk/1.0/ts-sdk/inputs/mp4)
+* [RTP](/ts-sdk/1.0/ts-sdk/inputs/rtp)
+* [WHIP](/ts-sdk/1.0/ts-sdk/inputs/whip)
+
+Browser (WASM):
+
+* [Camera (Web API)](/ts-sdk/1.0/ts-sdk/inputs/wasm-camera)
+* [Screen capture (Web API)](/ts-sdk/1.0/ts-sdk/inputs/wasm-screen)
+* [MediaStream (Web API)](/ts-sdk/1.0/ts-sdk/inputs/wasm-stream)
+* [MP4](/ts-sdk/1.0/ts-sdk/inputs/mp4) (limited API compared to Node.js)
+
+After registering the stream, you can use it in composition by using [InputStream](/ts-sdk/1.0/ts-sdk/components/inputstream) component.
+
+<Code code={`<InputStream inputId="example_input" />`} lang="tsx" />
+
+### Outputs
+
+Similar to inputs, outputs require registering them before they can be utilized. You can register an output by using `Smelter.registerOutput`.
+
+Node.js:
+
+* [MP4](/ts-sdk/1.0/ts-sdk/outputs/mp4)
+* [RTP](/ts-sdk/1.0/ts-sdk/outputs/rtp)
+* [WHIP](/ts-sdk/1.0/ts-sdk/outputs/whip)
+
+Browser (WASM)
+
+* [Canvas (Web APi)](/ts-sdk/1.0/ts-sdk/outputs/wasm-canvas)
+* [MediaStream (Web API)](/ts-sdk/1.0/ts-sdk/outputs/wasm-stream)
+* [WHIP (Web API)](/ts-sdk/1.0/ts-sdk/outputs/wasm-whip)
+
+### Resources
+
+Other than inputs and outputs Smelter supports a few other entity types that need to be registered.
+
+* [Shader](/ts-sdk/1.0/ts-sdk/resources/shader)
+* [Image](/ts-sdk/1.0/ts-sdk/resources/image)
+* [WebRenderer](/ts-sdk/1.0/ts-sdk/resources/web-renderer)

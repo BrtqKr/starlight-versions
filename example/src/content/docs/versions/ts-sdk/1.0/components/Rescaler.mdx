@@ -1,0 +1,73 @@
+---
+title: Rescaler
+slug: ts-sdk/1.0/ts-sdk/components/rescaler
+---
+
+import { Code } from "@astrojs/starlight/components";
+import rescalerExample from "./examples/Rescaler.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-rescaler-example.webp";
+
+A layout component that will resize its children to match its own size. It will always preserve
+aspect ratio while resizing.
+
+## Usage
+
+<Code code={rescalerExample} title="RescalerExample.tsx" lang="tsx" collapse={["17-44"]} />
+
+<CollapsibleDetails summaryTitle="Example output">
+  <img src={ExampleImage.src} />
+</CollapsibleDetails>
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type RescalerProps = {
+    id?: string;
+    children: ReactElement;
+    style?: RescalerStyleProps;
+    transition?: Transition;
+  };
+  ```
+</CollapsibleDetails>
+
+## Transitions
+
+During a scene update, a `Rescaler` component will animate transitions between the original and the new state if `transition` prop is specified. For a transition to proceed, both the original and the new scene must define a component with the same ID. However, currently, only certain fields support animated transitions:
+
+* `width` / `height` - Transitions for these dimensions are only supported within the same positioning mode. If the positioning mode changes from the old scene to the new one, the transition will fail.
+* `bottom` / `top` / `left` / `right` / `rotation` - Transitions are supported only when changing the value of the same field. For example, if the `left` field is defined in the old scene but not in the new one, the transition will not be executed. If the positioning type of the `Rescaler` changes, the transition will not be applied either.
+
+## Props
+
+### children
+
+Exactly one child component.
+
+* **Type**: `ReactNode`
+
+***
+
+### id
+
+ID of a component.
+
+* **Type**: `string`
+* **Default value**: Value produced by `useId` hook
+
+***
+
+### style
+
+Rescaler styling properties.
+
+* **Type**: [`RescalerStyleProps`](/ts-sdk/1.0/ts-sdk/props/rescaler-style-props)
+
+***
+
+### transition
+
+Defines how this component will behave during a scene update. This will only have an effect if the previous scene already contained a `Rescaler` component with the same id.
+
+* **Type**: [`Transition`](/ts-sdk/1.0/ts-sdk/props/transition)

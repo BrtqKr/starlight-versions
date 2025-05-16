@@ -24,26 +24,111 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: 'Start Here',
-          items: [{ slug: 'getting-started' }, { label: 'Another Page', link: '/another-page/' }],
+          label: "Fundamentals",
+          items: [
+            { label: "Getting started", slug: "fundamentals/getting-started" },
+            { label: "Glossary of terms", slug: "fundamentals/glossary" },
+            {
+              label: "Concepts",
+              autogenerate: { directory: "fundamentals/concepts" },
+            },
+          ],
+        },
+        {
+          label: "Deployment",
+          items: [
+            { label: "Setup", slug: "deployment/setup" },
+            { label: "Configuration", slug: "deployment/configuration" },
+            {
+              label: "Variants",
+              autogenerate: { directory: "deployment/variants" },
+            },
+          ],
         },
         {
           label: "TypeScript SDK",
           items: [
-            { label: "TS PAGE 1", slug: "ts-sdk/ts-page" },
-            { label: "TS PAGE 2", slug: "ts-sdk/ts-page2" },
+            { label: "Overview", slug: "ts-sdk/overview" },
+            { label: "Project configuration", slug: "ts-sdk/configuration" },
+            { label: "Smelter", slug: "ts-sdk/smelter" },
+            { label: "OfflineSmelter", slug: "ts-sdk/smelter-offline" },
             {
-              label: "Guides",
+              label: "Smelter Managers",
               collapsed: true,
-              autogenerate: { directory: "ts-sdk/guides" },
+              autogenerate: { directory: "ts-sdk/managers" },
+            },
+            {
+              label: "Components",
+              collapsed: true,
+              autogenerate: { directory: "ts-sdk/components" },
+            },
+            {
+              label: "Props",
+              collapsed: true,
+              autogenerate: { directory: "ts-sdk/props" },
+            },
+            {
+              label: "Hooks",
+              collapsed: true,
+              autogenerate: { directory: "ts-sdk/hooks" },
             },
             {
               label: "Inputs",
               collapsed: true,
               autogenerate: { directory: "ts-sdk/inputs" },
             },
-
-          ]
+            {
+              label: "Outputs",
+              collapsed: true,
+              autogenerate: { directory: "ts-sdk/outputs" },
+            },
+            {
+              label: "Resources",
+              collapsed: true,
+              autogenerate: { directory: "ts-sdk/resources" },
+            },
+            {
+              label: "Guides",
+              collapsed: true,
+              autogenerate: { directory: "ts-sdk/guides" },
+            },
+          ],
+        },
+        {
+          label: "HTTP API",
+          items: [
+            { label: "Overview", slug: "http-api/overview" },
+            { label: "Routes", slug: "http-api/routes" },
+            {
+              label: "Events",
+              slug: "http-api/events",
+            },
+            {
+              label: "Components",
+              collapsed: true,
+              autogenerate: { directory: "http-api/components" },
+            },
+            {
+              label: "Inputs",
+              collapsed: true,
+              autogenerate: { directory: "http-api/inputs" },
+            },
+            {
+              label: "Outputs",
+              collapsed: true,
+              autogenerate: { directory: "http-api/outputs" },
+            },
+            {
+              label: "Resources",
+              collapsed: true,
+              autogenerate: { directory: "http-api/resources" },
+            },
+            {
+              label: "Guides",
+              collapsed: true,
+              autogenerate: { directory: "http-api/guides" },
+            },
+          ],
         },
       ],
       social: {

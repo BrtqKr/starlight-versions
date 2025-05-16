@@ -91,8 +91,6 @@ export function addPrefixToSidebarConfig(
       }
     })
 
-  console.log('STARLIGHT ' ,JSON.stringify(test, null, 2))
-
   return test
 }
 

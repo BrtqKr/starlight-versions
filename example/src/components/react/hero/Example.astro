@@ -1,0 +1,71 @@
+---
+
+---
+
+<div class="flex text-start sm:px-14 sm:max-w-[95%]">
+  <div class="flex flex-col sm:flex-row gap-8 items-center h-min">
+    <div
+      class="gradient-light-1 flex flex-1.5 rounded-4xl p-px h-full w-full aspect-video"
+    >
+      <div
+        class="h-full w-full rounded-[calc(2rem-1px)] bg-explanation-background"
+      >
+        <div class="relative z-0 flex h-full flex-col">
+          <div class="flex items-center">
+            <video
+              id="example-video"
+              autoplay
+              muted
+              playsinline
+              class="rounded-4xl h-full w-full object-cover"
+              poster="/example-video-poster.webp"
+            >
+              <source src="/example-video.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="test" class="flex flex-1 items-center">
+      <div
+        class="rounded-4xl border border-solid border-example-border overflow-hidden h-full w-full"
+      >
+        <video
+          id="code-video"
+          autoplay
+          muted
+          playsinline
+          class="h-full w-full object-cover"
+          poster="/code-video-poster.webp"
+        >
+          <source src="/code-video.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline data-astro-rerun>
+  document.addEventListener("astro:page-load", function () {
+    const video1 = document.getElementById("example-video");
+    const video2 = document.getElementById("code-video");
+
+    video1.addEventListener("ended", () => {
+      video1.currentTime = 0;
+      video1.play();
+      video2.currentTime = 0;
+      video2.play();
+    });
+
+    video2.addEventListener("ended", () => {
+      video1.currentTime = 0;
+      video1.play();
+      video2.currentTime = 0;
+      video2.play();
+    });
+
+    video1.play();
+    video2.play();
+  });
+</script>

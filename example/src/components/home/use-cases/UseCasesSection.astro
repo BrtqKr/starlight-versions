@@ -1,0 +1,56 @@
+---
+import { Image } from "astro:assets";
+import UseCaseTile from "./UseCaseTile.astro";
+
+import useCase1Image from "../../../assets/use-cases/use-case1.webp";
+import useCase2Image from "../../../assets/use-cases/use-case2.webp";
+import useCase3Image from "../../../assets/use-cases/use-case3.webp";
+import useCasesWave from "../../../assets/use-cases/use-cases-wave.svg";
+
+const USE_CASES = [
+  {
+    header: "Live-streaming",
+    subHeader:
+      "Compose and mix video streams in real time with ultra-low latency. Supports live and pre-recorded inputs, overlays, and transitions.",
+    image: useCase3Image,
+    uri: "/demos/streaming-app-setup",
+  },
+  {
+    header: "Broadcasting",
+    subHeader:
+      "Seamlessly blend multiple video sources for professional broadcasts. Leverage GPU-powered rendering and hardware decoding.",
+    image: useCase2Image,
+    uri: "/demos/broadcast",
+  },
+  {
+    header: "Video conferencing",
+    subHeader:
+      "Stream or record with real-time compositing, multi-camera setups, and dynamic overlays. Perfect for interactive webinars and meetings.",
+    image: useCase1Image,
+    uri: "/demos/video-conference",
+  },
+] as const;
+---
+
+<section id="use-cases" class="sm:py-14 sm:pb-28 scroll-mt-[14svh]">
+    <div>
+        <div class="flex justify-center gap-x-10 lg:gap-x-24 mt-4 mx-4 flex-col mb-28 sm:mx-8 sm:mb-0 sm:flex-row lg:mx-8 xl:mx-40">
+            <div class="flex flex-1 flex-col gap-y-6 sticky top-28 sm:static sm:top-0">
+				<div class="flex flex-2 mb-6 justify-center sm:mb-0">
+					<div id="useCasesHeader" class="self-start sm:sticky sm:top-28">
+						<h2 class="mb-8 text-useCases-header">One toolkit, many use cases</h2>
+						<Image src={useCasesWave} alt="wave pattern" class="absolute -left-40 top-6 opacity-45 sm:opacity-1 sm:top-56 -z-10" />
+					</div>
+				</div>
+				<div class="flex flex-1"/>                         
+            </div> 
+            <div id="useCasesList" class="flex flex-1 flex-col gap-y-6">
+                {USE_CASES.map((useCase) => <UseCaseTile {...useCase} />)}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="./useCasesSection.ts" />
+
+

@@ -1,0 +1,63 @@
+---
+title: Layouts
+---
+import { Aside } from '@astrojs/starlight/components';
+
+Layout components define the size, position, and simple styling of other components.
+
+Currently, we support the following layout components:
+
+- `View` ([TypeScript](/ts-sdk/components/view))
+- `Tiles` ([TypeScript](/ts-sdk/components/tiles))
+- `Rescaler` ([TypeScript](/ts-sdk/components/rescaler))
+
+### Common properties
+
+Most layout components share some of the properties related to its position and size in relation
+to their parent. 
+
+<Aside>
+There are components that do not support some of those options (for example `Tiles`),
+but if they are supported you can relay on consistent behavior across different components.
+</Aside>
+
+#### Sizing
+- `width` - Width of a component in pixels.
+- `height` - Height of a component in pixels.
+
+If not specified explicitly, sizing of the layout components varies depending on their parent
+and position in the component tree, as detailed in the table below:
+
+  <table>
+    <tr>
+      <th><strong>Layout component placement</strong></th>
+      <th><strong>Layout component size</strong></th>
+    </tr>
+    <tr>
+      <td>Root in a component tree</td>
+      <td>Size is based on the declared resolution of an output stream.</td>
+    </tr>
+    <tr>
+      <td>Child of a non-layout component</td>
+      <td>Defining size is required, usually via the `width`/`height` fields</td>
+    </tr>
+    <tr>
+      <td>Statically positioned child of another layout component</td>
+      <td>Size will be based on the area defined by its parent unless explicitly defined.</td>
+    </tr>
+    <tr>
+      <td>Absolutely positioned child of another layout component</td>
+      <td>The same size as parent.</td>
+    </tr>
+  </table>
+
+#### Absolute positioning
+- `top` - Distance in pixels from the top edge of a component to the top edge of its parent component.
+- `bottom` - Distance in pixels from the bottom edge of a component to the bottom edge of its parent component.
+- `left` - Distance in pixels from the left edge of a component to the left edge of its parent component.
+- `right` - Distance in pixels from the right edge of a component to the right edge of its parent component.
+- `rotation` - Rotation in degrees. (Caution: rotation of complex elements is not fully supported yet)
+
+All the properties above imply the absolute positioning of a component.
+
+When a component is positioned absolutely, it will ignore the normal layout of its parent. 

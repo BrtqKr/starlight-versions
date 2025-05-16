@@ -1,0 +1,67 @@
+---
+title: Getting started
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+
+## What is Smelter?
+
+Smelter is a toolkit for real-time video processing built by <a rel="noreferrer noopener" href="https://swmansion.com/" target="_blank">Software Mansion</a>.
+
+With Smelter you can:
+- Combine multimedia from different sources into a single video or live stream.
+- Enrich your content with text, custom shaders, and embedded websites.
+- Do it all effortlessly with React components or directly via HTTP API.
+
+## Quick start
+
+You can use Smelter in a few ways, however we recommend the TypeScript SDK as the best option to get started.
+
+### Typescript SDK
+
+TypeScript SDK is a set of libraries that provide React components you can use to control how Smelter 
+manipulates videos. Currently, we support running TypeScript SDK in Node.js environment and browser.
+
+You can generate a new starter project using the following commands:
+<Tabs syncKey="package-manager">
+  <TabItem label="npm" icon="seti:npm">
+    ```sh frame=none
+    npx create-smelter-app
+    ```
+  </TabItem>
+  <TabItem label="pnpm" icon="pnpm">
+    ```sh frame=none
+    pnpx create-smelter-app
+    ```
+  </TabItem>
+  <TabItem label="yarn" icon="seti:yarn">
+    ```sh frame=none
+    yarn create smelter-app
+    ```
+  </TabItem>
+    <TabItem label="bun" icon="bun">
+    ```sh frame=none
+    bunx create-smelter-app
+    ```
+  </TabItem>
+</Tabs>
+
+To learn more, explore <a href="/ts-sdk">TypeScript SDK documentation</a> or check out [step-by-step guides](/ts-sdk/guides/quick-start).
+
+### Standalone
+
+You can use Smelter as a standalone multimedia server. The server can be started by:
+- Building from sources [`github.com/software-mansion/smelter`](https://github.com/software-mansion/smelter).
+- Using binaries from [GitHub releases](https://github.com/software-mansion/smelter/releases).
+- Using Docker [`ghcr.io/software-mansion/smelter`](https://github.com/software-mansion/smelter/pkgs/container/smelter).
+
+
+### Membrane Framework plugin
+
+Membrane is a multimedia processing framework written in Elixir. You can use it with Smelter via `membrane_smelter_plugin`.
+It integrates a Smelter server into the Membrane pipeline.
+
+- See [`membrane.stream/learn`](https://membrane.stream/learn) to learn how to get started with Membrane.
+- Plugin documentation - [`membrane_smelter_plugin`](https://hexdocs.pm/membrane_smelter_plugin/readme.html)
+- Core membrane documentation - [`membrane_core`](https://hexdocs.pm/membrane_core/readme.html)

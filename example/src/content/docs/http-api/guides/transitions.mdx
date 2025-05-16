@@ -1,0 +1,281 @@
+---
+title: Transitions
+sidebar:
+  order: 2
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import WidthTransitionImage from "@assets/guides/transition-width.mp4";
+import SiblingTransitionImage from "@assets/guides/transition-sibling-width.mp4";
+import InterpolationFunctionsTransitionImage from "@assets/guides/transition-interpolation-functions.mp4";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+In this guide, you will learn how to implement basic animated transitions to the [`View`](/http-api/components/view) and [`Rescaler`](/http-api/components/rescaler) components.
+
+### Basic setup
+
+Start Smelter server, register inputs (`input_1`, `input_2`, `input_3`, `input_4`) and register video output (`output_1`) similarly to examples shown in [`Quick start`](/http-api/guides/quick-start) guide.
+
+### Width transition
+
+<CollapsibleDetails summaryTitle='Set initial scene' open>
+
+```http {13}
+POST: /api/output/output_1/update
+Content-Type: application/json
+
+{
+  "video": {
+    "root": {
+      "type": "view",
+      "background_color": "#4d4d4d",
+      "children": [
+        {
+          "type": "rescaler",
+          "id": "rescaler_1",
+          "width": 480,
+          "child": { "type": "input_stream", "input_id": "input_1" },
+        }
+      ]
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle='Trigger transition' open>
+
+```http {13-14}
+POST: /api/output/output_1/update
+Content-Type: application/json
+
+{
+  "video": {
+    "root": {
+      "type": "view",
+      "background_color": "#4d4d4d",
+      "children": [
+        {
+          "type": "rescaler",
+          "id": "rescaler_1",
+          "width": 1280,
+          "transition": { "duration_ms": 2000 },
+          "child": { "type": "input_stream", "input_id": "input_1" },
+        }
+      ]
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+In the first update request, you can see that the `Rescaler` has a width of `480`, and in the second one, it is changed to `1280` and `"transition.duration_ms": 2000` was added.
+
+The component must have the same `"id"` in both the initial state and the update that starts the transition, otherwise it will switch immediately to the new state without a transition.
+
+<video
+  autoplay
+  loop
+  muted
+  src={WidthTransitionImage}
+  alt="Rescaler transition result"
+/>
+
+### Sibling component transitions
+
+If there are two sibling `Rescaler` components and only one of them has a width transition applied, the layout of the other will be adjusted automatically.
+
+<CollapsibleDetails summaryTitle='Set initial scene' open>
+
+```http {13}
+POST: /api/output/output_1/update
+Content-Type: application/json
+
+{
+  "video": {
+    "root": {
+      "type": "view",
+      "background_color": "#4d4d4d",
+      "children": [
+        {
+          "type": "rescaler",
+          "id": "rescaler_1",
+          "width": 480,
+          "child": { "type": "input_stream", "input_id": "input_1" },
+        },
+        {
+          "type": "rescaler",
+          "child": { "type": "input_stream", "input_id": "input_2" },
+        }
+      ]
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle='Trigger transition' open>
+
+```http {13-14}
+POST: /api/output/output_1/update
+Content-Type: application/json
+
+{
+  "video": {
+    "root": {
+      "type": "view",
+      "background_color": "#4d4d4d",
+      "children": [
+        {
+          "type": "rescaler",
+          "id": "rescaler_1",
+          "width": 1280,
+          "transition": { "duration_ms": 2000 },
+          "child": { "type": "input_stream", "input_id": "input_1" },
+        },
+        {
+          "type": "rescaler",
+          "child": { "type": "input_stream", "input_id": "input_2" },
+        }
+      ]
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+In the first update request, you can see that the `Rescaler` has a width of `480`, and in the second one, it is
+changed to `1280` and `"transition.duration_ms": 2000` was added.
+
+Compared to previous section, this example also includes sibling component next to one that have a transition.
+That component will also animate based on its sibling's behavior.
+
+<video
+  autoplay
+  loop
+  muted
+  src={SiblingTransitionImage}
+  alt="Rescaler transition result"
+/>
+
+### Customizing interpolation functions
+
+All the examples above utilize the default `linear` interpolation; however, you can also choose from other available modes.
+
+<CollapsibleDetails summaryTitle='Set initial scene' open>
+
+```http
+POST: /api/output/output_1/update
+Content-Type: application/json
+
+{
+  "video": {
+    "root": {
+      "type": "view",
+      "background_color": "#4d4d4d",
+      "children": [
+        {
+          "type": "rescaler",
+          "id": "rescaler_1",
+          "width": 320, "height": 180, "top": 0, "left": 0,
+          "child": { "type": "input_stream", "input_id": "input_1" },
+        },
+        {
+          "type": "rescaler",
+          "id": "rescaler_2",
+          "width": 320, "height": 180, "top": 0, "left": 320,
+          "child": { "type": "input_stream", "input_id": "input_2" },
+        },
+        {
+          "type": "rescaler",
+          "id": "rescaler_3",
+          "width": 320, "height": 180, "top": 0, "left": 640,
+          "child": { "type": "input_stream", "input_id": "input_3" },
+        },
+        {
+          "type": "rescaler",
+          "id": "rescaler_4",
+          "width": 320, "height": 180, "top": 0, "left": 960,
+          "child": { "type": "input_stream", "input_id": "input_4" },
+        },
+      ]
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle='Trigger transition' open>
+
+```http
+POST: /api/output/output_1/update
+Content-Type: application/json
+
+{
+  "video": {
+    "root": {
+      "type": "view",
+      "background_color": "#4d4d4d",
+      "children": [
+        {
+          "type": "rescaler",
+          "id": "rescaler_1",
+          "width": 320, "height": 180, "top": 540, "left": 0,
+          "child": { "type": "input_stream", "input_id": "input_1" },
+          "transition": { "duration_ms": 2000 },
+        },
+        {
+          "type": "rescaler",
+          "id": "rescaler_2",
+          "width": 320, "height": 180, "top": 540, "left": 320,
+          "child": { "type": "input_stream", "input_id": "input_2" },
+          "transition": {
+            "duration_ms": 2000, "easing_function": {"function_name": "bounce"}
+          },
+        },
+        {
+          "type": "rescaler",
+          "id": "rescaler_3",
+          "width": 320, "height": 180, "top": 540, "left": 640,
+          "child": { "type": "input_stream", "input_id": "input_3" },
+          "transition": {
+            "duration_ms": 2000,
+            "easing_function": {
+                "function_name": "cubic_bezier",
+                "points": [0.65, 0, 0.35, 1]
+            }
+          }
+        },
+        {
+          "type": "rescaler",
+          "id": "rescaler_4",
+          "width": 320, "height": 180, "top": 540, "left": 960,
+          "child": { "type": "input_stream", "input_id": "input_4" },
+          "transition": {
+            "duration_ms": 2000,
+            "easing_function": {
+              "function_name": "cubic_bezier",
+              "points": [0.33, 1, 0.68, 1]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+<video
+  autoplay
+  loop
+  muted
+  src={InterpolationFunctionsTransitionImage}
+  alt="Rescaler transition result"
+/>

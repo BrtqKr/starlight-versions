@@ -1,0 +1,143 @@
+---
+title: Shader
+slug: ts-sdk/1.0/ts-sdk/components/shader
+---
+
+import { Aside, Code, Badge } from "@astrojs/starlight/components";
+import shaderExample from "./examples/Shader.tsx?raw";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-shader-example.mp4";
+
+<Badge text="Node.js" variant="tip" size="large" />
+
+<br />
+
+<br />
+
+Component that represents output of a user provided WGSL shader. All children components are available as textures inside the shader code.
+For more information on using shaders in Smelter, please visit [Shaders documentation](/ts-sdk/1.0/fundamentals/concepts/shaders).
+
+<Aside>
+  To use this component, you need to first register the image with a matching
+  `shaderId` using the
+  [`Smelter.registerShader`](/ts-sdk/1.0/ts-sdk/smelter#registershader) function.
+</Aside>
+
+## Usage
+
+<Code code={shaderExample} title="ShaderExample.tsx" lang="tsx" collapse={["7-54", "77-98"]} />
+
+<CollapsibleDetails summaryTitle="Example output">
+  <video autoplay loop muted src={ExampleImage} alt="example output" />
+</CollapsibleDetails>
+
+## Reference
+
+<CollapsibleDetails summaryTitle="Type definitions" open>
+  ```tsx
+  type ShaderProps = {
+    id?: string;
+    children?: ReactElement[];
+    shaderId: string;
+    shaderParam?: ShaderParam;
+    resolution: {
+      width: number;
+      height: number;
+    };
+  };
+  ```
+</CollapsibleDetails>
+
+## Props
+
+### shaderId
+
+ID of a shader. It identifies a shader registered using a [Smelter.registerShader](/ts-sdk/1.0/ts-sdk/smelter#registershader) method.
+
+* **Type**: `string`
+
+***
+
+### children
+
+A single child component to be transformed.
+
+* **Type**: `ReactNode`
+
+***
+
+### id
+
+ID of a component.
+
+* **Type**: `string`
+* **Default value**: Value produced by `useId` hook
+
+***
+
+### shaderParam
+
+Object that will be serialized into a struct and passed to the shader as `@group(1) @binding(0) var<uniform>`. ShaderParam object must match the structure defined in a shader source code.
+
+* **Type**: [`ShaderParam`](#shaderparam-1)
+
+<Aside>
+  Right now, we don't handle memory layout automatically. To get the correct
+  memory alignment, you might need to add some extra fields as padding. Visit
+  the{" "}
+
+  <a href="https://www.w3.org/TR/WGSL/#alignment-and-size" target="_blank">
+    WGSL documentation
+  </a>
+
+  {" "}
+
+  for more details.
+</Aside>
+
+***
+
+### resolution
+
+Resolution of the texture where shader will be executed.
+
+* **Type**: `{ width: number; height: number;}`
+
+## ShaderParam
+
+<Code
+  code={`
+type ShaderParam = 
+| { type: "f32"; value: f32; }
+| { type: "u32"; value: u32; }
+| { type: "i32"; value: i32; }
+| { type: "list"; value: ShaderParam[]; }
+| {
+    type: "struct";
+    value: ShaderParamStructField[];
+  }
+`}
+  lang="tsx"
+/>
+
+## ShaderParamStructField
+
+<Code
+  code={`
+type ShaderParamStructField = 
+| { field_name: string; type: "f32"; value: f32; }
+| { field_name: string; type: "u32"; value: u32; }
+| { field_name: string; type: "i32"; value: i32; }
+| {
+    field_name: string;
+    type: "list";
+    value: ShaderParam[];
+  }
+| {
+    field_name: string;
+    type: "struct";
+    value: ShaderParamStructField[];
+  }
+`}
+  lang="tsx"
+/>

@@ -1,0 +1,7 @@
+.hero-gradient {
+    @apply absolute top-1/6 left-28 -z-40;
+
+    @media (min-width: 640px) {
+        @apply absolute -top-28 left-28 -z-40;
+	}
+}

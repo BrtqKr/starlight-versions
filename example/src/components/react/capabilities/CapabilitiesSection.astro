@@ -1,0 +1,104 @@
+---
+import { Image } from "astro:assets";
+import CapabilitiesItem from "./CapabilitiesItem.astro";
+
+import api from "../../../assets/capabilities/api.svg";
+import bolt from "../../../assets/capabilities/bolt.svg";
+import capabilitiesBlur from "../../../assets/capabilities/capabilities-blur2.svg";
+import wavePattern from "../../../assets/capabilities/capabilities-wave.svg";
+import grid from "../../../assets/capabilities/grid.svg";
+import wand from "../../../assets/capabilities/wand.svg";
+
+const CAPABILITIES = [
+  {
+    label: "Compose",
+    text: "Seamlessly layout input streams using React syntax.<br/>Combine them with other built-in components to apply text and images.",
+    icon: api,
+  },
+  {
+    label: "Style",
+    text: "Create the interface you need using a familiar API developed by React developers for React developers.",
+    icon: wand,
+  },
+  {
+    label: "Animate",
+    text: "Enrich your video composition with animations.<br/>Use style transitions, a built-in Tiles component, or create custom effects with shaders.",
+    icon: bolt,
+  },
+  {
+    label: "Embed",
+    text: "Easily integrate Smelter into existing React applications.<br/>Then, stream directly from the browser.",
+    icon: grid,
+  },
+] as const;
+---
+
+<section
+  id="features"
+  class="px-4 scroll-m-28 flex flex-col items-center relative sm:mb-28 text-center lg:px-8 xl:px-40"
+>
+  <Image
+    id="capabilitiesWave"
+    src={wavePattern}
+    alt="wave pattern"
+    class="absolute -right-56 opacity-45 sm:top-36 sm:-right-40 -z-10"
+  />
+  <Image
+    id="capabilitiesBlur"
+    src={capabilitiesBlur}
+    alt="gradient"
+    class="absolute bottom-40 sm:-bottom-52 sm:-left-40 -translate-x-1/2 -z-10"
+  />
+  <h2 class="mb-2 text-capabilities-header">
+    What do you get with this toolkit?
+  </h2>
+  <div
+    class="flex gap-6 overflow-hidden relative flex-col sm:flex-row mt-12 sm:mt-20"
+  >
+    <div class="flex flex-1 flex-col gap-y-6">
+      {
+        CAPABILITIES.filter((_, index) => !(index % 2)).map((capability) => (
+          <CapabilitiesItem {...capability} />
+        ))
+      }
+    </div>
+    <div class="flex flex-1 flex-col gap-y-6 sm:mt-1/6">
+      {
+        CAPABILITIES.filter((_, index) => index % 2).map((capability) => (
+          <CapabilitiesItem {...capability} />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script is:inline data-astro-rerun>
+  document.addEventListener("astro:page-load", function () {
+    const capabilitiesBlur = document.getElementById("capabilitiesBlur");
+    const capabilitiesWave = document.getElementById("capabilitiesWave");
+
+    const parentSection = capabilitiesBlur?.closest("section");
+
+    const handleScroll = () => {
+      if (!parentSection) return;
+      const sectionBottom = parentSection.getBoundingClientRect().bottom;
+      const scrollY = window.screenY;
+      const sectionBottomToPageTop = scrollY + sectionBottom;
+      const relativeBottom =
+        scrollY - sectionBottomToPageTop + window.innerHeight;
+
+      if (
+        relativeBottom > -window.innerHeight &&
+        sectionBottom < window.innerHeight
+      ) {
+        const translateY = relativeBottom;
+        capabilitiesBlur.style.transform = `translateY(-${translateY * 0.7}px) translateX(-50%)`;
+        capabilitiesWave.style.transform = `translateY(${translateY * 0.4}px)`;
+      }
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+  });
+</script>

@@ -1,0 +1,44 @@
+---
+import { Image, type LocalImageProps } from "astro:assets";
+import GhostButton from "../../base/buttons/GhostButton.astro";
+
+import ArrowRight from "/public/images/arrow-right.svg";
+
+interface Props {
+  uri: string;
+  text: string;
+  description: string;
+  image: LocalImageProps["src"];
+}
+
+const { uri, text, description, image } = Astro.props;
+---
+
+<a
+  href={uri}
+  target="_blank"
+  aria-label={`${text} example`}
+  data-astro-prefetch
+  class="gradient-light-1 group flex h-full flex-1 rounded-4xl p-px transition-transform duration-500 ease-in-out"
+>
+  <div
+    class="h-full w-full rounded-[calc(2rem-1px)] bg-explanation-background group-hover:bg-opacity-90 border border-transparent hover:border-[#C2B1E0]"
+  >
+    <div
+      class="relative z-0 flex h-full flex-col p-6 pt-8 text-center items-center justify-center transition duration-200 ease-in-out"
+    >
+      <div class="mb-6">
+        <h3 class="text-explanation-text mb-4" set:html={text} />
+        <p class="text-capabilities-subheader text-smd">{description}</p>
+      </div>
+      <Image
+        src={image}
+        alt={text}
+        width={612}
+        height={344}
+        class="rounded-lg shadow-md transition-transform duration-300 transform group-hover:scale-[1.02]"
+      />
+      <GhostButton id="exampleGhostButton" class="mt-4 self-end hover:text-example-link">See the demo <ArrowRight /></GhostButton>
+    </div>
+  </div>
+</a>

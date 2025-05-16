@@ -1,0 +1,15 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"button">;
+
+const { class: buttonClass, ...secondaryButtonProps } = Astro.props;
+---
+
+<button
+  class:list={['rounded-full w-fit gradient-light-4 px-6 h-14 sm:px-7 sm:h-17.5 shadow-none hover:shadow-[#C2B1E040] hover:shadow-2xl transition-all hover:scale-[1.02] duration-300', buttonClass]}
+  {...secondaryButtonProps}>
+  <div class="flex gap-x-1.5 sm:gap-x-3 text-xl text-white justify-center items-center">
+    <slot />
+  </div>
+</button>

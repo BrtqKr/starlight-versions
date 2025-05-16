@@ -1,0 +1,238 @@
+---
+title: Text
+---
+
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import ExampleImage from "@assets/guides/component-text-example.webp";
+
+A component for rendering text.
+
+## Usage
+
+<CollapsibleDetails summaryTitle='Update request' open>
+
+```http
+POST: /api/output/example_output/update
+Content-Type: application/json
+
+{
+  "video": {
+    "root": {
+      "type": "view",
+      "background_color": "#52505b",
+      "padding": 100,
+      "direction": "column",
+      "children": [
+        {
+          "type": "text",
+          "font_size": 72,
+          "color": "#a5baf0",
+          "weight": "bold",
+          "text": "Example text"
+        },
+        { "type": "view", "height": 30 },
+        {
+          "type": "text",
+          "font_size": 30,
+          "line_height": 44,
+          "color": "#a5baf0",
+          "wrap": "word",
+          "width": 1000,
+          "text": "Lorem ipsum dolor sit amet, consectetur adipiscing (...)"
+        }
+      ]
+    }
+  }
+}
+```
+
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle="Example output">
+  <img src={ExampleImage.src} />
+</CollapsibleDetails>
+
+## Reference
+
+<CollapsibleDetails summaryTitle='Type definitions' open>
+```tsx
+type Text = {
+  id?: string;
+  text: string;
+  width?: f32;
+  height?: f32;
+  max_width?: f32;
+  max_height?: f32;
+  font_size: f32;
+  line_height?: f32;
+  color?: string;
+  background_color?: string;
+  font_family?: string;
+  style?: "normal" | "italic" | "oblique";
+  align?: "left" | "right" | "justified" | "center";
+  wrap?: "none" | "glyph" | "word";
+  weight?: 
+    | "thin"
+    | "extra_light"
+    | "light"
+    | "normal"
+    | "medium"
+    | "semi_bold"
+    | "bold"
+    | "extra_bold"
+    | "black";
+}
+```
+</CollapsibleDetails>
+
+## Properties
+
+### id
+
+ID of a component.
+
+- **Type**: `string`
+
+---
+
+### text
+
+Text that will be rendered.
+
+- **Type**: `string`
+
+---
+
+### width
+
+Width of a texture that text will be rendered on. If not provided, the resulting texture will be sized based on the defined text but limited to `max_width` value.
+
+- **Type**: `f32`
+
+---
+
+### height
+
+Height of a texture that text will be rendered on. If not provided, the resulting texture will be sized based on the defined text but limited to `max_height` value. It's an error to provide `height` if `width` is not defined.
+
+- **Type**: `f32`
+
+---
+
+### max_width
+
+Maximal `width`. Limits the width of the texture that the text will be rendered on. Value is ignored if `width` is defined.
+
+- **Type**: `f32`
+- **Default value**: `7682`
+
+---
+
+### max_height
+
+Maximal `height`. Limits the height of the texture that the text will be rendered on. Value is ignored if height is defined.
+
+- **Type**: `f32`
+- **Default value**: `4320`
+
+---
+
+### font_size
+
+Font size in pixels.
+
+- **Type**: `f32`
+
+---
+
+### line_height
+
+Distance between lines in pixels.
+
+- **Type**: `f32`
+- **Default value**: the value of the `font_size` property
+
+---
+
+### color
+
+Font color in `#RRGGBBAA` format.
+
+- **Type**: `string`
+- **Default value**: `"#FFFFFFFF"`
+
+---
+
+### background_color
+
+Background color in `#RRGGBBAA` format.
+
+- **Type**: `string`
+- **Default value**: `"#00000000"`
+
+---
+
+### font_family
+
+Font family. Provide [family-name](https://www.w3.org/TR/2018/REC-css-fonts-3-20180920/#family-name-value) for a specific font. "generic-family" values like e.g. "sans-serif" will not work.
+
+- **Type**: `string`
+- **Default value**: `"Verdana"`
+
+---
+
+### style
+
+Font style. The selected font needs to support the specified style.
+
+- **Type**: `"normal" | "italic" | "oblique"`
+- **Default value**: `"normal"`
+
+---
+
+### align
+
+Text align
+
+- **Type**: `"left" | "right" | "justified" | "center"`
+- **Default value**: `"left"`
+
+---
+
+### wrap
+
+Text wrapping options.
+
+- **Type**: `"none" | "glyph" | "word"`
+- **Default value**: `"none"`
+- **Supported values**:
+  - `"none"` - Disable text wrapping. Text that does not fit inside the texture will be cut off.
+  - `"glyph"` - Wraps at a glyph level.
+  - `"word"` - Wraps at a word level. Prevent splitting words when wrapping.
+
+---
+
+### weight
+
+Font weight. The selected font needs to support the specified weight. Font weight, based on the [OpenType specification](https://learn.microsoft.com/en-gb/typography/opentype/spec/os2#usweightclass).
+
+- **Type**: `"thin"
+    | "extra_light"
+    | "light"
+    | "normal"
+    | "medium"
+    | "semi_bold"
+    | "bold"
+    | "extra_bold"
+    | "black"`
+- **Default value**: `"normal"`
+- **Supported values**:
+  - `"thin"` - Weight 100.
+  - `"extra_light"` - Weight 200.
+  - `"light"` - Weight 300.
+  - `"normal"` - Weight 400.
+  - `"medium"` - Weight 500.
+  - `"semi_bold"` - Weight 600.
+  - `"bold"` - Weight 700.
+  - `"extra_bold"` - Weight 800.
+  - `"black"` - Weight 900.

@@ -1,0 +1,69 @@
+---
+import { Image } from "astro:assets";
+import UsageItem from "./UsageItem.astro";
+
+import docker from "../../../assets/usage/docker.svg";
+import elixir from "../../../assets/usage/elixir.svg";
+import react from "../../../assets/usage/react.svg";
+import usageBlur from "../../../assets/usage/usage-blur.svg";
+
+const USE_CASES = [
+  {
+    label: "React / TypeScript",
+    iconUrl: react,
+    text: "React is a powerful library for building dynamic user interfaces — leverage its benefits to seamlessly compose video. Or manage your Smelter instance directly with our TypeScript SDK.",
+    buttons: {
+      "read the docs": "/ts-sdk",
+      "explore React": "/react",
+    },
+  },
+  {
+    label: "Membrane plugin",
+    iconUrl: elixir,
+    text: "Membrane is a developer-friendly multimedia framework for Elixir. With its use, you can easily integrate video and audio mixing into your multimedia pipeline using the Membrane Smelter plugin.",
+    buttons: {
+      "read the docs": "https://hexdocs.pm/membrane_smelter_plugin/Membrane.Smelter.html",
+      "see the repo": "https://github.com/membraneframework/membrane_smelter_plugin",
+    },
+  },
+  {
+    label: "Standalone server",
+    iconUrl: docker,
+    text: "You can deploy Smelter as a standalone server, locally or in the cloud. Its language-agnostic API will integrate easily with your solutions, and our Docker images, coupled with proper deployment guides, will make the setup effortless.",
+    buttons: {
+      "read the docs": "https://smelter.dev/deployment/variants/docker/",
+      "see the registry": "https://github.com/software-mansion/smelter/pkgs/container/smelter",
+    },
+  },
+] as const;
+---
+
+<section id="usage" class="relative mb-28 flex flex-col items-center px-4 lg:px-8 xl:px-40 text-center 2xl:h-fit 2xl:min-h-[unset]">
+  <h2 class="mb-6 text-usage-header">Set up Smelter the way you want</h2>
+  <div class="mt-12 flex flex-col gap-4 sm:mt-20 text-start w-full md:w-fit">
+    {USE_CASES.map(useCase => <UsageItem {...useCase} />)}
+  </div>
+  <Image id="usageBlur" src={usageBlur} alt="gradient" class="absolute -right-32 top-8 sm:-right-72 sm:-top-40 -z-10" />
+</section>
+
+<script is:inline data-astro-rerun>
+  document.addEventListener('astro:page-load', function () {
+    const parallaxImage = document.getElementById('usageBlur');
+    const parentSection = parallaxImage?.closest('section');
+
+    const handleScroll = () => {
+        if(!parentSection) return;
+        const sectionTop = parentSection.getBoundingClientRect().top;
+        const scrollY = window.screenY;
+        const sectionTopToPageTop = scrollY + sectionTop;
+        const relativeTop = scrollY - sectionTopToPageTop + window.innerHeight;
+        
+        if (relativeTop > -window.innerHeight && sectionTop < window.innerHeight) {
+            const translateY = (relativeTop * 0.2);
+            parallaxImage.style.transform = `translateY(-${translateY}px)`;
+        }
+    };
+
+  	window.addEventListener('scroll', handleScroll);
+  });
+</script>

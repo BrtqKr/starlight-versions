@@ -1,0 +1,140 @@
+---
+import ArrowRight from "/public/images/arrow-right.svg";
+import Star from "../../../assets/license/star.svg";
+import Suitcase from "../../../assets/license/suitcase.svg";
+import SecondaryButton from "../../base/buttons/SecondaryButton.astro";
+---
+
+<section
+  id="pricing"
+  class="flex flex-col items-center mb-28 justify-center gap-y-12 mx-4 sm:mx-8 xl:mx-64 2xl:h-fit 2xl:min-h-[unset] 2xl:py-20 scroll-mt-[10svh]"
+>
+  <div class="justify-center text-center">
+    <h2 class="mb-6 text-homeLicense-header">Choose your plan</h2>
+  </div>
+
+  <div class="flex flex-col md:flex-row gap-8 max-w-[860px]">
+    <div class="gradient-light-4 flex flex-1 rounded-4xl p-px">
+      <div
+        class="h-full w-full rounded-[calc(2rem-1px)] bg-explanation-background p-10"
+      >
+        <div class="relative z-0 flex h-full flex-col">
+          <div
+            class="flex justify-between flex-col items-start md:flex-row"
+          >
+            <div class="flex items-start gap-4 h-[100px] md:h-[130px]">
+              <div
+                class="flex grow aspect-square overflow-clip rounded-2xl border border-homeLicense-border w-14 h-14 min-w-14 min-h-14"
+              >
+                <div class="gradient-light-3 w-full h-full aspect-square min-w-14 min-h-14">
+                  <div class="flex items-center justify-center p-2.5 md:p-3">
+                    <Star class="w-full h-full object-cover" />
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <h3 class="text-homeLicense-header text-start">Free</h3>
+                <p
+                  class="text-homeLicense-subheader text-start text-md leading-6"
+                >
+                  For hobbyists and<br class="hidden md:block" />small-to-medium projects
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col h-full justify-between">
+            <div class="my-3 flex flex-col text-capabilities-text">
+              <div class="mb-2">
+                <span class="font-semibold">Offline processing:</span> Unlimited
+              </div>
+              <div>
+                <span class="font-semibold">Live processing:</span>
+                <div class="flex flex-col mt-2">
+                  <ul class="list-disc mb-0 ml-8 text-capabilities-text">
+                    <li>Up to 50 employees</li>
+                    <li>Up to 10k viewers</li>
+                    <li>Up to 50 machines</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <a
+              href="/docs"
+              target="_blank"
+              style="text-decoration: none; color: inherit"
+              class="self-end mt-8"
+            >
+              <SecondaryButton class="max-h-14">
+                <p class="m-0">Try it now</p>
+                <ArrowRight class="w-4 h-4" />
+              </SecondaryButton>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="border border-homeLicense-border flex flex-1 rounded-4xl p-px">
+      <div
+        class="h-full w-full rounded-[calc(2rem-1px)] bg-explanation-background p-10"
+      >
+        <div class="relative z-0 flex h-full flex-col">
+          <div
+            class="flex justify-between flex-col items-start md:flex-row"
+          >
+            <div class="flex items-start gap-4 h-[100px] md:h-[130px]">
+              <div
+                class="flex grow aspect-square overflow-clip rounded-2xl border border-homeLicense-border w-14 h-14 min-w-14 min-h-14"
+              >
+                <div class="gradient-light-3 w-full h-full aspect-square min-w-14 min-h-14">
+                  <div class="flex items-center justify-center p-2.5 md:p-3">
+                    <Suitcase class="w-full h-full object-cover" />
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <h3 class="text-homeLicense-header text-start">Enterprise</h3>
+                <p class="text-homeLicense-subheader text-start leading-6">
+                  For enterprise-grade applications
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col h-full justify-between">
+            <div class="flex flex-col gap-y-6">
+              <div class="my-3 flex flex-col gap-y-2 text-capabilities-text">
+                <div>
+                  <span class="font-semibold">Offline processing:</span> Unlimited
+                </div>
+                <div>
+                  <span class="font-semibold">Live processing:</span> Unlimited
+                </div>
+                <div>
+                  <span class="font-semibold">Priority support:</span> Custom integrations,
+                  new features, long-term support
+                </div>
+              </div>
+              <hr
+                class="solid my-2 border-t-2 [border-image:linear-gradient(180deg,#C2B1E0,#493880)_120] opacity-70"
+              />
+              <p class="text-capabilities-text">
+                <strong>Free trial</strong> for 90 days (no credit card required,
+                no strings attached)
+              </p>
+            </div>
+            <a
+              href="#contact"
+              style="text-decoration: none; color: inherit"
+              class="self-end mt-8"
+            >
+              <SecondaryButton class="max-h-14">
+                <p class="m-0">Contact us</p>
+                <ArrowRight class="w-4 h-4" />
+              </SecondaryButton>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

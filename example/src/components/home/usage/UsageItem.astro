@@ -1,0 +1,70 @@
+---
+import Image from "astro/components/Image.astro";
+
+import GhostButton from "../../base/buttons/GhostButton.astro";
+
+import type { LocalImageProps } from "astro:assets";
+import ArrowRight from "/public/images/arrow-right.svg";
+import PrimaryButton from "../../base/buttons/PrimaryButton.astro";
+
+interface Props {
+  label: string;
+  iconUrl: LocalImageProps["src"];
+  text: string;
+  buttons: Record<string, string>;
+}
+
+const { label, iconUrl, text, buttons } = Astro.props;
+---
+
+<div
+  class="flex flex-col items-center justify-between gap-x-16 gap-y-8 rounded-4xl border border-capabilities-border bg-transparent p-10 px-6 transition duration-300 ease-in-out hover:bg-usage-hoverBackground lg:flex-row w-full"
+>
+  <div class="flex flex-1 flex-col">
+    <div class="flex mb-4 gap-x-2">
+      <Image src={iconUrl} alt="SoftwareMansion logo" class="aspect-square" />
+      <h3 class="text-usage-tileHeader">{label}</h3>
+    </div>
+    <p class="par-l text-usage-tileText hidden md:block">{text}</p>
+  </div>
+  <div
+    class="flex flex-col sm:flex-row gap-x-4 gap-y-1 lg:flex-col justify-between lg:w-[230px] md:self-start lg:self-center"
+  >
+    {
+      Object.entries(buttons).map(([label, url]) => {
+        const isReact = label === "explore React";
+
+        return (
+          <a
+            href={url}
+            target="_blank"
+            style="text-decoration: none; color: inherit;"
+            class="flex cursor-default items-center justify-end"
+          >
+            {isReact ? (
+              <PrimaryButton
+                id="usageReactButton"
+                class="gradient-react !px-4 sm:!px-4 !py-0 !h-12 sm:!h-14"
+              >
+                <p class="par-xl upper-case">{label}</p>
+                <ArrowRight />
+              </PrimaryButton>
+            ) : (
+              <GhostButton
+                id={isReact ? "usageReactButton" : "usageGhostButton"}
+                class:list={[
+                  "hover:text-usage-hoverText px-4 py-4 h-[unset]",
+                  isReact &&
+                    "text-usage-reactButton hover:text-usage-reactHover",
+                ]}
+              >
+                <p class="par-xl upper-case">{label}</p>
+                <ArrowRight />
+              </GhostButton>
+            )}
+          </a>
+        );
+      })
+    }
+  </div>
+</div>

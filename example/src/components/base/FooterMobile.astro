@@ -1,0 +1,94 @@
+---
+import { Image, getImage } from "astro:assets";
+
+import swmLogo from "/public/images/swm-logo.svg";
+import footerWave from "../../assets/footer-small.svg";
+
+const footerWaveImage = await getImage({
+  src: footerWave,
+  format: "svg",
+});
+---
+
+<footer class="relative flex overflow-hidden min-h-[60svh] sm:hidden">
+  <Fragment slot="head">
+    <link rel="preload" href={footerWaveImage.src} as="image" />
+  </Fragment>
+  <Image
+    src={footerWave}
+    alt="Decorative wave"
+    class="w-full h-full absolute"
+  />
+  <div
+    class="px-2 py-8 h-full w-full flex items-center justify-centere self-end"
+  >
+    <div class="flex flex-col w-full items-center gap-4 text-center self-end">
+      <div class="w-full mt-6">
+        <div class="flex flex-wrap justify-around text-base text-white">
+          <div class="flex flex-col items-start mb-4">
+            <p class="font-semibold mb-2">Product</p>
+            <a
+              href="/#features"
+              class="text-footer-link hover:underline cursor-pointer"
+              >Features</a
+            >
+            <a
+              href="/#pricing"
+              class="text-footer-link hover:underline cursor-pointer">Pricing</a
+            >
+            <a
+              href="/#use-cases"
+              class="text-footer-link hover:underline cursor-pointer"
+              >Use cases</a
+            >
+            <a
+              href="/#reviews"
+              class="text-footer-link hover:underline cursor-pointer">Reviews</a
+            >
+            <a
+              href="/react#examples"
+              class="text-footer-link hover:underline cursor-pointer"
+              >Live demos</a
+            >
+          </div>
+          <div class="flex flex-col items-start mb-4">
+            <p class="font-semibold mb-2">Resources</p>
+            <a
+              href="/ts-sdk/overview"
+              target="_blank"
+              class="text-footer-link hover:underline cursor-pointer"
+              >React / TypeScript</a
+            >
+            <a
+              href="https://hexdocs.pm/membrane_smelter_plugin/Membrane.Smelter.html"
+              target="_blank"
+              rel="noreferrer noopener"
+              class="text-footer-link hover:underline cursor-pointer"
+              >Elixir / Membrane</a
+            >
+            <a
+              href="/deployment/variants/docker/"
+              target="_blank"
+              class="text-footer-link hover:underline cursor-pointer">Docker</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="text-white flex flex-col w-full px-4">
+        <a href="https://swmansion.com" target="_blank" class="text-footer-text flex flex-col justify-between items-center w-full">
+          <Image src={swmLogo} alt="SoftwareMansion logo" class="w-24 mb-4" />
+          <h3 class="font-medium text-md">Created by Software Mansion</h3>
+        </a>
+      </div>
+
+      <div class="flex flex-col gap-1 text-sm">
+        <a
+          href="/license"
+          class="text-footer-link hover:underline cursor-pointer">License</a
+        >
+        <p class="text-xs text-white">&copy; 2024-2025 Software Mansion S.A.</p>
+      </div>
+    </div>
+  </div>
+</footer>

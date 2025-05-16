@@ -5,8 +5,8 @@ sidebar:
 slug: ts-sdk/1.0/ts-sdk/inputs/whip
 ---
 
-import { Aside, Badge, Code } from '@astrojs/starlight/components';
-import CollapsibleDetails from '../../../../../components/CollapsibleDetails.astro';
+import { Aside, Badge, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
 
 <Badge text="Node.js" variant="tip" size="large" />
 
@@ -35,7 +35,7 @@ async function run() {
     {
       type: "whip",
       video: { decoder: "ffmpeg_h264" },
-      audio: { decoder: "opus" }
+      audio: { decoder: "opus" },
     }
   );
   // At this point you can establish WHIP connection to
@@ -104,7 +104,7 @@ Parameters of a video source included in the WHIP stream.
   ```tsx
   type InputWhipVideoOptions = {
     decoder: "ffmpeg_h264" | "vulkan_video";
-  }
+  };
   ```
 </CollapsibleDetails>
 
@@ -133,7 +133,7 @@ Parameters of an audio source included in the WHIP stream.
   type InputWhipAudioOptions = {
     decoder: "opus";
     forwardErrorCorrection?: boolean;
-  }
+  };
   ```
 </CollapsibleDetails>
 

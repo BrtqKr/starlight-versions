@@ -1,0 +1,274 @@
+---
+title: Project configuration
+slug: ts-sdk/1.0/ts-sdk/configuration
+---
+
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+
+Configuration instructions and compatibility table for TypeScript SDK
+on different runtimes.
+
+## Node.js
+
+**Package:** `@swmansion/smelter-node`
+
+React code runs in the Node.js process and controls Smelter server.
+Managed server does not have to be deployed on the same machine.
+
+### Compatibility
+
+Node.js SDK requires
+
+<table>
+  <thead>
+    <tr>
+      <th>SDK version</th>
+      <th>Smelter server version</th>
+      <th>React version</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        <strong>`v0.2.0`</strong><br />
+        <strong>`v0.2.1`</strong>
+      </td>
+
+      <td>
+        <strong>`v0.4.0`</strong><br />
+        <strong>`v0.4.1`</strong>
+      </td>
+
+      <td>
+        Recommended: `18.3.1`
+
+        Should work with any react version that is compatible with
+        `react-reconciler@0.29.2`
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+And of course you need to remember about requirements of the actual Smelter server too. See
+Smelter server deployment options:
+
+* [Docker](/ts-sdk/1.0/deployment/variants/docker/)
+* [Binaries](/ts-sdk/1.0/deployment/variants/binaries/)
+
+## Browser (WASM)
+
+**Package:** `@swmansion/smelter-web-wasm`
+
+React code runs in the browser, potentially along the separate React
+code that runs to actually render the page. Actual video rendering
+is done fully in-browser by Smelter code compiled to WASM.
+
+### Compatibility
+
+<table>
+  <thead>
+    <tr>
+      <th>SDK version</th>
+      <th>Supported browsers</th>
+      <th>React version</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        <strong>`v0.2.0`</strong><br />
+        <strong>`v0.2.1`</strong>
+      </td>
+
+      <td>
+        Google Chrome and other Chromium based browsers
+      </td>
+
+      <td>
+        Recommended: `18.3.1`
+
+        Should work with any react version that is compatible with
+        `react-reconciler@0.29.2`
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### Configuration
+
+In the Smelter repository you can find [few example projects](https://github.com/software-mansion/smelter/tree/master/demos) with Smelter configured.
+
+We are working on examples of other configurations, but here are steps you need to follow
+to configure that yourself:
+
+* `@swmansion/smelter-browser-render` includes `smelter.wasm` that needs to hosted on your site.
+* You need to call `setWasmBundleUrl` with URL to `smelter.wasm` before starting any Smelter instances.
+* Smelter code will be started in a Web Worker. Your project bundler needs to be able to handle following
+  syntax in a library code.
+  ```js
+  new Worker(new URL("../esm/runWorker.mjs", import.meta.url), {
+    type: "module",
+  });
+  ```
+
+<CollapsibleDetails summaryTitle="Configuring Next.js project">
+  With below configuration, somewhere in your code you need to call:
+
+  ```ts
+  import { setWasmBundleUrl } from "@swmansion/smelter-web-wasm";
+
+  setWasmBundleUrl("/smelter.wasm");
+  ```
+
+  ```json title="package.json" ins={12-13, 15-16, 27} collapse={2-10, 19-25}
+  {
+    "name": "nextjs-demo",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "next lint"
+    },
+    "dependencies": {
+      "@swmansion/smelter": "0.2.1",
+      "@swmansion/smelter-web-wasm": "0.2.1",
+      "next": "14.2.24",
+      "react": "^18.3.1",
+      "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+      "@types/node": "^20",
+      "@types/react": "^18",
+      "@types/react-dom": "^18",
+      "eslint": "^8",
+      "eslint-config-next": "14.2.24",
+      "postcss": "^8",
+      "tailwindcss": "^3.4.1",
+      "typescript": "^5",
+      "copy-webpack-plugin": "12.0.2"
+    }
+  }
+  ```
+
+  ```js title="next.config.mjs"
+  import path from "node:path";
+  import { createRequire } from "node:module";
+  import CopyPlugin from "copy-webpack-plugin";
+
+  const require = createRequire(import.meta.url);
+
+  const nextConfig = {
+    webpack: (config, { isServer }) => {
+      config.plugins.push(
+        new CopyPlugin({
+          patterns: [
+            {
+              from: path.join(
+                path.dirname(
+                  require.resolve("@swmansion/smelter-browser-render")
+                ),
+                "smelter.wasm"
+              ),
+              to: path.join(import.meta.dirname, "public"),
+            },
+          ],
+        })
+      );
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        "compositor_web_bg.wasm": false,
+      };
+
+      if (isServer) {
+        config.externals = config.externals || [];
+        config.externals.push("@swmansion/smelter-web-wasm");
+      }
+
+      return config;
+    },
+  };
+
+  export default nextConfig;
+  ```
+</CollapsibleDetails>
+
+<CollapsibleDetails summaryTitle="Configuring Vite projects">
+  With below configuration, somewhere in your code you need to call:
+
+  ```ts
+  import { setWasmBundleUrl } from "@swmansion/smelter-web-wasm";
+
+  setWasmBundleUrl("/assets/smelter.wasm");
+  ```
+
+  ```json title="package.json" ins={13-16, 31} collapse={2-11, 19-29}
+  {
+    "name": "vite-demo",
+    "private": true,
+    "version": "0.1.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc -b && vite build",
+      "lint": "eslint .",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "@swmansion/smelter": "0.2.0",
+      "@swmansion/smelter-web-wasm": "0.2.0",
+      "react": "^18.3.1",
+      "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+      "@eslint/js": "^9.19.0",
+      "@types/node": "20",
+      "@types/react": "^18.3.18",
+      "@types/react-dom": "^18.3.5",
+      "@vitejs/plugin-react-swc": "^3.5.0",
+      "eslint": "^9.19.0",
+      "eslint-plugin-react-hooks": "^5.0.0",
+      "eslint-plugin-react-refresh": "^0.4.18",
+      "globals": "^15.14.0",
+      "typescript": "~5.7.2",
+      "typescript-eslint": "^8.22.0",
+      "vite": "^6.1.0",
+      "vite-plugin-static-copy": "^2.2.0"
+    }
+  }
+  ```
+
+  ```js title="vite.config.ts"
+  import { defineConfig } from "vite";
+  import react from "@vitejs/plugin-react-swc";
+  import { viteStaticCopy } from "vite-plugin-static-copy";
+  import { createRequire } from "node:module";
+  import path from "node:path";
+
+  const require = createRequire(import.meta.url);
+
+  export default defineConfig({
+    plugins: [
+      react(),
+      viteStaticCopy({
+        targets: [
+          {
+            src: path.join(
+              path.dirname(require.resolve("@swmansion/smelter-browser-render")),
+              "smelter.wasm"
+            ),
+            dest: "assets",
+          },
+        ],
+      }),
+    ],
+    optimizeDeps: {
+      exclude: ["@swmansion/smelter-web-wasm"],
+      include: ["@swmansion/smelter-web-wasm > pino"],
+    },
+  });
+  ```
+</CollapsibleDetails>

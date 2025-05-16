@@ -1,15 +1,16 @@
 ---
 title: Basic layouts
 sidebar:
-    order: 2
+  order: 2
 ---
-import { Steps, Code } from '@astrojs/starlight/components';
-import CollapsibleDetails from '../../../../components/CollapsibleDetails.astro';
-import Step1Image from '../../../../assets/guides/basic-layouts-1.mp4'
-import Step2Image from '../../../../assets/guides/basic-layouts-2.mp4'
-import Step3Image from '../../../../assets/guides/basic-layouts-3.mp4'
-import Step4Image from '../../../../assets/guides/basic-layouts-4.mp4'
-import Step5Image from '../../../../assets/guides/basic-layouts-5.mp4'
+
+import { Steps, Code } from "@astrojs/starlight/components";
+import CollapsibleDetails from "@components/CollapsibleDetails.astro";
+import Step1Image from "@assets/guides/basic-layouts-1.mp4";
+import Step2Image from "@assets/guides/basic-layouts-2.mp4";
+import Step3Image from "@assets/guides/basic-layouts-3.mp4";
+import Step4Image from "@assets/guides/basic-layouts-4.mp4";
+import Step5Image from "@assets/guides/basic-layouts-5.mp4";
 
 In this guide, you'll learn how layouts in Smelter works and how to position and resize components.
 It includes examples and explanation how component size is calculated.
@@ -17,284 +18,313 @@ It includes examples and explanation how component size is calculated.
 <Steps>
 
 1. Init Smelter and connect inputs and outputs
-    ```tsx collapse={15-16, 20-21, 25-35}
-    import { View } from "@swmansion/smelter"
-    import Smelter from "@swmansion/smelter-node"
 
-    function App() {
-      return (
-        <View style={{ backgroundColor: "#4d4d4d" }} />
-      )
-    }
+   ```tsx collapse={15-16, 20-21, 25-35}
+   import { View } from "@swmansion/smelter";
+   import Smelter from "@swmansion/smelter-node";
 
-    async function start() {
-      const smelter = new Smelter();
-      await smelter.init();
+   function App() {
+     return <View style={{ backgroundColor: "#4d4d4d" }} />;
+   }
 
-      await smelter.registerInput("input_1", {
-        type: "mp4",
-        serverPath: "input1.mp4"
-      });
+   async function start() {
+     const smelter = new Smelter();
+     await smelter.init();
 
-      await smelter.registerInput("input_2", {
-        type: "mp4",
-        serverPath: "input2.mp4"
-      })
+     await smelter.registerInput("input_1", {
+       type: "mp4",
+       serverPath: "input1.mp4",
+     });
 
-      await smelter.registerOutput("output", <App />, {
-        type: "rtp_stream",
-        transportProtocol: "udp",
-        port: 9004,
-        ip: "127.0.0.1",
-        video: {
-          resolution: { width: 1280, height: 720 },
-          encoder: { type: "ffmpeg_h264" },
-        },
-        audio: {
-          encoder: { type: "opus", channels: "stereo" },
-        }
-      });
+     await smelter.registerInput("input_2", {
+       type: "mp4",
+       serverPath: "input2.mp4",
+     });
 
-      await smelter.start();
-    }
-    ```
+     await smelter.registerOutput("output", <App />, {
+       type: "rtp_stream",
+       transportProtocol: "udp",
+       port: 9004,
+       ip: "127.0.0.1",
+       video: {
+         resolution: { width: 1280, height: 720 },
+         encoder: { type: "ffmpeg_h264" },
+       },
+       audio: {
+         encoder: { type: "opus", channels: "stereo" },
+       },
+     });
 
-    Starts the Smelter server with 2 input streams (`input_1` and `input_2`) and output
-    stream that generates a blank output.
+     await smelter.start();
+   }
+   ```
 
-    <video autoplay loop muted src={Step1Image} alt="Basic layouts - intial" />
+   Starts the Smelter server with 2 input streams (`input_1` and `input_2`) and output
+   stream that generates a blank output.
+
+   <video autoplay loop muted src={Step1Image} alt="Basic layouts - intial" />
 
 2. Add `input_1` to the scene.
-    ```tsx collapse={12-59}
-    import { View, InputStream } from "@swmansion/smelter"
-    import Smelter from "@swmansion/smelter-node"
 
-    function App() {
-      return (
-        <View style={{ backgroundColor: "#4d4d4d" }}>
-          <InputStream inputId="input_1" />
-        </View>
-      )
-    }
+   ```tsx collapse={12-59}
+   import { View, InputStream } from "@swmansion/smelter";
+   import Smelter from "@swmansion/smelter-node";
 
-    async function start() {
-      const smelter = new Smelter();
-      await smelter.init();
+   function App() {
+     return (
+       <View style={{ backgroundColor: "#4d4d4d" }}>
+         <InputStream inputId="input_1" />
+       </View>
+     );
+   }
 
-      await smelter.registerInput("input_1", {
-        type: "mp4",
-        serverPath: "input1.mp4"
-      });
+   async function start() {
+     const smelter = new Smelter();
+     await smelter.init();
 
-      await smelter.registerInput("input_2", {
-        type: "mp4",
-        serverPath: "input2.mp4"
-      });
+     await smelter.registerInput("input_1", {
+       type: "mp4",
+       serverPath: "input1.mp4",
+     });
 
-      await smelter.registerOutput("output", <App />, {
-        type: "rtp_stream",
-        transportProtocol: "udp",
-        port: 9004,
-        ip: "127.0.0.1",
-        video: {
-          resolution: { width: 1280, height: 720 },
-          encoder: { type: "ffmpeg_h264" },
-        },
-        audio: {
-          encoder: { type: "opus", channels: "stereo" },
-        }
-      });
+     await smelter.registerInput("input_2", {
+       type: "mp4",
+       serverPath: "input2.mp4",
+     });
 
-      await smelter.start();
-    }
-    ```
+     await smelter.registerOutput("output", <App />, {
+       type: "rtp_stream",
+       transportProtocol: "udp",
+       port: 9004,
+       ip: "127.0.0.1",
+       video: {
+         resolution: { width: 1280, height: 720 },
+         encoder: { type: "ffmpeg_h264" },
+       },
+       audio: {
+         encoder: { type: "opus", channels: "stereo" },
+       },
+     });
 
-    The input stream in the example has a resolution `1920x1080`, but it is rendered
-    on the `1270x720` output. as a result only part of the stream is visible.
+     await smelter.start();
+   }
+   ```
 
-    <video autoplay loop muted src={Step2Image} alt="basic layouts - add input" />
+   The input stream in the example has a resolution `1920x1080`, but it is rendered
+   on the `1270x720` output. as a result only part of the stream is visible.
 
+   <video
+     autoplay
+     loop
+     muted
+     src={Step2Image}
+     alt="basic layouts - add input"
+   />
 
 3. Resize `input_1` to fill the output.
-    ```tsx collapse={14-59}
-    import { View, Rescaler, InputStream } from "@swmansion/smelter"
-    import Smelter from "@swmansion/smelter-node"
 
-    function App() {
-      return (
-        <View style={{ backgroundColor: "#4d4d4d" }}>
-          <Rescaler>
-            <InputStream inputId="input_1" />
-          </Rescaler>
-        </View>
-      )
-    }
+   ```tsx collapse={14-59}
+   import { View, Rescaler, InputStream } from "@swmansion/smelter";
+   import Smelter from "@swmansion/smelter-node";
 
-    async function start() {
-      const smelter = new smelter();
-      await smelter.init();
+   function App() {
+     return (
+       <View style={{ backgroundColor: "#4d4d4d" }}>
+         <Rescaler>
+           <InputStream inputId="input_1" />
+         </Rescaler>
+       </View>
+     );
+   }
 
-      await smelter.registerInput("input_1", {
-        type: "mp4",
-        serverPath: "input1.mp4"
-      });
+   async function start() {
+     const smelter = new smelter();
+     await smelter.init();
 
-      await smelter.registerInput("input_2", {
-        type: "mp4",
-        serverPath: "input2.mp4"
-      })
+     await smelter.registerInput("input_1", {
+       type: "mp4",
+       serverPath: "input1.mp4",
+     });
 
-      await smelter.registerOutput("output", <App />, {
-        type: "rtp_stream",
-        transportProtocol: "udp",
-        port: 9004,
-        ip: "127.0.0.1",
-        video: {
-          resolution: { width: 1280, height: 720 },
-          encoder: { type: "ffmpeg_h264" },
-        },
-        audio: {
-          encoder: { type: "opus", channels: "stereo" },
-        }
-      });
+     await smelter.registerInput("input_2", {
+       type: "mp4",
+       serverPath: "input2.mp4",
+     });
 
-      await smelter.start();
-    }
-    ```
+     await smelter.registerOutput("output", <App />, {
+       type: "rtp_stream",
+       transportProtocol: "udp",
+       port: 9004,
+       ip: "127.0.0.1",
+       video: {
+         resolution: { width: 1280, height: 720 },
+         encoder: { type: "ffmpeg_h264" },
+       },
+       audio: {
+         encoder: { type: "opus", channels: "stereo" },
+       },
+     });
 
-    Input stream now fully fits inside the output.
+     await smelter.start();
+   }
+   ```
 
-    Explanation:
-    - Root `View` component in the example takes it size from the output itself (`1280x720`).
-    - `Rescaler` is the only child without width/height specified, so it takes its size from the `View` component.
-    - `InputStream` is resized by `Rescaler` to fit inside it.
+   Input stream now fully fits inside the output.
 
-    <video autoplay loop muted src={Step3Image} alt="basic layouts - resize input" />
+   Explanation:
+
+   - Root `View` component in the example takes it size from the output itself (`1280x720`).
+   - `Rescaler` is the only child without width/height specified, so it takes its size from the `View` component.
+   - `InputStream` is resized by `Rescaler` to fit inside it.
+
+   <video
+     autoplay
+     loop
+     muted
+     src={Step3Image}
+     alt="basic layouts - resize input"
+   />
 
 4. Show both inputs side-by-side.
-    ```tsx collapse={17-59}
-    import { View, Rescaler, InputStream } from "@swmansion/smelter"
-    import Smelter from "@swmansion/smelter-node"
 
-    function App() {
-      return (
-        <View style={{ backgroundColor: "#4d4d4d" }}>
-          <Rescaler>
-            <InputStream inputId="input_1" />
-          </Rescaler>
-          <Rescaler>
-            <InputStream inputId="input_2" />
-          </Rescaler>
-        </View>
-      )
-    }
+   ```tsx collapse={17-59}
+   import { View, Rescaler, InputStream } from "@swmansion/smelter";
+   import Smelter from "@swmansion/smelter-node";
 
-    async function start() {
-      const smelter = new smelter();
-      await smelter.init();
+   function App() {
+     return (
+       <View style={{ backgroundColor: "#4d4d4d" }}>
+         <Rescaler>
+           <InputStream inputId="input_1" />
+         </Rescaler>
+         <Rescaler>
+           <InputStream inputId="input_2" />
+         </Rescaler>
+       </View>
+     );
+   }
 
-      await smelter.registerInput("input_1", {
-        type: "mp4",
-        serverPath: "input1.mp4"
-      });
+   async function start() {
+     const smelter = new smelter();
+     await smelter.init();
 
-      await smelter.registerInput("input_2", {
-        type: "mp4",
-        serverPath: "input2.mp4"
-      })
+     await smelter.registerInput("input_1", {
+       type: "mp4",
+       serverPath: "input1.mp4",
+     });
 
-      await smelter.registerOutput("output", <App />, {
-        type: "rtp_stream",
-        transportProtocol: "udp",
-        port: 9004,
-        ip: "127.0.0.1",
-        video: {
-          resolution: { width: 1280, height: 720 },
-          encoder: { type: "ffmpeg_h264" },
-        },
-        audio: {
-          encoder: { type: "opus", channels: "stereo" },
-        }
-      });
+     await smelter.registerInput("input_2", {
+       type: "mp4",
+       serverPath: "input2.mp4",
+     });
 
-      await smelter.start();
-    }
-    ```
+     await smelter.registerOutput("output", <App />, {
+       type: "rtp_stream",
+       transportProtocol: "udp",
+       port: 9004,
+       ip: "127.0.0.1",
+       video: {
+         resolution: { width: 1280, height: 720 },
+         encoder: { type: "ffmpeg_h264" },
+       },
+       audio: {
+         encoder: { type: "opus", channels: "stereo" },
+       },
+     });
 
-    Both input streams are now visible.
-    
-    Explanation:
-    - Root `View` component in the example takes it size from the output itself (`1280x720`).
-    - Root `View` has 2 child components, each without any dimensions specified, so both child
-      components (`Rescaler`) will have size `640x720`.
-    - `InputStream` is resized by `Rescaler` to fit inside it. Aspect ratio does not match,
-      so it is centered vertically.
+     await smelter.start();
+   }
+   ```
 
-    <video autoplay loop muted src={Step4Image} alt="basic layouts - side-by-side" />
+   Both input streams are now visible.
 
-5. Put one of the inputs in the corner 
-    ```tsx collapse={17-59}
-    import { View, Rescaler, InputStream } from "@swmansion/smelter"
-    import Smelter from "@swmansion/smelter-node"
+   Explanation:
 
-    function App() {
-      return (
-        <View style={{ backgroundColor: "#4d4d4d" }}>
-          <Rescaler>
-            <InputStream inputId="input_1" />
-          </Rescaler>
-          <Rescaler style={{ width: 320, height: 180, top: 20, right: 20 }}>
-            <InputStream inputId="input_2" />
-          </Rescaler>
-        </View>
-      )
-    }
+   - Root `View` component in the example takes it size from the output itself (`1280x720`).
+   - Root `View` has 2 child components, each without any dimensions specified, so both child
+     components (`Rescaler`) will have size `640x720`.
+   - `InputStream` is resized by `Rescaler` to fit inside it. Aspect ratio does not match,
+     so it is centered vertically.
 
-    async function start() {
-      const smelter = new Smelter();
-      await smelter.init();
+   <video
+     autoplay
+     loop
+     muted
+     src={Step4Image}
+     alt="basic layouts - side-by-side"
+   />
 
-      await smelter.registerInput("input_1", {
-        type: "mp4",
-        serverPath: "input1.mp4"
-      });
+5. Put one of the inputs in the corner
 
-      await smelter.registerInput("input_2", {
-        type: "mp4",
-        serverPath: "input2.mp4"
-      })
+   ```tsx collapse={17-59}
+   import { View, Rescaler, InputStream } from "@swmansion/smelter";
+   import Smelter from "@swmansion/smelter-node";
 
-      await smelter.registerOutput("output", <App />, {
-        type: "rtp_stream",
-        transportProtocol: "udp",
-        port: 9004,
-        ip: "127.0.0.1",
-        video: {
-          resolution: { width: 1280, height: 720 },
-          encoder: { type: "ffmpeg_h264" },
-        },
-        audio: {
-          encoder: { type: "opus", channels: "stereo" },
-        }
-      });
+   function App() {
+     return (
+       <View style={{ backgroundColor: "#4d4d4d" }}>
+         <Rescaler>
+           <InputStream inputId="input_1" />
+         </Rescaler>
+         <Rescaler style={{ width: 320, height: 180, top: 20, right: 20 }}>
+           <InputStream inputId="input_2" />
+         </Rescaler>
+       </View>
+     );
+   }
 
-      await smelter.start();
-    }
-    ```
+   async function start() {
+     const smelter = new Smelter();
+     await smelter.init();
 
-    Both input streams are now visible.
-    
-    Explanation:
-    - Root `View` component in the example takes it size from the output itself (`1280x720`)
-    - Root `View` has 2 child components, but only one is positioned statically.
-      (See [absolute positioning](/fundamentals/concepts/layouts/#absolute-positioning))
-      - First `Rescaler` is the only static child of the View, so it has the same size as its
-        parent
-      - Second `Rescaler` has fields `top` and `right` defined so it is positioned absolutely.
-        It is rendered on top of static content of the View and it does not affect layout of 
-        the other sibling components.
-    - `InputStream` components are resized by `Rescaler` components to fit inside them.
+     await smelter.registerInput("input_1", {
+       type: "mp4",
+       serverPath: "input1.mp4",
+     });
 
-    <video autoplay loop muted src={Step5Image} alt="basic layouts - side-by-side" />
+     await smelter.registerInput("input_2", {
+       type: "mp4",
+       serverPath: "input2.mp4",
+     });
+
+     await smelter.registerOutput("output", <App />, {
+       type: "rtp_stream",
+       transportProtocol: "udp",
+       port: 9004,
+       ip: "127.0.0.1",
+       video: {
+         resolution: { width: 1280, height: 720 },
+         encoder: { type: "ffmpeg_h264" },
+       },
+       audio: {
+         encoder: { type: "opus", channels: "stereo" },
+       },
+     });
+
+     await smelter.start();
+   }
+   ```
+
+   Both input streams are now visible.
+
+   Explanation:
+
+   - Root `View` component in the example takes it size from the output itself (`1280x720`)
+   - Root `View` has 2 child components, but only one is positioned statically.
+     (See [absolute positioning](/fundamentals/concepts/layouts/#absolute-positioning))
+     - First `Rescaler` is the only static child of the View, so it has the same size as its
+       parent
+     - Second `Rescaler` has fields `top` and `right` defined so it is positioned absolutely.
+       It is rendered on top of static content of the View and it does not affect layout of
+       the other sibling components.
+   - `InputStream` components are resized by `Rescaler` components to fit inside them.
+
+   <video
+     autoplay
+     loop
+     muted
+     src={Step5Image}
+     alt="basic layouts - side-by-side"
+   />
 
 </Steps>

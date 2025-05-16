@@ -1,0 +1,20 @@
+---
+import Image from "astro/components/Image.astro";
+
+import Deric from "../../assets/testimonials/deric.avif";
+---
+
+<section id="reviews" class="px-4 my-40 flex flex-row justify-center items-center relative sm:px-12 sm:pb-14 2xl:pb-20 2xl:h-fit scroll-mt-[30svh]">
+    <div class="flex flex-col text-center items-center">
+        <h2 class="text-testimonials-header mb-10">What our users say about Smelter</h2>
+        <p class="text-testimonials-content mb-6">“We currently use this in one of our current production apps and the capabilities of it are fantastic.<br/>Quite a pragmatic toolkit to use and would definitely recommend it to anyone interested in doing real-time A/V.<br/>The best toolkit to use in Elixir for sure.”</p>
+        <figure class="flex flex-col items-center">
+            <Image alt="Deric avatar" width={60} height={60} src={Deric} class="rounded-full mb-4 aspect-square" /> 
+            <figcaption class="text-testimonials-caption flex flex-col">
+                <span class="text-base mb-1 font-semibold">Deric Walintukan</span>
+                <span>Senior Engineering Manager at Firework</span>
+            </figcaption>
+        </figure>
+    </div>
+</section>
+
